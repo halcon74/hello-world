@@ -1,3 +1,3 @@
 TEMPLATE = app
 
-SOURCES += main.cpp SConstruct
+SOURCES += src/main.cpp SConstruct

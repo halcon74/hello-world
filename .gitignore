@@ -1,4 +1,4 @@
 Hello_World.pro.user
 .sconsign.dblite
-Hello_World
-main.o
+build/Hello_World
+src/main.o
