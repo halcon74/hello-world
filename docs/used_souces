@@ -1,0 +1,20 @@
+1. https://www.geeksforgeeks.org/writing-first-c-program-hello-world-example/
+
+2. https://habr.com/ru/post/442682/
+(in Russian)
+
+3. https://neval8.wordpress.com/2013/04/30/using-scons-with-qtcreator/
+(the chapter "Adding a build and a clean target")
+
+4. https://doc.qt.io/qt-5/qmake-variable-reference.html#config
+
+5. https://github.com/SCons/scons/wiki/SConsCrashCourse
+
+6. https://devmanual.gentoo.org/eclass-reference/scons-utils.eclass/index.html
+
+7. https://github.com/mixxxdj/mixxx/blob/main/SConscript
+
+And, sure,
+https://packages.gentoo.org/packages/dev-qt/qt-creator
+and
+https://packages.gentoo.org/packages/dev-util/scons
