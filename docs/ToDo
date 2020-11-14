@@ -4,3 +4,13 @@
 		#!/usr/bin/env python
 		# -*- coding: utf-8 -*-
 	?
+
+2
+	https://github.com/mixxxdj/mixxx/blob/main/SConscript
+	is this also needed
+	                unix_share_path = os.path.join(install_root, env.get('SHAREDIR', default='share'))
+	                unix_bin_path = os.path.join(install_root, env.get('BINDIR', default='bin'))
+	?
+	
+3
+	to try to build in Gentoo (write an ebuild)
