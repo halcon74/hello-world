@@ -24,10 +24,9 @@ def set_program_destdir(supported_oses, default_program_destdir):
             return program_destdir
         else:
             print(this_destdir + ' not found')
-    if not program_destdir:
-        program_destdir = default_program_destdir
-        print('default destination directory will be used: ' + program_destdir)
-        return program_destdir
+    program_destdir = default_program_destdir
+    print('default destination directory will be used: ' + program_destdir)
+    return program_destdir
 
 program_destdir = set_program_destdir(supported_oses, default_program_destdir)
 
