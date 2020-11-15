@@ -8,29 +8,27 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-default_destdir = 'build'
-
 supported_oses = OrderedDict()
 supported_oses['gentoo'] = {'name':'Gentoo', 'destdir':'DESTDIR'}
 supported_oses['debian'] = {'name':'Debian/Ubuntu', 'destdir':'install_root'}
 
 def set_program_destdir():
-    global program_destdir
     for key, nested_dict in supported_oses.items():
         this_destdir = nested_dict['destdir']
         print('checking for ' + this_destdir + '... (are we on ' + nested_dict['name'] + '?)')
-        get_destdir = ARGUMENTS.get(this_destdir)
-        if get_destdir:
-            program_destdir = get_destdir
+        program_destdir = ARGUMENTS.get(this_destdir)
+        if program_destdir:
             print(this_destdir + ' found and will be used: ' + program_destdir)
-            break
+            return program_destdir
         else:
             print(this_destdir + ' not found')
-    if not get_destdir:
-        program_destdir = default_destdir
+    if not program_destdir:
+        program_destdir = default_program_destdir
         print('default destination directory will be used: ' + program_destdir)
+        return program_destdir
 
-set_program_destdir()
+default_program_destdir = 'build'
+program_destdir = set_program_destdir()
 
 if program_destdir.endswith('/'):
     program_target = program_destdir + program_name
