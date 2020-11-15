@@ -30,6 +30,13 @@ supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 
 program_builddir = 'build'
 
+def set_build_target(program_destdir, program_name):
+    if program_destdir.endswith('/'):
+        build_target = program_destdir + program_name
+    else:
+        build_target = program_destdir + '/' + program_name
+    return build_target
+
 def set_program_destdir(supported_oses, program_builddir):
     for key, nested_dict in supported_oses.items():
         this_destdir = nested_dict['destdir']
@@ -43,13 +50,6 @@ def set_program_destdir(supported_oses, program_builddir):
     program_destdir = default_program_destdir
     print('program build directory will be used: ' + program_builddir)
     return program_destdir
-
-def set_build_target(program_destdir, program_name):
-    if program_destdir.endswith('/'):
-        build_target = program_destdir + program_name
-    else:
-        build_target = program_destdir + '/' + program_name
-    return build_target
 
 build_target = set_build_target(program_builddir, program_name)
 target = env.Program(target=build_target, source=program_source)
