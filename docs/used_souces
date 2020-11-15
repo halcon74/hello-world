@@ -18,6 +18,8 @@
 https://gitweb.gentoo.org/repo/gentoo.git/tree/media-sound/klick/klick-0.12.2-r2.ebuild
 and
 https://gitweb.gentoo.org/repo/gentoo.git/tree/media-sound/klick/files/klick-0.12.2-sconstruct.patch
+and
+https://github.com/dsacre/klick/blob/master/SConstruct
 
 9. https://scons.org/doc/4.0.1/HTML/scons-api/SCons.Variables/
 
