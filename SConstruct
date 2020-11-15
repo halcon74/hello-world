@@ -44,17 +44,17 @@ def set_program_destdir(supported_oses, program_builddir):
     print('program build directory will be used: ' + program_builddir)
     return program_destdir
 
-def set_program_target(program_destdir, program_name):
+def set_build_target(program_destdir, program_name):
     if program_destdir.endswith('/'):
-        program_target = program_destdir + program_name
+        build_target = program_destdir + program_name
     else:
-        program_target = program_destdir + '/' + program_name
-    return program_target
+        build_target = program_destdir + '/' + program_name
+    return build_target
 
-program_target = set_program_target(program_builddir, program_name)
-target = env.Program(target=program_target, source=program_source)
+build_target = set_build_target(program_builddir, program_name)
+target = env.Program(target=build_target, source=program_source)
 Default(target)
-print('will build: target = ' + program_target + ', source = ' + program_builddir)
+print('will build: target = ' + build_target + ', source = ' + program_source)
 
 program_destdir = set_program_destdir(supported_oses, program_builddir)
 Alias("install", env.Install(dir=program_destdir, source=program_source))
