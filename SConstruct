@@ -8,7 +8,13 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-def set_os_data(name, destdir='', cpp_compiler='', cpp_compiler_flags='', linker_flags='', prefix=''):
+def set_os_data(name='', destdir='', cpp_compiler='', cpp_compiler_flags='', linker_flags='', prefix=''):
+    if not name:
+        print('set_os_data: name argument is not defined')
+        return mydict
+    if not destdir:
+        print('set_os_data: destdir argument is not defined')
+        return mydict
     mydict = {}
     mydict['name'] = name
     mydict['destdir'] = destdir
