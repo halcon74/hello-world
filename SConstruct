@@ -39,7 +39,7 @@ if program_destdir.endswith('/'):
 else:
     program_target = program_destdir + '/' + program_name
 
-print('Building: target = ' + program_target + ', source = ' + program_source)
+print('will build: target = ' + program_target + ', source = ' + program_source)
 
 target = env.Program(target=program_target, source=program_source)
 Default(target)
