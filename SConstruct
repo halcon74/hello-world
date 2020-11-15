@@ -8,7 +8,6 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-# default
 default_destdir = 'build'
 
 supported_oses = OrderedDict()
