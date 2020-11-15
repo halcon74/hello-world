@@ -28,13 +28,15 @@ def set_program_destdir(supported_oses, default_program_destdir):
     print('default destination directory will be used: ' + program_destdir)
     return program_destdir
 
+def set_program_target(program_destdir, program_name):
+    if program_destdir.endswith('/'):
+        program_target = program_destdir + program_name
+    else:
+        program_target = program_destdir + '/' + program_name
+    return program_target
+
 program_destdir = set_program_destdir(supported_oses, default_program_destdir)
-
-if program_destdir.endswith('/'):
-    program_target = program_destdir + program_name
-else:
-    program_target = program_destdir + '/' + program_name
-
+program_target = set_program_target(program_destdir, program_name)
 print('will build: target = ' + program_target + ', source = ' + program_source)
 
 target = env.Program(target=program_target, source=program_source)
