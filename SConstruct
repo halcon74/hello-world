@@ -8,9 +8,21 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
+def set_os_data(dict, key, name, destdir='', cpp_compiler='', cpp_compiler_flags='', linker_flags='', prefix=''):
+    dict[key] = {}
+    dict[key]['name'] = name
+    dict[key]['destdir'] = destdir
+    dict[key]['cpp_compiler'] = cpp_compiler
+    dict[key]['cpp_compiler_flags'] = cpp_compiler_flags
+    dict[key]['linker_flags'] = linker_flags
+    dict[key]['prefix'] = prefix
+    return dict
+
 supported_oses = OrderedDict()
-supported_oses['gentoo'] = {'name':'Gentoo', 'destdir':'DESTDIR'}
-supported_oses['debian'] = {'name':'Debian/Ubuntu', 'destdir':'install_root'}
+supported_oses=set_os_data(supported_oses, 'gentoo', 'Gentoo',         'DESTDIR',      'CXX', 'CXXFLAGS', 'LDFLAGS', 'PREFIX')
+supported_oses=set_os_data(supported_oses, 'debian', 'Debian/Ubuntu',  'install_root')
+
+print('supported_oses_gentoo_name = ' + supported_oses['gentoo']['name'])
 
 default_program_destdir = 'build'
 
@@ -41,3 +53,5 @@ print('will build: target = ' + program_target + ', source = ' + program_source)
 
 target = env.Program(target=program_target, source=program_source)
 Default(target)
+
+Alias("install", env.Install(dir=program_destdir, source=program_source))
