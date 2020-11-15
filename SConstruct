@@ -9,13 +9,13 @@ program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
 def set_os_data(name='', destdir='', cpp_compiler='', cpp_compiler_flags='', linker_flags='', prefix=''):
+    mydict = {}
     if not name:
-        print('set_os_data: name argument is not defined')
+        print('set_os_data: name argument is undefined or empty string')
         return mydict
     if not destdir:
-        print('set_os_data: destdir argument is not defined')
+        print('set_os_data: destdir argument is undefined or empty string')
         return mydict
-    mydict = {}
     mydict['name'] = name
     mydict['destdir'] = destdir
     mydict['cpp_compiler'] = cpp_compiler
