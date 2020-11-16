@@ -50,6 +50,7 @@ def set_program_destdir(supported_oses, program_builddir):
             print(this_destdir + ' not found')
     program_destdir = program_builddir
     print('program build directory will be used: ' + program_builddir)
+    print('Operating System not detected')
     return program_destdir
 
 def set_program_install_target(program_destdir, program_install_path):
