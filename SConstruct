@@ -13,13 +13,13 @@ variables_cache = Variables(variables_cache_file)
 
 def os_path_concat(*paths):
     joined = ''
-    for i, path in enumerate(paths, start=0):
-        if joined.endswith('/') and paths[i].startswith('/'):
-            fixed = paths[i][1:]
-            paths[i] = fixed
-        elif not joined.endswith('/') and not paths[i].startswith('/') and joined != '':
+    for path in paths:
+        if joined.endswith('/') and path.startswith('/'):
+            fixed = path[1:]
+            path = fixed
+        elif not joined.endswith('/') and not path.startswith('/') and joined != '':
             joined += '/'
-        joined += paths[i]
+        joined += path
     return joined
 
 def variables_cache_save(env, variables_cache, variables_cache_file):
