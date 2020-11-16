@@ -27,9 +27,9 @@ def set_os_data(variables_cache, name='', destdir='', prefix='', cpp_compiler=''
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
-    variables_cache.AddVariables(PathVariable('DESTDIR', 'intermediate install prefix', '', PathVariable.PathAccept)
+    variables_cache.AddVariables(PathVariable('DESTDIR', 'intermediate install prefix', '', PathVariable.PathAccept))
     mydict['prefix'] = prefix
-    variables_cache.AddVariables(PathVariable('PREFIX', 'install prefix', '/usr/local')
+    variables_cache.AddVariables(PathVariable('PREFIX', 'install prefix', '/usr/local'))
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
