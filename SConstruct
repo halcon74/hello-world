@@ -19,10 +19,10 @@ def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_fl
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
+    mydict['prefix'] = prefix
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
-    mydict['prefix'] = prefix
     return mydict
 
 supported_oses = OrderedDict()
