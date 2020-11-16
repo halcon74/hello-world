@@ -54,6 +54,7 @@ def set_program_destdir(supported_oses, program_builddir):
     return program_destdir
 
 def set_program_install_target(program_destdir, program_install_path):
+    program_install_target = os.path.join(program_destdir, program_install_path)
     if detected_os:
         this_prefix = supported_oses[detected_os]['prefix']
         program_prefix = ARGUMENTS.get(this_prefix)
@@ -61,10 +62,8 @@ def set_program_install_target(program_destdir, program_install_path):
             program_install_target = os.path.join(program_destdir, program_prefix, program_install_path)
             print(this_prefix + ' found and will be used: ' + program_prefix)
         else:
-            program_install_target = os.path.join(program_destdir, program_install_path)
             print(this_prefix + ' not found for Operating System: ' + detected_os)
     else:
-        program_install_target = os.path.join(program_destdir, program_install_path)
         print('no prefix will be used because Operating System was not detected')
     return program_install_target
 
