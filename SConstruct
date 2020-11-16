@@ -3,6 +3,7 @@
 
 from collections import OrderedDict
 
+# env['PREFIX'] and env['DESTDIR'] set in function set_program_install_target
 env = Environment()
 
 program_name = 'Hello_World'
@@ -43,7 +44,7 @@ supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 program_builddir = 'build'
 program_install_path = 'bin'
 
-# Set in _set_program_destdir()
+# Set in function _set_program_destdir
 detected_os = ''
 
 def _set_program_destdir(supported_oses, program_builddir):
