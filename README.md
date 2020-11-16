@@ -15,4 +15,4 @@ not have to patch it.
   
 In short, it turned into a project of learning more Python, SCons and Linux in general :)  
   
-There is a file docs/used_sources with a listing af all main materials that I've read during the work on this project.
+There is a file docs/used_sources with a listing af all main materials that I've looked at during the work on this project.
