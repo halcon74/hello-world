@@ -1,6 +1,6 @@
 #### "Hello World" in C++...
 
-Actually, this project has turned into someting greater.  
+Actually, this project has turned into something greater.  
   
 It happened so that, while reading the materials about C++, I found a good review about IDEs and build systems 
 for C++, after reading which I've chosen to work with qt-creator as IDE/editor and with SCons as build system...  
