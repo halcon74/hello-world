@@ -33,7 +33,7 @@ supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 program_builddir = 'build'
 program_install_path = 'bin'
 
-# set in set_program_destdir()
+# Set in set_program_destdir()
 detected_os = ''
 
 def set_program_destdir(supported_oses, program_builddir):
