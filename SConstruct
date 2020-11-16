@@ -57,14 +57,12 @@ def _set_program_destdir(supported_oses, program_builddir):
             global detected_os
             detected_os = key
             print('detected Operating System: ' + detected_os)
-            env['DESTDIR'] = program_destdir
             return program_destdir
         else:
             print(this_destdir + ' not found')
     program_destdir = program_builddir
     print('program build directory will be used: ' + program_builddir)
     print('Operating System not detected')
-    env['DESTDIR'] = program_destdir
     return program_destdir
 
 def set_program_install_target(supported_oses, program_builddir, program_install_path):
@@ -87,8 +85,7 @@ target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
-set_program_install_target(supported_oses, program_builddir, program_install_path)
-Alias("install", env.Install(dir=env['DESTDIR'], source=program_source))
+env['DESTDIR'] = set_program_install_target(supported_oses, program_builddir, program_install_path)
 print('will install: dir = ' + env['DESTDIR'] + ', source = ' + program_source)
 
-
+Alias("install", env.Install(dir=env['DESTDIR'], source=program_build_target))
