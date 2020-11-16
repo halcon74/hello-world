@@ -5,12 +5,21 @@
 		# -*- coding: utf-8 -*-
 	?
 
-2
+2 CLOSED RESOLVED
 	https://github.com/mixxxdj/mixxx/blob/main/SConscript
 	is this also needed
 		unix_share_path = os.path.join(install_root, env.get('SHAREDIR', default='share'))
 		unix_bin_path = os.path.join(install_root, env.get('BINDIR', default='bin'))
 	?
+		See NOTE 1
 	
-3
+3 CLOSED RESOLVED
 	to try to build in Gentoo (write an ebuild)
+
+4
+	to add support of 'CXX', 'CXXFLAGS', 'LDFLAGS'
+
+NOTES
+
+1
+	So far not needed
