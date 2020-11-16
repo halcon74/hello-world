@@ -54,13 +54,13 @@ def set_program_destdir(supported_oses, program_builddir):
     print('Operating System not detected')
     return program_destdir
 
-def set_program_install_target(program_destdir, program_install_path):
-    program_install_target = os.path.join(program_destdir, program_install_path)
+def set_program_install_target(program_destdir, program_install_path, program_name):
+    program_install_target = os.path.join(program_destdir, program_install_path, program_name)
     if detected_os:
         this_prefix = supported_oses[detected_os]['prefix']
         program_prefix = ARGUMENTS.get(this_prefix)
         if program_prefix:
-            program_install_target = os.path.join(program_destdir, program_prefix, program_install_path)
+            program_install_target = os.path.join(program_destdir, program_prefix, program_install_path, program_name)
             print(this_prefix + ' found and will be used: ' + program_prefix)
         else:
             print(this_prefix + ' not found for Operating System: ' + detected_os)
@@ -74,7 +74,7 @@ Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
 program_destdir = set_program_destdir(supported_oses, program_builddir)
-program_install_target = set_program_install_target(program_destdir, program_install_path)
+program_install_target = set_program_install_target(program_destdir, program_install_path, program_name)
 Alias("install", env.Install(dir=program_install_target, source=program_source))
 print('will install: dir = ' + program_install_target + ', source = ' + program_source)
 
