@@ -12,12 +12,12 @@ program_source = 'src/main.cpp'
 variables_cache_file = 'scons_variables_cache.conf'
 variables_cache = Variables(variables_cache_file)
 
-def _variables_cache_save(variables_cache):
+def variables_cache_save(env, variables_cache, variables_cache_file):
     variables_cache.Update(env)
-    variables_cache.Save('scache.conf', env)
+    variables_cache.Save(variables_cache_file, env)
     Help(variables_cache.GenerateHelpText(env))
 
-def set_os_data(variables_cache, name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
+def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
         print('set_os_data: name argument is undefined or empty string')
@@ -33,13 +33,13 @@ def set_os_data(variables_cache, name='', destdir='', prefix='', cpp_compiler=''
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
-    _variables_cache_save(variables_cache)
     return mydict
 
 supported_oses = OrderedDict()
 # On each Operating System - its own set of variables
-supported_oses['gentoo']=set_os_data(variables_cache, 'Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-supported_oses['debian']=set_os_data(variables_cache, 'Debian/Ubuntu',  'install_root')
+supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
+variables_cache_save(env, variables_cache, variables_cache_file)
 
 program_builddir = 'build'
 program_install_path = 'bin'
@@ -67,25 +67,25 @@ def _set_program_destdir(supported_oses, program_builddir):
 
 def set_program_install_target(supported_oses, program_builddir, program_install_path):
     program_destdir = _set_program_destdir(supported_oses, program_builddir)
-    program_install_target = os.path.join(program_destdir, program_install_path)
+    env['DESTDIR'] = os.path.join(program_destdir, program_install_path)
     if detected_os:
         this_prefix = supported_oses[detected_os]['prefix']
         program_prefix = ARGUMENTS.get(this_prefix)
         if program_prefix:
-            program_install_target = os.path.join(program_destdir, program_prefix, program_install_path)
-            print(this_prefix + ' found and will be used: ' + program_prefix)
+            env['PREFIX'] = program_prefix
+            env['DESTDIR'] = os.path.join(program_destdir, program_prefix, program_install_path)
+            print(this_prefix + ' found and will be used: ' + env['PREFIX'])
         else:
             print(this_prefix + ' not found for Operating System: ' + detected_os)
     else:
         print('no prefix will be used because Operating System was not detected')
-    return program_install_target
 
 program_build_target = os.path.join(program_builddir, program_name)
 target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
-env['DESTDIR'] = set_program_install_target(supported_oses, program_builddir, program_install_path)
-print('will install: dir = ' + env['DESTDIR'] + ', source = ' + program_source)
+set_program_install_target(supported_oses, program_builddir, program_install_path)
+print('will install: dir = ' + env['DESTDIR'] + ', source = ' + program_build_target)
 
 Alias("install", env.Install(dir=env['DESTDIR'], source=program_build_target))
