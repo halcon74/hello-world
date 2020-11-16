@@ -30,28 +30,46 @@ supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'CXX', 'C
 supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 
 program_builddir = 'build'
+program_install_path = 'bin'
 
-def set_install_target(supported_oses, program_builddir):
+# set in set_program_destdir()
+global detected_os
+detected_os = ''
+
+def set_program_destdir(supported_oses, program_builddir):
     for key, nested_dict in supported_oses.items():
         this_destdir = nested_dict['destdir']
         print('checking for ' + this_destdir + '... (are we on ' + nested_dict['name'] + '?)')
-        install_target = ARGUMENTS.get(this_destdir)
-        if install_target:
-            print(this_destdir + ' found and will be used: ' + install_target)
-            return install_target
+        program_destdir = ARGUMENTS.get(this_destdir)
+        if program_destdir:
+            print(this_destdir + ' found and will be used: ' + program_destdir)
+            detected_os = key
+            print('detected Operating System: ' + detected_os)
+            return program_destdir
         else:
             print(this_destdir + ' not found')
-    install_target = program_builddir
+    program_destdir = program_builddir
     print('program build directory will be used: ' + program_builddir)
-    return install_target
+    return program_destdir
+
+def set_program_install_target(program_destdir, program_install_path):
+    if detected_os:
+        prefix = supported_oses[detected_os]['prefix']
+        print(prefix + ' found and will be used: ' + prefix)
+        program_install_target = os.path.join(program_destdir, supported_oses[detected_os]['prefix'], program_install_path)
+    else:
+        print('no prefix will be used because Operating System was not detected')
+        program_install_target = os.path.join(program_destdir, program_install_path)
+    return program_install_target
 
 build_target = os.path.join(program_builddir, program_name)
 target = env.Program(target=build_target, source=program_source)
 Default(target)
 print('will build: target = ' + build_target + ', source = ' + program_source)
 
-install_target = set_install_target(supported_oses, program_builddir)
-Alias("install", env.Install(dir=install_target, source=program_source))
-print('will install: dir = ' + install_target + ', source = ' + program_source)
+program_destdir = set_program_destdir(supported_oses, program_builddir)
+program_install_target = set_program_install_target(program_destdir, program_install_path)
+Alias("install", env.Install(dir=program_install_target, source=program_source))
+print('will install: dir = ' + program_install_target + ', source = ' + program_source)
 
 
