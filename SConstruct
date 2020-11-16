@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 from collections import OrderedDict
+import os
 
 env = Environment()
 
@@ -30,13 +31,6 @@ supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 
 program_builddir = 'build'
 
-def set_build_target(program_builddir, program_name):
-    if program_builddir.endswith('/'):
-        build_target = program_builddir + program_name
-    else:
-        build_target = program_builddir + '/' + program_name
-    return build_target
-
 def set_install_target(supported_oses, program_builddir):
     for key, nested_dict in supported_oses.items():
         this_destdir = nested_dict['destdir']
@@ -51,7 +45,7 @@ def set_install_target(supported_oses, program_builddir):
     print('program build directory will be used: ' + program_builddir)
     return install_target
 
-build_target = set_build_target(program_builddir, program_name)
+build_target = os.path.join(program_builddir, program_name)
 target = env.Program(target=build_target, source=program_source)
 Default(target)
 print('will build: target = ' + build_target + ', source = ' + program_source)
