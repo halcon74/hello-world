@@ -9,7 +9,7 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-def set_os_data(name='', destdir='', cpp_compiler='', cpp_compiler_flags='', linker_flags='', prefix=''):
+def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
         print('set_os_data: name argument is undefined or empty string')
@@ -26,14 +26,13 @@ def set_os_data(name='', destdir='', cpp_compiler='', cpp_compiler_flags='', lin
     return mydict
 
 supported_oses = OrderedDict()
-supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'CXX', 'CXXFLAGS', 'LDFLAGS', 'PREFIX')
+supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
 supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 
 program_builddir = 'build'
 program_install_path = 'bin'
 
 # set in set_program_destdir()
-global detected_os
 detected_os = ''
 
 def set_program_destdir(supported_oses, program_builddir):
@@ -43,6 +42,7 @@ def set_program_destdir(supported_oses, program_builddir):
         program_destdir = ARGUMENTS.get(this_destdir)
         if program_destdir:
             print(this_destdir + ' found and will be used: ' + program_destdir)
+            global detected_os
             detected_os = key
             print('detected Operating System: ' + detected_os)
             return program_destdir
@@ -55,12 +55,17 @@ def set_program_destdir(supported_oses, program_builddir):
 
 def set_program_install_target(program_destdir, program_install_path):
     if detected_os:
-        prefix = supported_oses[detected_os]['prefix']
-        print(prefix + ' found and will be used: ' + prefix)
-        program_install_target = os.path.join(program_destdir, supported_oses[detected_os]['prefix'], program_install_path)
+        this_prefix = supported_oses[detected_os]['prefix']
+        program_prefix = ARGUMENTS.get(this_prefix)
+        if program_prefix:
+            program_install_target = os.path.join(program_destdir, program_prefix, program_install_path)
+            print(this_prefix + ' found and will be used: ' + program_prefix)
+        else:
+            program_install_target = os.path.join(program_destdir, program_install_path)
+            print(this_prefix + ' not found for Operating System: ' + detected_os)
     else:
-        print('no prefix will be used because Operating System was not detected')
         program_install_target = os.path.join(program_destdir, program_install_path)
+        print('no prefix will be used because Operating System was not detected')
     return program_install_target
 
 build_target = os.path.join(program_builddir, program_name)
