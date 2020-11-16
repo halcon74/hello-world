@@ -26,6 +26,7 @@ def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_fl
     return mydict
 
 supported_oses = OrderedDict()
+# On each Operating System - its own set of variables
 supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
 supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
 
