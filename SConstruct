@@ -44,10 +44,10 @@ supported_oses['debian']=set_os_data(variables_cache, 'Debian/Ubuntu',  'install
 program_builddir = 'build'
 program_install_path = 'bin'
 
-# Set in set_program_destdir()
+# Set in _set_program_destdir()
 detected_os = ''
 
-def set_program_destdir(supported_oses, program_builddir):
+def _set_program_destdir(supported_oses, program_builddir):
     for key, nested_dict in supported_oses.items():
         this_destdir = nested_dict['destdir']
         print('checking for ' + this_destdir + '... (are we on ' + nested_dict['name'] + '?)')
@@ -65,7 +65,8 @@ def set_program_destdir(supported_oses, program_builddir):
     print('Operating System not detected')
     return program_destdir
 
-def set_program_install_target(program_destdir, program_install_path):
+def set_program_install_target(supported_oses, program_builddir, program_install_path):
+    program_destdir = _set_program_destdir(supported_oses, program_builddir)
     program_install_target = os.path.join(program_destdir, program_install_path)
     if detected_os:
         this_prefix = supported_oses[detected_os]['prefix']
@@ -84,9 +85,7 @@ target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
-program_destdir = set_program_destdir(supported_oses, program_builddir)
-program_install_target = set_program_install_target(program_destdir, program_install_path)
-Alias("install", env.Install(dir=program_install_target, source=program_source))
-print('will install: dir = ' + program_install_target + ', source = ' + program_source)
+Alias("install", env.Install(dir=set_program_install_target(supported_oses, program_builddir, program_install_path), source=program_source))
+print('will install: dir = ' + set_program_install_target(supported_oses, program_builddir, program_install_path) + ', source = ' + program_source)
 
 
