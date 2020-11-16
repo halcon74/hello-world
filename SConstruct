@@ -9,7 +9,15 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
+variables_cache_file = 'scons_variables_cache.conf'
+variables_cache = Variables(variables_cache_file)
+
+def _variables_cache_save(variables_cache):
+    variables_cache.Update(env)
+    variables_cache.Save('scache.conf', env)
+    Help(variables_cache.GenerateHelpText(env))
+
+def set_os_data(variables_cache, name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
         print('set_os_data: name argument is undefined or empty string')
@@ -19,16 +27,19 @@ def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_fl
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
+    variables_cache.AddVariables(PathVariable('DESTDIR', 'intermediate install prefix', '', PathVariable.PathAccept)
     mydict['prefix'] = prefix
+    variables_cache.AddVariables(PathVariable('PREFIX', 'install prefix', '/usr/local')
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
+    _variables_cache_save(variables_cache)
     return mydict
 
 supported_oses = OrderedDict()
 # On each Operating System - its own set of variables
-supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
+supported_oses['gentoo']=set_os_data(variables_cache, 'Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+supported_oses['debian']=set_os_data(variables_cache, 'Debian/Ubuntu',  'install_root')
 
 program_builddir = 'build'
 program_install_path = 'bin'
