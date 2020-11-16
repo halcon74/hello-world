@@ -2,3 +2,4 @@ Hello_World.pro.user
 .sconsign.dblite
 build/Hello_World
 src/main.o
+scons_variables_cache.conf

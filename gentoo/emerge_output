@@ -1,0 +1,94 @@
+# emerge -v Hello_World
+
+These are the packages that would be merged, in order:
+
+Calculating dependencies... done!
+[ebuild  N    *] app-misc/Hello_World-9999::localrepo  0 KiB
+
+Total: 1 package (1 new), Size of downloads: 0 KiB
+
+
+>>> Verifying ebuild manifests
+
+>>> Emerging (1 of 1) app-misc/Hello_World-9999::localrepo
+ * Using python3.7 to build
+>>> Unpacking source...
+ * Repository id: halcon74_hello-world.git
+ * To override fetched repository properties, use:
+ *   EGIT_OVERRIDE_REPO_HALCON74_HELLO_WORLD
+ *   EGIT_OVERRIDE_BRANCH_HALCON74_HELLO_WORLD
+ *   EGIT_OVERRIDE_COMMIT_HALCON74_HELLO_WORLD
+ *   EGIT_OVERRIDE_COMMIT_DATE_HALCON74_HELLO_WORLD
+ * 
+ * Fetching https://github.com/halcon74/hello-world.git ...
+git fetch https://github.com/halcon74/hello-world.git +HEAD:refs/git-r3/HEAD
+git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
+ * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
+git checkout --quiet refs/git-r3/HEAD
+GIT update -->
+   repository:               https://github.com/halcon74/hello-world.git
+   at the commit:            01eb485d1509ab91a48424b5cc1fbc1e2635225d
+>>> Source unpacked in /var/tmp/portage/app-misc/Hello_World-9999/work
+>>> Preparing source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
+>>> Source prepared.
+>>> Configuring source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
+>>> Source configured.
+>>> Compiling source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
+scons -j15 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe LDFLAGS=-Wl,-O1 -Wl,--as-needed
+scons: Reading SConscript files ...
+will build: target = build/Hello_World, source = src/main.cpp
+checking for DESTDIR... (are we on Gentoo?)
+DESTDIR found and will be used: /var/tmp/portage/app-misc/Hello_World-9999/image
+detected Operating System: gentoo
+PREFIX found and will be used: /usr
+will install: dir = /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin, source = build/Hello_World
+scons: done reading SConscript files.
+scons: Building targets ...
+g++ -o src/main.o -c -O2 -march=native -pipe src/main.cpp
+g++ -o build/Hello_World -Wl,-O1 -Wl,--as-needed src/main.o
+scons: done building targets.
+>>> Source compiled.
+>>> Test phase [not enabled]: app-misc/Hello_World-9999
+
+>>> Install app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
+scons -j15 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe LDFLAGS=-Wl,-O1 -Wl,--as-needed install
+scons: Reading SConscript files ...
+will build: target = build/Hello_World, source = src/main.cpp
+checking for DESTDIR... (are we on Gentoo?)
+DESTDIR found and will be used: /var/tmp/portage/app-misc/Hello_World-9999/image
+detected Operating System: gentoo
+PREFIX found and will be used: /usr
+will install: dir = /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin, source = build/Hello_World
+scons: done reading SConscript files.
+scons: Building targets ...
+Install file: "build/Hello_World" as "/var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin/Hello_World"
+scons: done building targets.
+>>> Completed installing app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
+
+ * Final size of build directory: 240 KiB
+ * Final size of installed tree:   52 KiB
+
+strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R .comment -R .GCC.command.line -R .note.gnu.gold-version
+   /usr/bin/Hello_World
+
+>>> Installing (1 of 1) app-misc/Hello_World-9999::localrepo
+ * checking 3 files for package collisions
+>>> Merging app-misc/Hello_World-9999 to /
+--- /usr/
+--- /usr/bin/
+>>> /usr/bin/Hello_World
+--- /usr/share/
+--- /usr/share/doc/
+>>> /usr/share/doc/Hello_World-9999/
+>>> /usr/share/doc/Hello_World-9999/README.md.bz2
+>>> /usr/share/doc/Hello_World-9999/used_sources.bz2
+>>> app-misc/Hello_World-9999 merged.
+
+>>> Recording app-misc/Hello_World in "world" favorites file...
+>>> Auto-cleaning packages...
+
+>>> No outdated packages were found on your system.
+
+ * GNU info directory index is up-to-date.
+
+#
