@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 
 from collections import OrderedDict
-import os
 
 env = Environment()
 
@@ -11,6 +10,17 @@ program_source = 'src/main.cpp'
 
 variables_cache_file = 'scons_variables_cache.conf'
 variables_cache = Variables(variables_cache_file)
+
+def os_path_concat(*paths):
+    joined = ''
+    for i, path in enumerate(paths, start=0):
+        if joined.endswith('/') and paths[i].startswith('/'):
+            fixed = paths[i][1:]
+            paths[i] = fixed
+        elif not joined.endswith('/') and not paths[i].startswith('/') and joined != '':
+            joined += '/'
+        joined += paths[i]
+    return joined
 
 def variables_cache_save(env, variables_cache, variables_cache_file):
     variables_cache.Update(env)
@@ -67,20 +77,20 @@ def _set_program_destdir(supported_oses, program_builddir):
 
 def set_program_install_target(supported_oses, program_builddir, program_install_path):
     program_destdir = _set_program_destdir(supported_oses, program_builddir)
-    env['DESTDIR'] = os.path.join(program_destdir, program_install_path)
+    env['DESTDIR'] = os_path_concat(program_destdir, program_install_path)
     if detected_os:
         this_prefix = supported_oses[detected_os]['prefix']
         program_prefix = ARGUMENTS.get(this_prefix)
         if program_prefix:
             env['PREFIX'] = program_prefix
-            env['DESTDIR'] = os.path.join(program_destdir, program_prefix, program_install_path)
+            env['DESTDIR'] = os_path_concat(program_destdir, program_prefix, program_install_path)
             print(this_prefix + ' found and will be used: ' + env['PREFIX'])
         else:
             print(this_prefix + ' not found for Operating System: ' + detected_os)
     else:
         print('no prefix will be used because Operating System was not detected')
 
-program_build_target = os.path.join(program_builddir, program_name)
+program_build_target = os_path_concat(program_builddir, program_name)
 target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
