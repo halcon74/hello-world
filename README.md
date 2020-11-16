@@ -9,7 +9,7 @@ I've liked much that SCons is not just another build system, but *a build system
 this sense it is similar to Gentoo which is not just another distro, but a *meta-distro*, or a *distro designer*, in which  
 you must make all the decisions yourself and which gives you maximum flexibility.  
   
-SCons also is good to learn what job a Gentoo (or Debian) maintainer of a package should do in order to make the  
+SCons is also good to learn what job a Gentoo (or other distro's) maintainer of a package should do in order to get the  
 package built correctly. I would like to write the SCons script so that maintainers do not have to patch it.  
   
 In short, it turned into a project of learning more Python, SCons and Linux in general :)  
