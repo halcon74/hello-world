@@ -68,10 +68,10 @@ def set_program_install_target(program_destdir, program_install_path):
         print('no prefix will be used because Operating System was not detected')
     return program_install_target
 
-build_target = os.path.join(program_builddir, program_name)
-target = env.Program(target=build_target, source=program_source)
+program_build_target = os.path.join(program_builddir, program_name)
+target = env.Program(target=program_build_target, source=program_source)
 Default(target)
-print('will build: target = ' + build_target + ', source = ' + program_source)
+print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
 program_destdir = set_program_destdir(supported_oses, program_builddir)
 program_install_target = set_program_install_target(program_destdir, program_install_path)
