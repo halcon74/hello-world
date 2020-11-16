@@ -2,8 +2,8 @@
 
 Actually, this project has turned into someting greater.  
   
-It happened so that, while reading the materials about C++, I found a good review about IDEs-editors / build systems 
-for C++, after reading which I've chosen to work with qt-creator as IDE-editor and with SCons as build system...  
+It happened so that, while reading the materials about C++, I found a good review about IDEs and build systems 
+for C++, after reading which I've chosen to work with qt-creator as IDE/editor and with SCons as build system...  
   
 I've liked much that SCons is not just another build system, but a *build system creation kit*. In my humble opinion, in 
 this sense it is similar to Gentoo which is not just another distro, but a *meta-distro*, or a *distro designer*, in which 
