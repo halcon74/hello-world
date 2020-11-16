@@ -8,9 +8,6 @@ env = Environment()
 program_name = 'Hello_World'
 program_source = 'src/main.cpp'
 
-variables_cache_file = 'scons_variables_cache.conf'
-variables_cache = Variables(variables_cache_file)
-
 def os_path_concat(*paths):
     joined = ''
     for path in paths:
@@ -22,11 +19,6 @@ def os_path_concat(*paths):
         joined += path
     return joined
 
-def variables_cache_save(env, variables_cache, variables_cache_file):
-    variables_cache.Update(env)
-    variables_cache.Save(variables_cache_file, env)
-    Help(variables_cache.GenerateHelpText(env))
-
 def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
@@ -37,9 +29,7 @@ def set_os_data(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_fl
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
-    variables_cache.AddVariables(PathVariable('DESTDIR', 'intermediate install prefix', '', PathVariable.PathAccept))
     mydict['prefix'] = prefix
-    variables_cache.AddVariables(PathVariable('PREFIX', 'install prefix', '/usr/local'))
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
@@ -49,7 +39,6 @@ supported_oses = OrderedDict()
 # On each Operating System - its own set of variables
 supported_oses['gentoo']=set_os_data('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
 supported_oses['debian']=set_os_data('Debian/Ubuntu',  'install_root')
-variables_cache_save(env, variables_cache, variables_cache_file)
 
 program_builddir = 'build'
 program_install_path = 'bin'
