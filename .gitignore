@@ -1,5 +1,6 @@
 Hello_World.pro.user
 .sconsign.dblite
-build/Hello_World
 src/main.o
+build/Hello_World
+usr/bin/Hello_World
 scons_variables_cache.conf
