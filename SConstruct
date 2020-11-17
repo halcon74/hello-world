@@ -95,8 +95,8 @@ def populate_install_args(global_vars):
 install_args_retrieved = ARGUMENTS.get('INSTALLARGS')
 if install_args_retrieved:
     print('INSTALLARGS retrieved successfully; no need for re-configuring!')
-    Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
-    print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
+    Alias("install", env.Install(dir = install_args_retrieved['dir'], source = install_args_retrieved['source']))
+    print('will install: dir = ' + install_args_retrieved['dir'] + ', source = ' + install_args_retrieved['source'])
 else:
     print('INSTALLARGS not retrieved; configuring...')
     global_vars = populate_global_vars()
