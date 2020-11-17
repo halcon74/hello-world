@@ -3,7 +3,7 @@
 
 from collections import OrderedDict
 
-# env['PREFIX'] and env['DESTDIR'] are set in function set_program_install_target
+# env['PREFIX'] and env['DESTDIR'] are set in function set_env_prefix_and_destdir
 env = Environment()
 
 program_name = 'Hello_World'
@@ -61,7 +61,7 @@ def _get_os_destdir_argvalue(supported_oses, program_builddir):
     print('Operating System not detected')
     return os_destdir_argvalue
 
-def set_program_install_target(supported_oses, program_builddir, program_install_path):
+def set_env_prefix_and_destdir(supported_oses, program_builddir, program_install_path):
     os_destdir_argvalue = _get_os_destdir_argvalue(supported_oses, program_builddir)
     env['DESTDIR'] = os_path_join(os_destdir_argvalue, program_install_path)
     if detected_os:
@@ -86,6 +86,6 @@ target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
 
-set_program_install_target(supported_oses, program_builddir, program_install_path)
+set_env_prefix_and_destdir(supported_oses, program_builddir, program_install_path)
 Alias("install", env.Install(dir=env['DESTDIR'], source=program_build_target))
 print('will install: dir = ' + env['DESTDIR'] + ', source = ' + program_build_target)
