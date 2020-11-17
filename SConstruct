@@ -50,8 +50,8 @@
 # That is, if you run
 # scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL="1"
 # as the first run (or after deleting the variables-cache file)
-# the script will be going to COMPILE, not to INSTALL (will print
-# a message about it).
+# the script will be going to COMPILE (and to get and save the variables
+# needed for INSTALL), not to INSTALL.
 #
 # IMHO, this algorithm is consistent enough.
 
