@@ -79,7 +79,7 @@ def populate_global_vars():
         'compile_path' : 'build',
         'install_path' : 'bin',
         'binary_name' : 'Hello_World',
-        # Set in function configure_and_compile
+        # Set in function save_variables_for_install
         'supported_oses' : OrderedDict(),
         # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
         'detected_os' : '',
