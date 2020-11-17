@@ -13,17 +13,17 @@
 #
 # With this file, no redundant actions (that are usually called
 # 're-configuring' will be performed during the second and all the
-# consequent runs (will be performed # only populating global variables
+# consequent runs (will be performed only populating global variables
 # and reading variables cache).
 #
 # This file contains variables that are needed for INSTALL action only,
 # not for COMPILE action.
 #
-# But the COMPILE action can be done after creating this file;
+# The COMPILE action can be done after creating this file as well;
 # this file does not make any harm for it.
 #
-# Moreover, this file makes the COMPILE actions faster, because the
-# script will not try to get variables needed for COMPILE action and
+# Moreover, this file makes the COMPILE action faster, because the
+# script will not try to get variables needed for INSTALL action and
 # to save them in the variables-cache file.
 #
 # THE MOST IMPORTANT PART: this script does not contain an usual
