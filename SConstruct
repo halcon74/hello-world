@@ -92,13 +92,15 @@ def populate_install_args(global_vars):
     }
     return install_args
 
-install_args_retrieved = ARGUMENTS.get('INSTALLARGS')
-if install_args_retrieved:
-    print('INSTALLARGS retrieved successfully; no need for re-configuring!')
-    Alias("install", env.Install(dir = install_args_retrieved['dir'], source = install_args_retrieved['source']))
-    print('will install: dir = ' + install_args_retrieved['dir'] + ', source = ' + install_args_retrieved['source'])
+variables_cache_file = 'scons_variables_cache.conf'
+install_args = Variables(variables_cache_file)
+install_args.Add('MYDIR', "cached 'dir' argument for env.Install", '')
+install_args.Add('MYSOURCE', "cached 'source' argument for env.Install", '')
+env = Environment(variables=install_args)
+if env['MYDIR'] and env['MYSOURCE']:
+    print('install_args retrieved successfully; no need for re-configuring!')
 else:
-    print('INSTALLARGS not retrieved; configuring...')
+    print('install_args not retrieved; configuring...')
     global_vars = populate_global_vars()
     # On each Operating System - its own set of variables
     global_vars['supported_oses']['gentoo'] = populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
@@ -109,7 +111,10 @@ else:
     print('will build: target = ' + global_vars['build_target'] + ', source = ' + global_vars['source_full'])
 
     set_env_prefix_and_destdir(global_vars)
-    Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
-    print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
-    install_args = populate_install_args(global_vars)
-    Return('install_args')
+    env['MYDIR'] = env['DESTDIR']
+    env['MYSOURCE'] = global_vars['build_target']
+    install_args.Update(env)
+    install_args.Save(variables_cache_file, env)
+
+print('will install: dir = ' + env['MYDIR'] + ', source = ' + env['MYSOURCE'])
+Alias("install", env.Install(dir = env['MYDIR'], source = env['MYSOURCE']))
