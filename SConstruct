@@ -56,14 +56,14 @@ def _get_os_destdir_argvalue(global_vars):
         print('checking for ' + os_destdir_argname + '... (are we on ' + nested_dict['name'] + '?)')
         os_destdir_argvalue = ARGUMENTS.get(os_destdir_argname)
         if os_destdir_argvalue:
-            print(os_destdir_argname + ' found and will be used: ' + os_destdir_argvalue)
+            print(os_destdir_argname + ' found and used: ' + os_destdir_argvalue)
             global_vars['detected_os'] = key
             print('detected Operating System: ' + global_vars['detected_os'])
             return os_destdir_argvalue
         else:
             print(os_destdir_argname + ' not found')
     os_destdir_argvalue = global_vars['build_path']
-    print('program build path will be used: ' + os_destdir_argvalue)
+    print('program build path used: ' + os_destdir_argvalue)
     print('Operating System not detected')
     return os_destdir_argvalue
 
@@ -77,11 +77,11 @@ def set_env_prefix_and_destdir(global_vars):
         if os_prefix_argvalue:
             env['PREFIX'] = os_prefix_argvalue
             env['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, env['PREFIX'], global_vars['install_path'])
-            print(os_prefix_argname + ' found and will be used: ' + env['PREFIX'])
+            print(os_prefix_argname + ' found and used: ' + env['PREFIX'])
         else:
             print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
     else:
-        print('no prefix will be used because Operating System was not detected')
+        print('no prefix used because Operating System was not detected')
 
 global_vars = populate_global_vars()
 # On each Operating System - its own set of variables
