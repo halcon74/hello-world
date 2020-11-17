@@ -71,13 +71,15 @@ def set_env_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_os_destdir_argvalue(global_vars)
     detected_os = global_vars['detected_os']
     env['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
+    print("until prefix is found, env['DESTDIR'] is set for default value without prefix: " + env['DESTDIR'])
     if detected_os:
         os_prefix_argname = global_vars['supported_oses'][detected_os]['prefix']
         os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
         if os_prefix_argvalue:
             env['PREFIX'] = os_prefix_argvalue
             env['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, env['PREFIX'], global_vars['install_path'])
-            print(os_prefix_argname + ' found and used: ' + env['PREFIX'])
+            print(os_prefix_argname + ' found and used: ' + env['PREFIX'] + "")
+            print("env['DESTDIR'] is reset using prefix: " + env['DESTDIR'])
         else:
             print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
     else:
