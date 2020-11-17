@@ -16,7 +16,7 @@ detected_os = ''
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
-def os_path_join(*paths):
+def myown_os_path_join(*paths):
     joined = ''
     for path in paths:
         if joined.endswith('/') and path.startswith('/'):
@@ -27,13 +27,13 @@ def os_path_join(*paths):
         joined += path
     return joined
 
-def set_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
+def populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
-        print('set_os_dict: name argument is undefined or empty string')
+        print('populate_os_dict: name argument is undefined or empty string')
         return mydict
     if not destdir:
-        print('set_os_dict: destdir argument is undefined or empty string')
+        print('populate_os_dict: destdir argument is undefined or empty string')
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
@@ -63,13 +63,13 @@ def _get_os_destdir_argvalue(supported_oses, program_builddir):
 
 def set_env_prefix_and_destdir(supported_oses, program_builddir, program_install_path):
     os_destdir_argvalue = _get_os_destdir_argvalue(supported_oses, program_builddir)
-    env['DESTDIR'] = os_path_join(os_destdir_argvalue, program_install_path)
+    env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, program_install_path)
     if detected_os:
         os_prefix_argname = supported_oses[detected_os]['prefix']
         os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
         if os_prefix_argvalue:
             env['PREFIX'] = os_prefix_argvalue
-            env['DESTDIR'] = os_path_join(os_destdir_argvalue, os_prefix_argvalue, program_install_path)
+            env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, os_prefix_argvalue, program_install_path)
             print(os_prefix_argname + ' found and will be used: ' + env['PREFIX'])
         else:
             print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
@@ -78,10 +78,10 @@ def set_env_prefix_and_destdir(supported_oses, program_builddir, program_install
 
 supported_oses = OrderedDict()
 # On each Operating System - its own set of variables
-supported_oses['gentoo']=set_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-supported_oses['debian']=set_os_dict('Debian/Ubuntu',  'install_root')
+supported_oses['gentoo']=populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+supported_oses['debian']=populate_os_dict('Debian/Ubuntu',  'install_root')
 
-program_build_target = os_path_join(program_builddir, program_name)
+program_build_target = myown_os_path_join(program_builddir, program_name)
 target = env.Program(target=program_build_target, source=program_source)
 Default(target)
 print('will build: target = ' + program_build_target + ', source = ' + program_source)
