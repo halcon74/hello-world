@@ -8,7 +8,7 @@ env = Environment()
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
-def myown_os_path_join(*paths):
+def _myown_os_path_join(*paths):
     joined = ''
     for path in paths:
         if joined.endswith('/') and path.startswith('/'):
@@ -30,8 +30,8 @@ def populate_global_vars():
         # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
         'detected_os' : ''
     }
-    mydict['source_full'] = myown_os_path_join(mydict['source_path'], mydict['source_name'])
-    mydict['build_target'] = myown_os_path_join(mydict['build_path'], mydict['binary_name'])
+    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
+    mydict['build_target'] = _myown_os_path_join(mydict['build_path'], mydict['binary_name'])
     return mydict
 
 def populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
@@ -70,13 +70,13 @@ def _get_os_destdir_argvalue(global_vars):
 def set_env_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_os_destdir_argvalue(global_vars)
     detected_os = global_vars['detected_os']
-    env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
+    env['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
     if detected_os:
         os_prefix_argname = global_vars['supported_oses'][detected_os]['prefix']
         os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
         if os_prefix_argvalue:
             env['PREFIX'] = os_prefix_argvalue
-            env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, env['PREFIX'], global_vars['install_path'])
+            env['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, env['PREFIX'], global_vars['install_path'])
             print(os_prefix_argname + ' found and will be used: ' + env['PREFIX'])
         else:
             print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
