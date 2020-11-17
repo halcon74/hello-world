@@ -85,13 +85,6 @@ def set_env_prefix_and_destdir(global_vars):
     else:
         print('no prefix used because Operating System was not detected')
 
-def populate_install_args(global_vars):
-    install_args = {
-        'dir' : env['DESTDIR'],
-        'source' : global_vars['build_target']
-    }
-    return install_args
-
 variables_cache_file = 'scons_variables_cache.conf'
 install_args = Variables(variables_cache_file)
 install_args.Add('MYDIR', "cached 'dir' argument for env.Install", '')
