@@ -11,7 +11,7 @@ program_source = 'src/main.cpp'
 program_builddir = 'build'
 program_install_path = 'bin'
 
-# Set in function _get_os_destdir_argvalue
+# Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
 detected_os = ''
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
