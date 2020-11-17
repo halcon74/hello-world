@@ -22,9 +22,9 @@
 # The COMPILE action can be done after creating this file as well;
 # this file does not make any harm for it.
 #
-# Moreover, this file makes the COMPILE action faster, because the
-# script will not try to get variables needed for INSTALL action and
-# to save them in the variables-cache file.
+# Moreover, this file makes the consequent compiling runs faster,
+# because the script will not try to get variables needed for
+# INSTALL action and to save them in the variables-cache file.
 #
 # THE MOST IMPORTANT PART: this script does not contain an usual
 # Alias "install", because I prefer to use command-line arguments
