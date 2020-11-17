@@ -11,7 +11,7 @@ program_source = 'src/main.cpp'
 program_builddir = 'build'
 program_install_path = 'bin'
 
-# Set in function get_os_destdir_argvalue
+# Set in function _get_os_destdir_argvalue
 detected_os = ''
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
@@ -43,7 +43,7 @@ def set_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_fl
     mydict['linker_flags'] = linker_flags
     return mydict
 
-def get_os_destdir_argvalue(supported_oses, program_builddir):
+def _get_os_destdir_argvalue(supported_oses, program_builddir):
     for key, nested_dict in supported_oses.items():
         os_destdir_argname = nested_dict['destdir']
         print('checking for ' + os_destdir_argname + '... (are we on ' + nested_dict['name'] + '?)')
@@ -62,7 +62,7 @@ def get_os_destdir_argvalue(supported_oses, program_builddir):
     return os_destdir_argvalue
 
 def set_program_install_target(supported_oses, program_builddir, program_install_path):
-    os_destdir_argvalue = get_os_destdir_argvalue(supported_oses, program_builddir)
+    os_destdir_argvalue = _get_os_destdir_argvalue(supported_oses, program_builddir)
     env['DESTDIR'] = os_path_join(os_destdir_argvalue, program_install_path)
     if detected_os:
         os_prefix_argname = supported_oses[detected_os]['prefix']
