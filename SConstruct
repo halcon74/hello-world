@@ -85,15 +85,32 @@ def set_env_prefix_and_destdir(global_vars):
     else:
         print('no prefix used because Operating System was not detected')
 
-global_vars = populate_global_vars()
-# On each Operating System - its own set of variables
-global_vars['supported_oses']['gentoo'] = populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-global_vars['supported_oses']['debian'] = populate_os_dict('Debian/Ubuntu',  'install_root')
+def populate_install_args(global_vars):
+    install_args = {
+        'dir' : env['DESTDIR'],
+        'source' : global_vars['build_target']
+    }
+    return install_args
 
-target = env.Program(target = global_vars['build_target'], source = global_vars['source_full'])
-Default(target)
-print('will build: target = ' + global_vars['build_target'] + ', source = ' + global_vars['source_full'])
+install_args_retrieved = ARGUMENTS.get('INSTALLARGS')
+if install_args_retrieved:
+    print('INSTALLARGS retrieved successfully; no need for re-configuring!')
+    Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
+    print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
+else:
+    print('INSTALLARGS not retrieved; configuring...')
+    global_vars = populate_global_vars()
+    # On each Operating System - its own set of variables
+    global_vars['supported_oses']['gentoo'] = populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+    global_vars['supported_oses']['debian'] = populate_os_dict('Debian/Ubuntu',  'install_root')
 
-set_env_prefix_and_destdir(global_vars)
-Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
-print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
+    target = env.Program(target = global_vars['build_target'], source = global_vars['source_full'])
+    Default(target)
+    print('will build: target = ' + global_vars['build_target'] + ', source = ' + global_vars['source_full'])
+
+    set_env_prefix_and_destdir(global_vars)
+    Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
+    print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
+
+install_args = populate_install_args(global_vars)
+Return('install_args')
