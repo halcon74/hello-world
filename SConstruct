@@ -111,6 +111,5 @@ else:
     set_env_prefix_and_destdir(global_vars)
     Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
     print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
-
-install_args = populate_install_args(global_vars)
-Return('install_args')
+    install_args = populate_install_args(global_vars)
+    Return('install_args')
