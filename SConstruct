@@ -96,11 +96,12 @@ variables_cache_file = 'scons_variables_cache.conf'
 install_args = Variables(variables_cache_file)
 install_args.Add('MYDIR', "cached 'dir' argument for env.Install", '')
 install_args.Add('MYSOURCE', "cached 'source' argument for env.Install", '')
-env = Environment(variables=install_args)
+env = Environment(variables = install_args)
 if env['MYDIR'] and env['MYSOURCE']:
     print('install_args retrieved successfully; no need for re-configuring!')
 else:
     print('install_args not retrieved; configuring...')
+
     global_vars = populate_global_vars()
     # On each Operating System - its own set of variables
     global_vars['supported_oses']['gentoo'] = populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
@@ -113,7 +114,6 @@ else:
     set_env_prefix_and_destdir(global_vars)
     env['MYDIR'] = env['DESTDIR']
     env['MYSOURCE'] = global_vars['build_target']
-    install_args.Update(env)
     install_args.Save(variables_cache_file, env)
 
 print('will install: dir = ' + env['MYDIR'] + ', source = ' + env['MYSOURCE'])
