@@ -6,14 +6,6 @@ from collections import OrderedDict
 # env['PREFIX'] and env['DESTDIR'] are set in function set_env_prefix_and_destdir
 env = Environment()
 
-program_name = 'Hello_World'
-program_source = 'src/main.cpp'
-program_builddir = 'build'
-program_install_path = 'bin'
-
-# Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
-detected_os = ''
-
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
 def myown_os_path_join(*paths):
@@ -27,13 +19,28 @@ def myown_os_path_join(*paths):
         joined += path
     return joined
 
+def populate_global_vars():
+    mydict = {
+        'source_path' : 'src',
+        'source_name' : 'main.cpp',
+        'build_path' : 'build',
+        'install_path' : 'bin',
+        'binary_name' : 'Hello_World',
+        'supported_oses' : OrderedDict(),
+        # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
+        'detected_os' : ''
+    }
+    mydict['source_full'] = myown_os_path_join(mydict['source_path'], mydict['source_name'])
+    mydict['build_target'] = myown_os_path_join(mydict['build_path'], mydict['binary_name'])
+    return mydict
+
 def populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
-        print('populate_os_dict: name argument is undefined or empty string')
+        print('populate_os_dict ERROR: name argument is undefined or empty string')
         return mydict
     if not destdir:
-        print('populate_os_dict: destdir argument is undefined or empty string')
+        print('populate_os_dict ERROR: destdir argument is undefined or empty string')
         return mydict
     mydict['name'] = name
     mydict['destdir'] = destdir
@@ -43,49 +50,47 @@ def populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compil
     mydict['linker_flags'] = linker_flags
     return mydict
 
-def _get_os_destdir_argvalue(supported_oses, program_builddir):
-    for key, nested_dict in supported_oses.items():
+def _get_os_destdir_argvalue(global_vars):
+    for key, nested_dict in global_vars['supported_oses'].items():
         os_destdir_argname = nested_dict['destdir']
         print('checking for ' + os_destdir_argname + '... (are we on ' + nested_dict['name'] + '?)')
         os_destdir_argvalue = ARGUMENTS.get(os_destdir_argname)
         if os_destdir_argvalue:
             print(os_destdir_argname + ' found and will be used: ' + os_destdir_argvalue)
-            global detected_os
-            detected_os = key
-            print('detected Operating System: ' + detected_os)
+            global_vars['detected_os'] = key
+            print('detected Operating System: ' + global_vars['detected_os'])
             return os_destdir_argvalue
         else:
             print(os_destdir_argname + ' not found')
-    os_destdir_argvalue = program_builddir
-    print('program build directory will be used: ' + os_destdir_argvalue)
+    os_destdir_argvalue = global_vars['build_path']
+    print('program build path will be used: ' + os_destdir_argvalue)
     print('Operating System not detected')
     return os_destdir_argvalue
 
-def set_env_prefix_and_destdir(supported_oses, program_builddir, program_install_path):
-    os_destdir_argvalue = _get_os_destdir_argvalue(supported_oses, program_builddir)
-    env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, program_install_path)
-    if detected_os:
-        os_prefix_argname = supported_oses[detected_os]['prefix']
+def set_env_prefix_and_destdir(global_vars):
+    os_destdir_argvalue = _get_os_destdir_argvalue(global_vars)
+    env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
+    if global_vars['detected_os']:
+        os_prefix_argname = global_vars['supported_oses'][global_vars['detected_os']]['prefix']
         os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
         if os_prefix_argvalue:
             env['PREFIX'] = os_prefix_argvalue
-            env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, os_prefix_argvalue, program_install_path)
+            env['DESTDIR'] = myown_os_path_join(os_destdir_argvalue, env['PREFIX'], global_vars['install_path'])
             print(os_prefix_argname + ' found and will be used: ' + env['PREFIX'])
         else:
-            print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
+            print(os_prefix_argname + ' not found for Operating System: ' + global_vars['detected_os'])
     else:
         print('no prefix will be used because Operating System was not detected')
 
-supported_oses = OrderedDict()
+global_vars = populate_global_vars()
 # On each Operating System - its own set of variables
-supported_oses['gentoo']=populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-supported_oses['debian']=populate_os_dict('Debian/Ubuntu',  'install_root')
+global_vars['supported_oses']['gentoo'] = populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+global_vars['supported_oses']['debian'] = populate_os_dict('Debian/Ubuntu',  'install_root')
 
-program_build_target = myown_os_path_join(program_builddir, program_name)
-target = env.Program(target=program_build_target, source=program_source)
+target = env.Program(target = global_vars['build_target'], source = global_vars['source_full'])
 Default(target)
-print('will build: target = ' + program_build_target + ', source = ' + program_source)
+print('will build: target = ' + global_vars['build_target'] + ', source = ' + global_vars['source_full'])
 
-set_env_prefix_and_destdir(supported_oses, program_builddir, program_install_path)
-Alias("install", env.Install(dir=env['DESTDIR'], source=program_build_target))
-print('will install: dir = ' + env['DESTDIR'] + ', source = ' + program_build_target)
+set_env_prefix_and_destdir(global_vars)
+Alias("install", env.Install(dir = env['DESTDIR'], source = global_vars['build_target']))
+print('will install: dir = ' + env['DESTDIR'] + ', source = ' + global_vars['build_target'])
