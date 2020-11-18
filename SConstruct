@@ -129,7 +129,7 @@ def populate_global_vars():
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
     mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
 
-    # We define the Operating System as a set of variables
+    # Operating System is defined as a set of variables
     mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
     mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
 
