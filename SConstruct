@@ -70,12 +70,18 @@
 # ==========================================================
 
 from collections import OrderedDict
+import re
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
 def _myown_os_path_join(*paths):
     joined = ''
     for path in paths:
+        pattern = re.compile("^[a-zA-Z0-9_./-]+$")
+        match = pattern.match(path)
+        if not match:
+            print('_myown_os_path_join ERROR: path contains forbidded characters')
+            return ''
         if joined.endswith('/') and path.startswith('/'):
             fixed = path[1:]
             path = fixed
@@ -166,7 +172,7 @@ def _save_variables_cache(global_vars):
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
 def save_variables_for_install(global_vars):
-    print('will get and save variables needed for install')
+    print('getting and saving variables needed for install...')
     # On each Operating System - its own set of variables
     global_vars['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
     global_vars['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
