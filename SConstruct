@@ -190,7 +190,7 @@ def _save_variables_cache(global_vars):
     global_vars['env']['MYSOURCE'] = global_vars['compile_target']
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
-def save_variables_for_install(global_vars):
+def get_and_save_variables_for_install(global_vars):
     print('getting and saving variables needed for install...')
     _set_env_prefix_and_destdir(global_vars)
     _save_variables_cache(global_vars)
@@ -218,5 +218,5 @@ if global_vars['env']['MYDIR'] and global_vars['env']['MYSOURCE']:
         compile(global_vars)
 else:
     print('variables for install not retrieved')
-    save_variables_for_install(global_vars)
+    get_and_save_variables_for_install(global_vars)
     compile(global_vars)
