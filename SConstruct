@@ -138,6 +138,7 @@ def populate_global_vars():
 
     # Changed by calling method "Add" in function read_variables_cache
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
+
     return mydict
 
 def _detect_os(global_vars):
