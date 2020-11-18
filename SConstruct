@@ -158,7 +158,7 @@ def _detect_os(global_vars):
 
 def _get_argvalue(global_vars, argname):
     if global_vars['detected_os'] == '' and argname != global_vars['os_detected_at']:
-        print('_get_argvalue ERROR: when getting for ' + argname + ' value, OS should be already detected')
+        print('_get_argvalue ERROR: when getting ' + argname + ' value, OS should be already detected')
         sys.exit(1)
     if (argname == global_vars['os_detected_at']):
         _detect_os(global_vars)
