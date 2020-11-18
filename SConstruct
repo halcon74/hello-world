@@ -71,17 +71,21 @@
 
 from collections import OrderedDict
 import re
+import sys
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
 def _myown_os_path_join(*paths):
     joined = ''
     for path in paths:
-        pattern = re.compile("^[a-zA-Z0-9_./-]+$")
+        pattern = re.compile("^[0-9_./-]+$")
         match = pattern.match(path)
-        if not match:
-            print('_myown_os_path_join ERROR: path contains forbidded characters')
-            return ''
+        try:
+            if not match:
+                print('_myown_os_path_join ERROR: path contains forbidded character(s)')
+                raise ValueError
+        except ValueError as error:
+            sys.exit(1)
         if joined.endswith('/') and path.startswith('/'):
             fixed = path[1:]
             path = fixed
@@ -112,12 +116,18 @@ def populate_global_vars():
 
 def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
-    if not name:
-        print('_populate_os_dict ERROR: name argument is undefined or empty string')
-        return mydict
-    if not destdir:
-        print('_populate_os_dict ERROR: destdir argument is undefined or empty string')
-        return mydict
+    try:
+        if not name:
+            print('_populate_os_dict ERROR: name argument is undefined or empty string')
+            raise ValueError
+    except ValueError as error:
+        sys.exit(1)
+    try:
+        if not destdir:
+            print('_populate_os_dict ERROR: destdir argument is undefined or empty string')
+            raise ValueError
+    except ValueError as error:
+        sys.exit(1)
     mydict['name'] = name
     mydict['destdir'] = destdir
     mydict['prefix'] = prefix
