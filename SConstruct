@@ -148,7 +148,7 @@ def _detect_os(global_vars):
             return 1
     print('Operating System not detected')
     print('If your Operating System is not supported, you can simulate one of supported OSes by passing parameters with names that it has')
-    print('The names that each of supported Operating Systems has, you can see in function populate_global_vars (calls to function _populate_os_dict)')
+    print('Parameter names that each of supported Operating Systems has, you can see in function populate_global_vars (calls to function _populate_os_dict)')
     sys.exit(1)
 
 def _get_argvalue(global_vars, argname):
