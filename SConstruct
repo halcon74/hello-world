@@ -181,6 +181,6 @@ if global_vars['env']['MYDIR'] and global_vars['env']['MYSOURCE']:
         print('will not install; this SConscript requires passing "INSTALL=1" in command-line arguments instead of "install" after them')
         compile(global_vars)
 else:
-    print('install_args not retrieved')
+    print('variables for install not retrieved')
     save_variables_for_install(global_vars)
     compile(global_vars)
