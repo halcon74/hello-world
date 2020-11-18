@@ -182,8 +182,6 @@ def _set_env_prefix_and_destdir(global_vars):
         global_vars['env']['prefix'] = os_prefix_argvalue
         global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['prefix'], global_vars['install_path'])
         print("global_vars['env']['destdir'] is reset using prefix: " + global_vars['env']['destdir'])
-    else:
-        print('prefix not found for Operating System: ' + detected_os)
 
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add('MYDIR', "cached 'dir' argument for global_vars['env'].Install", '')
