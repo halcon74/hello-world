@@ -169,6 +169,7 @@ def _get_argvalue(global_vars, argname):
 
 def _set_env_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_argvalue(global_vars, 'destdir')
+    # No check 'if os_destdir_argvalue' here because if it is not 'true', OS will not be defined and the script will exit in function _detect_os
     global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
     print("until prefix is found, global_vars['env']['destdir'] is set for default value without prefix: " + global_vars['env']['destdir'])
     os_prefix_argvalue = _get_argvalue(global_vars, 'prefix')
