@@ -12,7 +12,7 @@
 # for the dictionary key 'variables_cache_file'.
 #
 # With this file, no redundant actions (that are usually called
-# 're-configuring' will be performed during the second and all the
+# 're-configuring') will be performed during the second and all the
 # consequent runs (will be performed only populating global variables
 # and reading variables cache).
 #
