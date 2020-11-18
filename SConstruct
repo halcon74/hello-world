@@ -80,11 +80,8 @@ def _myown_os_path_join(*paths):
     for path in paths:
         pattern = re.compile("^[a-zA-Z0-9_./-]+$")
         match = pattern.match(path)
-        try:
-            if not match:
-                print('_myown_os_path_join ERROR: path contains forbidden character(s)')
-                raise ValueError
-        except ValueError as error:
+        if not match:
+            print('_myown_os_path_join ERROR: path contains forbidden character(s)')
             sys.exit(1)
         if joined.endswith('/') and path.startswith('/'):
             fixed = path[1:]
@@ -116,17 +113,11 @@ def populate_global_vars():
 
 def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
-    try:
-        if not name:
-            print('_populate_os_dict ERROR: name argument is undefined or empty string')
-            raise ValueError
-    except ValueError as error:
+    if not name:
+        print('_populate_os_dict ERROR: name argument is undefined or empty string')
         sys.exit(1)
-    try:
-        if not destdir:
-            print('_populate_os_dict ERROR: destdir argument is undefined or empty string')
-            raise ValueError
-    except ValueError as error:
+    if not destdir:
+        print('_populate_os_dict ERROR: destdir argument is undefined or empty string')
         sys.exit(1)
     mydict['name'] = name
     mydict['destdir'] = destdir
