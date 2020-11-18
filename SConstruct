@@ -173,7 +173,7 @@ global_vars = populate_global_vars()
 read_variables_cache(global_vars)
 
 if global_vars['env']['MYDIR'] and global_vars['env']['MYSOURCE']:
-    print('install_args retrieved successfully; no need for re-configuring!')
+    print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
         install(global_vars)
