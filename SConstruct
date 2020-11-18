@@ -82,7 +82,7 @@ def _myown_os_path_join(*paths):
         match = pattern.match(path)
         try:
             if not match:
-                print('_myown_os_path_join ERROR: path contains forbidded character(s)')
+                print('_myown_os_path_join ERROR: path contains forbidden character(s)')
                 raise ValueError
         except ValueError as error:
             sys.exit(1)
