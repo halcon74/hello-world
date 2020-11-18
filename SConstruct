@@ -121,7 +121,10 @@ def populate_global_vars():
         'supported_oses' : OrderedDict(),
         'os_detected_at' : 'destdir',
 
-        # Set in function _detect_os (by finding non-empty value of scons argument which name is set for the key 'os_detected_at' above ^^)
+        # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
+        # destdir -> second argument of function _populate_os_dict ->
+        #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
+        #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
         'detected_os' : '',
 
         'variables_cache_file' : 'scons_variables_cache.conf'
