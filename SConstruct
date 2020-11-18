@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
+# ==========================================================
+#
+# TL;DR
+#
+# Supposing that these are your preferred arguments
+# -j2 DESTDIR="/some/dir" PREFIX="/some/dir"
+# just run
+# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir"
+# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL=1
+#
+# ==========================================================
+#
 # When this script is running for the first time with usual
 # command-line arguments, like
 # scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir"
@@ -16,8 +28,8 @@
 # consequent runs (will be performed only populating global variables
 # and reading variables cache).
 #
-# This file contains variables that are needed for INSTALL action only,
-# not for COMPILE action.
+# This file contains variables that are needed for INSTALL action
+# only, not for COMPILE action.
 #
 # The COMPILE action can be done after creating this file as well;
 # this file does not make any harm for it.
@@ -41,19 +53,21 @@
 #
 # The INSTALL action WILL be performed
 # if you run
-# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL="1"
+# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL=1
 #
 # And, in conclusion:
 # As the INSTALL action requires the variables-cache file,
 # it will not be performed without this file.
 #
 # That is, if you run
-# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL="1"
+# scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL=1
 # as the first run (or after deleting the variables-cache file)
-# the script will be going to COMPILE (and to get and save the variables
-# needed for INSTALL), not to INSTALL.
+# the script will be going to COMPILE (and to get and save the
+# variables needed for INSTALL), not to INSTALL.
 #
 # IMHO, this algorithm is consistent enough.
+#
+# ==========================================================
 
 from collections import OrderedDict
 
