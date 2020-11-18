@@ -136,6 +136,7 @@ def populate_global_vars():
     mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
     mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
 
+    # Changed by calling method "Add" in function read_variables_cache
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
     return mydict
 
