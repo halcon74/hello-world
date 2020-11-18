@@ -91,26 +91,6 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def populate_global_vars():
-    mydict = {
-        # ['env']['PREFIX'] and ['env']['DESTDIR'] are set in function _set_env_prefix_and_destdir
-        'env' : Environment(),
-        'source_path' : 'src',
-        'source_name' : 'main.cpp',
-        'compile_path' : 'build',
-        'install_path' : 'bin',
-        'binary_name' : 'Hello_World',
-        # Set in function save_variables_for_install
-        'supported_oses' : OrderedDict(),
-        # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
-        'detected_os' : '',
-        'variables_cache_file' : 'scons_variables_cache.conf'
-    }
-    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
-    mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
-    mydict['install_args'] = Variables(mydict['variables_cache_file'])
-    return mydict
-
 def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
     mydict = {}
     if not name:
@@ -125,6 +105,33 @@ def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compi
     mydict['cpp_compiler'] = cpp_compiler
     mydict['cpp_compiler_flags'] = cpp_compiler_flags
     mydict['linker_flags'] = linker_flags
+    return mydict
+
+def populate_global_vars():
+    mydict = {
+        # ['env']['prefix'] and ['env']['destdir'] are set in function _set_env_prefix_and_destdir
+        'env' : Environment(),
+
+        'source_path' : 'src',
+        'source_name' : 'main.cpp',
+        'compile_path' : 'build',
+        'install_path' : 'bin',
+        'binary_name' : 'Hello_World',
+        'supported_oses' : OrderedDict(),
+
+        # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
+        'detected_os' : '',
+
+        'variables_cache_file' : 'scons_variables_cache.conf'
+    }
+    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
+    mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
+
+    # We define the Operating System as a set of variables
+    mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
+    mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
+
+    mydict['install_args'] = Variables(mydict['variables_cache_file'])
     return mydict
 
 def _get_os_destdir_argvalue(global_vars):
@@ -147,16 +154,16 @@ def _get_os_destdir_argvalue(global_vars):
 def _set_env_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_os_destdir_argvalue(global_vars)
     detected_os = global_vars['detected_os']
-    global_vars['env']['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
-    print("until prefix is found, global_vars['env']['DESTDIR'] is set for default value without prefix: " + global_vars['env']['DESTDIR'])
+    global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
+    print("until prefix is found, global_vars['env']['destdir'] is set for default value without prefix: " + global_vars['env']['destdir'])
     if detected_os:
         os_prefix_argname = global_vars['supported_oses'][detected_os]['prefix']
         os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
         if os_prefix_argvalue:
-            global_vars['env']['PREFIX'] = os_prefix_argvalue
-            global_vars['env']['DESTDIR'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['PREFIX'], global_vars['install_path'])
-            print(os_prefix_argname + ' found and used: ' + global_vars['env']['PREFIX'] + "")
-            print("global_vars['env']['DESTDIR'] is reset using prefix: " + global_vars['env']['DESTDIR'])
+            global_vars['env']['prefix'] = os_prefix_argvalue
+            global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['prefix'], global_vars['install_path'])
+            print(os_prefix_argname + ' found and used: ' + global_vars['env']['prefix'] + "")
+            print("global_vars['env']['destdir'] is reset using prefix: " + global_vars['env']['destdir'])
         else:
             print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
     else:
@@ -168,15 +175,12 @@ def read_variables_cache(global_vars):
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
 def _save_variables_cache(global_vars):
-    global_vars['env']['MYDIR'] = global_vars['env']['DESTDIR']
+    global_vars['env']['MYDIR'] = global_vars['env']['destdir']
     global_vars['env']['MYSOURCE'] = global_vars['compile_target']
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
 def save_variables_for_install(global_vars):
     print('getting and saving variables needed for install...')
-    # On each Operating System - its own set of variables
-    global_vars['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-    global_vars['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
     _set_env_prefix_and_destdir(global_vars)
     _save_variables_cache(global_vars)
 
