@@ -118,8 +118,9 @@ def populate_global_vars():
         'install_path' : 'bin',
         'binary_name' : 'Hello_World',
         'supported_oses' : OrderedDict(),
+        'os_detected_at' : 'destdir',
 
-        # Set in function _get_os_destdir_argvalue by finding non-empty value of a variable which name is set as OS's destdir
+        # Set in function _detect_os (by finding non-empty value of SConscript argument which name is set in the key 'os_detected_at' above ^^)
         'detected_os' : '',
 
         'variables_cache_file' : 'scons_variables_cache.conf'
@@ -134,40 +135,45 @@ def populate_global_vars():
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
     return mydict
 
-def _get_os_destdir_argvalue(global_vars):
+def _detect_os(global_vars):
     for key, nested_dict in global_vars['supported_oses'].items():
-        os_destdir_argname = nested_dict['destdir']
-        print('checking for ' + os_destdir_argname + '... (are we on ' + nested_dict['name'] + '?)')
-        os_destdir_argvalue = ARGUMENTS.get(os_destdir_argname)
-        if os_destdir_argvalue:
-            print(os_destdir_argname + ' found and used: ' + os_destdir_argvalue)
+        os_detected_at = global_vars['os_detected_at']
+        os_argname = nested_dict[os_detected_at]
+        print('checking for ' + os_detected_at + ' as ' + os_argname + '... (are we on ' + nested_dict['name'] + '?)')
+        os_argvalue = ARGUMENTS.get(os_argname)
+        if os_argvalue:
             global_vars['detected_os'] = key
             print('detected Operating System: ' + global_vars['detected_os'])
-            return os_destdir_argvalue
-        else:
-            print(os_destdir_argname + ' not found')
-    os_destdir_argvalue = global_vars['compile_path']
-    print('program compile path used: ' + os_destdir_argvalue)
+            return 1
     print('Operating System not detected')
-    return os_destdir_argvalue
+
+def _get_argvalue(global_vars, argname):
+    if global_vars['detected_os'] == '' and argname != global_vars['os_detected_at']:
+        print('_get_argvalue ERROR: when getting for' + argname + ' value, OS should be already detected')
+        sys.exit(1)
+    if (argname == global_vars['os_detected_at']):
+        _detect_os(global_vars)
+    detected_os = global_vars['detected_os']
+    this_os_argname = global_vars['supported_oses'][detected_os][argname]
+    argvalue = ARGUMENTS.get(this_os_argname)
+    if argvalue:
+        print(argname + ' (' + this_os_argname + ' in ' + global_vars['supported_oses'][detected_os]['name'] + ') argument found: ' + argvalue)
+        return argvalue
+    else:
+        print(argname + ' (' + this_os_argname + ' in ' + global_vars['supported_oses'][detected_os]['name'] + ') argument not found')
+        return ''
 
 def _set_env_prefix_and_destdir(global_vars):
-    os_destdir_argvalue = _get_os_destdir_argvalue(global_vars)
-    detected_os = global_vars['detected_os']
+    os_destdir_argvalue = _get_argvalue(global_vars, 'destdir')
     global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
     print("until prefix is found, global_vars['env']['destdir'] is set for default value without prefix: " + global_vars['env']['destdir'])
-    if detected_os:
-        os_prefix_argname = global_vars['supported_oses'][detected_os]['prefix']
-        os_prefix_argvalue = ARGUMENTS.get(os_prefix_argname)
-        if os_prefix_argvalue:
-            global_vars['env']['prefix'] = os_prefix_argvalue
-            global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['prefix'], global_vars['install_path'])
-            print(os_prefix_argname + ' found and used: ' + global_vars['env']['prefix'] + "")
-            print("global_vars['env']['destdir'] is reset using prefix: " + global_vars['env']['destdir'])
-        else:
-            print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
+    os_prefix_argvalue = _get_argvalue(global_vars, 'prefix')
+    if os_prefix_argvalue:
+        global_vars['env']['prefix'] = os_prefix_argvalue
+        global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['prefix'], global_vars['install_path'])
+        print("global_vars['env']['destdir'] is reset using prefix: " + global_vars['env']['destdir'])
     else:
-        print('no prefix used because Operating System was not detected')
+        print(os_prefix_argname + ' not found for Operating System: ' + detected_os)
 
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add('MYDIR', "cached 'dir' argument for global_vars['env'].Install", '')
