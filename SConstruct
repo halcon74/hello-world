@@ -121,7 +121,7 @@ def populate_global_vars():
         'supported_oses' : OrderedDict(),
         'os_detected_at' : 'destdir',
 
-        # Set in function _detect_os (by finding non-empty value of SConscript argument which name is set in the key 'os_detected_at' above ^^)
+        # Set in function _detect_os (by finding non-empty value of SConscript argument which name is set for the key 'os_detected_at' above ^^)
         'detected_os' : '',
 
         'variables_cache_file' : 'scons_variables_cache.conf'
