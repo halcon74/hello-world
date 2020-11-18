@@ -70,6 +70,7 @@
 # ==========================================================
 
 from collections import OrderedDict
+import os
 import re
 import sys
 
@@ -78,7 +79,7 @@ import sys
 def _myown_os_path_join(*paths):
     joined = ''
     for path in paths:
-        pattern = re.compile("^[a-zA-Z0-9_./-]+$")
+        pattern = re.compile("^[a-zA-Z0-9_." + os.path.sep + "-]+$")
         match = pattern.match(path)
         if not match:
             print('_myown_os_path_join ERROR: path contains forbidden character(s)')
