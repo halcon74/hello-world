@@ -78,7 +78,7 @@ import sys
 def _myown_os_path_join(*paths):
     joined = ''
     for path in paths:
-        pattern = re.compile("^[0-9_./-]+$")
+        re.compile("^[a-zA-Z0-9_./-]+$")
         match = pattern.match(path)
         try:
             if not match:
