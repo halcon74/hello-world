@@ -240,6 +240,9 @@ global_vars = populate_global_vars()
 
 read_variables_cache(global_vars)
 
+# And then what changed
+#print(global_vars['env'].Dump())
+
 cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
 cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
 if global_vars['env'][cached_dir_varname] and global_vars['env'][cached_source_varname]:
