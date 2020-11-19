@@ -259,10 +259,11 @@ def _get_cpp_linker_vars(global_vars):
 
 def _apply_cpp_linker_vars(global_vars):
     for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
-        if dict['name_in_env']:
+        name_in_env = dict['name_in_env']
+        if name_in_env:
             # Replace's keyword (in 'keyword = value' syntax) can't be an expression
-            print('setting ' + dict['name_in_env'] + ' to ' + global_vars['got_arguments'][key])
-            evaling_string = "global_vars['env'].Replace(" + dict['name_in_env'] + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
+            print('setting ' + name_in_env + ' to ' + global_vars['got_arguments'][key])
+            evaling_string = "global_vars['env'].Replace(" + name_in_env + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
             eval(evaling_string)
 
 def get_myown_env_variable(global_vars, usedname):
