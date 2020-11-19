@@ -78,6 +78,7 @@ from collections import OrderedDict
 import os.path
 import re
 import sys
+import SCons.Util
 
 # os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
@@ -139,6 +140,7 @@ def populate_global_vars():
         #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
         'detected_os' : '',
 
+        'cpp_linker_vars' : ('cpp_compiler', 'cpp_compiler_flags', 'linker_flags'),
         'variables_cache_file' : 'scons_variables_cache.conf'
     }
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
@@ -213,6 +215,17 @@ def _get_prefix_and_destdir(global_vars):
         global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['got_arguments']['prefix'], global_vars['install_path'])
         print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
 
+def get_cpp_linker_vars(global_vars):
+    for var in global_vars['cpp_linker_vars']:
+        os_argvalue = _get_argvalue(global_vars, var)
+        if os_argvalue:
+            global_vars['got_arguments'][var] = os_argvalue
+
+def apply_cpp_linker_vars(global_vars):
+    global_vars['env'].Append(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
+    global_vars['env'].Append(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
+    global_vars['env'].Append(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
+
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_source'])
@@ -235,6 +248,8 @@ def get_and_save_variables_for_install(global_vars):
     _save_variables_cache(global_vars)
 
 def compile(global_vars):
+    get_cpp_linker_vars(global_vars)
+    apply_cpp_linker_vars(global_vars)
     target = global_vars['env'].Program(target = global_vars['compile_target'], source = global_vars['source_full'])
     Default(target)
     print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])
