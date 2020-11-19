@@ -116,7 +116,7 @@ def _myown_env_variables_descriptions():
 
 def populate_global_vars():
     mydict = {
-        # 2 my own env variables are added in function read_variables_cache
+        # 2 my own env variables are added in function read_variables_cache and then their values are set in function _save_variables_cache
         # The names of all my own env variables are the first elements of tuples in ['myown_env_variables']
         'env' : Environment(),
 
@@ -146,9 +146,10 @@ def populate_global_vars():
     # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
     mydict['got_arguments'] = {}
 
-    # All that I add to env variables must be defined here
+    # All that I add to env variables must be defined in tuples here
     mydict['myown_env_variables'] = _myown_env_variables_descriptions()
 
+    # This is the SCons.Variables.Variables class object for reading from / writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
 
