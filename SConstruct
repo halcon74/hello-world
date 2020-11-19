@@ -222,9 +222,9 @@ def get_cpp_linker_vars(global_vars):
             global_vars['got_arguments'][var] = os_argvalue
 
 def apply_cpp_linker_vars(global_vars):
-    global_vars['env'].Append(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
-    global_vars['env'].Append(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
-    global_vars['env'].Append(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
+    global_vars['env'].Replace(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
+    global_vars['env'].Replace(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
+    global_vars['env'].Replace(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
 
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
@@ -261,13 +261,7 @@ def install(global_vars):
 
 global_vars = populate_global_vars()
 
-# If you want to see what is in Construction Environment, uncomment this
-#print(global_vars['env'].Dump())
-
 read_variables_cache(global_vars)
-
-# And then what changed
-#print(global_vars['env'].Dump())
 
 if get_myown_env_variable(global_vars, 'cached_dir') and get_myown_env_variable(global_vars, 'cached_source'):
     print('variables for install retrieved successfully; no need for re-configuring!')
