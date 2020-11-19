@@ -193,7 +193,7 @@ def populate_global_vars():
     #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
     mydict['detected_os'] = ''
 
-    # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
+    # Values are set in functions _get_prefix_and_destdir and _get_cpp_linker_vars
     mydict['got_arguments'] = {}
 
     mydict['variables_cache_file'] = 'scons_variables_cache.conf'
