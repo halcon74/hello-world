@@ -159,7 +159,7 @@ def get_myown_env_variable(global_vars, usedname):
     varname = global_vars['myown_env_variables'][usedname][0]
     return global_vars['env'][varname]
 
-def set_myown_env_variable(global_vars, usedname, value):
+def _set_myown_env_variable(global_vars, usedname, value):
     varname = global_vars['myown_env_variables'][usedname][0]
     global_vars['env'][varname] = value
 
@@ -216,8 +216,8 @@ def read_variables_cache(global_vars):
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
 def _save_variables_cache(global_vars):
-    set_myown_env_variable(global_vars, 'cached_dir', global_vars['got_arguments']['destdir'])
-    set_myown_env_variable(global_vars, 'cached_source', global_vars['compile_target'])
+    _set_myown_env_variable(global_vars, 'cached_dir', global_vars['got_arguments']['destdir'])
+    _set_myown_env_variable(global_vars, 'cached_source', global_vars['compile_target'])
 
     # This saves only variables from 'install_args', not all variables from 'env' ('env' is the environment to get the option values from)
     # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
