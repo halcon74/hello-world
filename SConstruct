@@ -203,7 +203,7 @@ def _get_prefix_and_destdir(global_vars):
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_source'])
-    # This is an "official" way to add new varaiables to Environment
+    # This adds new varaiables to Environment
     # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
@@ -212,6 +212,8 @@ def _save_variables_cache(global_vars):
     cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
     global_vars['env'][cached_dir_varname] = global_vars['got_arguments']['destdir']
     global_vars['env'][cached_source_varname] = global_vars['compile_target']
+    # This saves only variables from 'install_args', not all variables from 'env' ('env' is the environment to get the option values from)
+    # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
 def get_and_save_variables_for_install(global_vars):
@@ -232,6 +234,10 @@ def install(global_vars):
     print('will install: dir = ' + global_vars['env'][cached_dir_varname] + ', source = ' + global_vars['env'][cached_source_varname])
 
 global_vars = populate_global_vars()
+
+# If you want to see what is in Construction Environment, uncomment this
+#print(global_vars['env'].Dump())
+
 read_variables_cache(global_vars)
 
 cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
