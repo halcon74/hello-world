@@ -142,6 +142,9 @@ def populate_global_vars():
     return mydict
 
 def _detect_os(global_vars):
+    if global_vars['detected_os']:
+        print('re-detecting Operating System is not supported')
+        sys.exit(1)
     for key, nested_dict in global_vars['supported_oses'].items():
         os_detected_at = global_vars['os_detected_at']
         os_argname = nested_dict[os_detected_at]
