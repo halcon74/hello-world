@@ -261,8 +261,8 @@ def _apply_cpp_linker_vars(global_vars):
     for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
         name_in_env = dict['name_in_env']
         if name_in_env:
-            # Replace's keyword (in 'keyword = value' syntax) can't be an expression
             print('setting ' + name_in_env + ' to ' + global_vars['got_arguments'][key])
+            # Replace's keyword (in 'keyword = value' syntax) can't be an expression
             evaling_string = "global_vars['env'].Replace(" + name_in_env + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
             eval(evaling_string)
 
