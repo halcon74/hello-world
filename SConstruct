@@ -149,7 +149,7 @@ def populate_global_vars():
     # All that I add to env variables must be defined in tuples here
     mydict['myown_env_variables'] = _myown_env_variables_descriptions()
 
-    # This is the SCons.Variables.Variables class object for reading from / writing to the variables cache file
+    # This is a SCons.Variables.Variables class object for reading from / writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
 
