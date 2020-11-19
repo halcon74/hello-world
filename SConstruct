@@ -98,7 +98,7 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def populate_os_data():
+def _populate_os_data():
     mydict = {}
     mydict['supported_oses'] = OrderedDict()
     mydict['supported_oses'] = {
@@ -184,11 +184,11 @@ def populate_global_vars():
         'install_path' : 'bin',
         'binary_name' : 'Hello_World'
     }
-    mydict['os_data'] = populate_os_data()
+    mydict['os_data'] = _populate_os_data()
     mydict['os_detected_at'] = 'destdir'
 
     # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
-    #   (see function populate_os_data)
+    #   (see function _populate_os_data)
     #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
     # I don't use special tools for detecting OS intentionally, because I define OS here as a set of variables
@@ -222,7 +222,7 @@ def _detect_os(global_vars):
             return 1
     print('Operating System not detected')
     print('If your Operating System is not supported, you can simulate one of supported OSes by passing parameters with names that it has')
-    print('Parameter names that each of supported Operating Systems has, you can see them in function populate_os_data)
+    print('Parameter names that each of supported Operating Systems has, you can see them in function _populate_os_data)
     sys.exit(1)
 
 def _get_argvalue(global_vars, argname):
