@@ -155,6 +155,14 @@ def populate_global_vars():
 
     return mydict
 
+def get_myown_env_variable(global_vars, usedname):
+    varname = global_vars['myown_env_variables'][usedname][0]
+    return global_vars['env'][varname]
+
+def set_myown_env_variable(global_vars, usedname, value):
+    varname = global_vars['myown_env_variables'][usedname][0]
+    global_vars['env'][varname] = value
+
 def _detect_os(global_vars):
     if global_vars['detected_os']:
         print('re-detecting Operating System is not supported')
@@ -208,10 +216,9 @@ def read_variables_cache(global_vars):
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
 def _save_variables_cache(global_vars):
-    cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
-    cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
-    global_vars['env'][cached_dir_varname] = global_vars['got_arguments']['destdir']
-    global_vars['env'][cached_source_varname] = global_vars['compile_target']
+    set_myown_env_variable(global_vars, 'cached_dir', global_vars['got_arguments']['destdir'])
+    set_myown_env_variable(global_vars, 'cached_source', global_vars['compile_target'])
+
     # This saves only variables from 'install_args', not all variables from 'env' ('env' is the environment to get the option values from)
     # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
@@ -227,11 +234,9 @@ def compile(global_vars):
     print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])
 
 def install(global_vars):
-    cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
-    cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
-    target = global_vars['env'].Install(dir = global_vars['env'][cached_dir_varname], source = global_vars['env'][cached_source_varname])
+    target = global_vars['env'].Install(dir = get_myown_env_variable(global_vars, 'cached_dir'), source = get_myown_env_variable(global_vars, 'cached_source'))
     Default(target)
-    print('will install: dir = ' + global_vars['env'][cached_dir_varname] + ', source = ' + global_vars['env'][cached_source_varname])
+    print('will install: dir = ' + get_myown_env_variable(global_vars, 'cached_dir') + ', source = ' + get_myown_env_variable(global_vars, 'cached_source'))
 
 global_vars = populate_global_vars()
 
@@ -243,9 +248,7 @@ read_variables_cache(global_vars)
 # And then what changed
 #print(global_vars['env'].Dump())
 
-cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
-cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
-if global_vars['env'][cached_dir_varname] and global_vars['env'][cached_source_varname]:
+if get_myown_env_variable(global_vars, 'cached_dir') and get_myown_env_variable(global_vars, 'cached_source'):
     print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
