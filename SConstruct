@@ -67,6 +67,11 @@
 #
 # IMHO, this algorithm is consistent enough.
 #
+# A side effect of this algorithm:
+# you can run this script two times with "INSTALL=1"
+# (the first run will COMPILE, the second run will INSTALL)
+# :)
+#
 # ==========================================================
 
 from collections import OrderedDict
