@@ -215,13 +215,13 @@ def _get_prefix_and_destdir(global_vars):
         global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['got_arguments']['prefix'], global_vars['install_path'])
         print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
 
-def get_cpp_linker_vars(global_vars):
+def _get_cpp_linker_vars(global_vars):
     for var in global_vars['cpp_linker_vars']:
         os_argvalue = _get_argvalue(global_vars, var)
         if os_argvalue:
             global_vars['got_arguments'][var] = os_argvalue
 
-def apply_cpp_linker_vars(global_vars):
+def _apply_cpp_linker_vars(global_vars):
     global_vars['env'].Replace(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
     global_vars['env'].Replace(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
     global_vars['env'].Replace(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
@@ -248,8 +248,8 @@ def get_and_save_variables_for_install(global_vars):
     _save_variables_cache(global_vars)
 
 def compile(global_vars):
-    get_cpp_linker_vars(global_vars)
-    apply_cpp_linker_vars(global_vars)
+    _get_cpp_linker_vars(global_vars)
+    _apply_cpp_linker_vars(global_vars)
     target = global_vars['env'].Program(target = global_vars['compile_target'], source = global_vars['source_full'])
     Default(target)
     print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])

@@ -22,23 +22,12 @@ Total: 1 package (1 new), Size of downloads: 0 KiB
  * 
  * Fetching https://github.com/halcon74/hello-world.git ...
 git fetch https://github.com/halcon74/hello-world.git +HEAD:refs/git-r3/HEAD
-remote: Enumerating objects: 70, done.
-remote: Counting objects: 100% (70/70), done.
-remote: Compressing objects: 100% (46/46), done.
-remote: Total 70 (delta 44), reused 50 (delta 24), pack-reused 0
-Unpacking objects: 100% (70/70), 24.70 KiB | 191.00 KiB/s, done.
-From https://github.com/halcon74/hello-world
-   7c37bc2..217f87e             -> refs/git-r3/HEAD
 git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
  * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 git checkout --quiet refs/git-r3/HEAD
 GIT update -->
    repository:               https://github.com/halcon74/hello-world.git
-   updating from commit:     7c37bc235ab3ca986a5cd0f6c173527928cffb2d
-   to commit:                217f87e24ea1e6923e0b83124e0a6a2250dc2919
- SConstruct                     | 158 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------
- gentoo/Hello_World-9999.ebuild |   2 +-
- 2 files changed, 100 insertions(+), 60 deletions(-)
+   at the commit:            d42d304b4b95c3e85ed24e250f4f4485b0aedf89
 >>> Source unpacked in /var/tmp/portage/app-misc/Hello_World-9999/work
 >>> Preparing source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 >>> Source prepared.
@@ -52,14 +41,17 @@ getting and saving variables needed for install...
 checking for destdir as DESTDIR... (are we on Gentoo?)
 detected Operating System: gentoo
 destdir (DESTDIR in Gentoo) argument found: /var/tmp/portage/app-misc/Hello_World-9999/image
-until prefix is found, global_vars['env']['destdir'] is set for default value without prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/bin
+until prefix is found, global_vars['got_arguments']['destdir'] is set for default value without prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/bin
 prefix (PREFIX in Gentoo) argument found: /usr
-global_vars['env']['destdir'] is reset using prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin
+global_vars['got_arguments']['destdir'] is reset using prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin
+cpp_compiler (CXX in Gentoo) argument found: x86_64-pc-linux-gnu-g++
+cpp_compiler_flags (CXXFLAGS in Gentoo) argument found: -O2 -march=native -pipe
+linker_flags (LDFLAGS in Gentoo) argument found: -Wl,-O1 -Wl,--as-needed
 will compile: target = build/Hello_World, source = src/main.cpp
 scons: done reading SConscript files.
 scons: Building targets ...
-g++ -o src/main.o -c -O2 -march=native -pipe src/main.cpp
-g++ -o build/Hello_World -Wl,-O1 -Wl,--as-needed src/main.o
+x86_64-pc-linux-gnu-g++ -o src/main.o -c -O2 -march=native -pipe src/main.cpp
+x86_64-pc-linux-gnu-g++ -o build/Hello_World -Wl,-O1 -Wl,--as-needed src/main.o
 scons: done building targets.
 >>> Source compiled.
 >>> Test phase [not enabled]: app-misc/Hello_World-9999
@@ -75,7 +67,7 @@ Install file: "build/Hello_World" as "/var/tmp/portage/app-misc/Hello_World-9999
 scons: done building targets.
 >>> Completed installing app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
 
- * Final size of build directory: 280 KiB
+ * Final size of build directory: 292 KiB
  * Final size of installed tree:   52 KiB
 
 strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R .comment -R .GCC.command.line -R .note.gnu.gold-version
