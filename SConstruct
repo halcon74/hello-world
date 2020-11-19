@@ -158,14 +158,10 @@ def populate_os_data():
                     for name_in_supported_oses_key, name_in_supported_oses in var_dict['names_in_supported_oses'].items():
                         if name_in_supported_oses_key == os_dict_key:
                             os_dict[var_dict_key] = name_in_supported_oses
-                            #Testing print
-                            #print('os_dict[' + var_dict_key + '] = ' + name_in_supported_oses)
                     if var_dict['required'] == 'non-empty' and not os_dict[var_dict_key]:
                         print('_populate_os_dict ERROR: ' + var_dict_key + ' is empty for ' + os_dict_key)
                         sys.exit(1)
     _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
-    #Testing print
-    #print(mydict)
     return mydict
 
 def _myown_env_variables_descriptions():
@@ -192,7 +188,7 @@ def populate_global_vars():
     mydict['os_detected_at'] = 'destdir'
 
     # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
-    #   (see in function populate_os_data)
+    #   (see function populate_os_data)
     #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
     mydict['detected_os'] = ''
@@ -209,14 +205,6 @@ def populate_global_vars():
     mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
 
     return mydict
-
-def get_myown_env_variable(global_vars, usedname):
-    varname = global_vars['myown_env_variables'][usedname][0]
-    return global_vars['env'][varname]
-
-def _set_myown_env_variable(global_vars, usedname, value):
-    varname = global_vars['myown_env_variables'][usedname][0]
-    global_vars['env'][varname] = value
 
 def _detect_os(global_vars):
     if global_vars['detected_os']:
@@ -276,9 +264,13 @@ def _apply_cpp_linker_vars(global_vars):
             evaling_string = "global_vars['env'].Replace(" + dict['name_in_env'] + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
             eval(evaling_string)
 
-    #global_vars['env'].Replace(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
-    #global_vars['env'].Replace(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
-    #global_vars['env'].Replace(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
+def get_myown_env_variable(global_vars, usedname):
+    varname = global_vars['myown_env_variables'][usedname][0]
+    return global_vars['env'][varname]
+
+def _set_myown_env_variable(global_vars, usedname, value):
+    varname = global_vars['myown_env_variables'][usedname][0]
+    global_vars['env'][varname] = value
 
 def read_variables_cache(global_vars):
     global_vars['scons_var_obj'].Add(global_vars['myown_env_variables']['cached_dir'])
