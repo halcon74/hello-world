@@ -108,9 +108,16 @@ def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compi
     mydict['linker_flags'] = linker_flags
     return mydict
 
+def _myown_env_variables_descriptions():
+    mydict = {}
+    mydict['cached_dir'] = ('MYCACHEDDIR', "cached 'dir' argument for global_vars['env'].Install", '')
+    mydict['cached_source'] = ('MYCACHEDSOURCE', "cached 'source' argument for global_vars['env'].Install", '')
+    return mydict
+
 def populate_global_vars():
     mydict = {
-        # ['env']['prefix'] and ['env']['destdir'] are set in function _set_env_prefix_and_destdir
+        # 2 my own env variables are added in function read_variables_cache
+        # The names of all my own env variables are the first elements of tuples in ['myown_env_variables']
         'env' : Environment(),
 
         'source_path' : 'src',
@@ -122,7 +129,7 @@ def populate_global_vars():
         'os_detected_at' : 'destdir',
 
         # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
-        # destdir -> second argument of function _populate_os_dict ->
+        # destdir -> the second argument of function _populate_os_dict ->
         #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
         #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
         'detected_os' : '',
@@ -135,6 +142,12 @@ def populate_global_vars():
     # Operating System is defined as a set of variables
     mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
     mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
+
+    # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
+    mydict['got_arguments'] = {}
+
+    # All that I add to env variables must be defined here
+    mydict['myown_env_variables'] = _myown_env_variables_descriptions()
 
     # Changed by calling method "Add" in function read_variables_cache
     mydict['install_args'] = Variables(mydict['variables_cache_file'])
@@ -175,30 +188,34 @@ def _get_argvalue(global_vars, argname):
         print(argname + ' (' + this_os_argname + ' in ' + global_vars['supported_oses'][detected_os]['name'] + ') argument not found')
         return ''
 
-def _set_env_prefix_and_destdir(global_vars):
+def _get_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_argvalue(global_vars, 'destdir')
     # No check 'if os_destdir_argvalue' here because if it is not 'true', OS will not be defined and the script will exit in function _detect_os
-    global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
-    print("until prefix is found, global_vars['env']['destdir'] is set for default value without prefix: " + global_vars['env']['destdir'])
+    global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
+    print("until prefix is found, global_vars['got_arguments']['destdir'] is set for default value without prefix: " + global_vars['got_arguments']['destdir'])
     os_prefix_argvalue = _get_argvalue(global_vars, 'prefix')
     if os_prefix_argvalue:
-        global_vars['env']['prefix'] = os_prefix_argvalue
-        global_vars['env']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['env']['prefix'], global_vars['install_path'])
-        print("global_vars['env']['destdir'] is reset using prefix: " + global_vars['env']['destdir'])
+        global_vars['got_arguments']['prefix'] = os_prefix_argvalue
+        global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['got_arguments']['prefix'], global_vars['install_path'])
+        print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
 
 def read_variables_cache(global_vars):
-    global_vars['install_args'].Add('MYDIR', "cached 'dir' argument for global_vars['env'].Install", '')
-    global_vars['install_args'].Add('MYSOURCE', "cached 'source' argument for global_vars['env'].Install", '')
+    global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
+    global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_source'])
+    # This is an "official" way to add new varaiables to Environment
+    # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
 def _save_variables_cache(global_vars):
-    global_vars['env']['MYDIR'] = global_vars['env']['destdir']
-    global_vars['env']['MYSOURCE'] = global_vars['compile_target']
+    cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
+    cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
+    global_vars['env'][cached_dir_varname] = global_vars['got_arguments']['destdir']
+    global_vars['env'][cached_source_varname] = global_vars['compile_target']
     global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
 def get_and_save_variables_for_install(global_vars):
     print('getting and saving variables needed for install...')
-    _set_env_prefix_and_destdir(global_vars)
+    _get_prefix_and_destdir(global_vars)
     _save_variables_cache(global_vars)
 
 def compile(global_vars):
@@ -207,14 +224,18 @@ def compile(global_vars):
     print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])
 
 def install(global_vars):
-    target = global_vars['env'].Install(dir = global_vars['env']['MYDIR'], source = global_vars['env']['MYSOURCE'])
+    cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
+    cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
+    target = global_vars['env'].Install(dir = global_vars['env'][cached_dir_varname], source = global_vars['env'][cached_source_varname])
     Default(target)
-    print('will install: dir = ' + global_vars['env']['MYDIR'] + ', source = ' + global_vars['env']['MYSOURCE'])
+    print('will install: dir = ' + global_vars['env'][cached_dir_varname] + ', source = ' + global_vars['env'][cached_source_varname])
 
 global_vars = populate_global_vars()
 read_variables_cache(global_vars)
 
-if global_vars['env']['MYDIR'] and global_vars['env']['MYSOURCE']:
+cached_dir_varname = global_vars['myown_env_variables']['cached_dir'][0]
+cached_source_varname = global_vars['myown_env_variables']['cached_source'][0]
+if global_vars['env'][cached_dir_varname] and global_vars['env'][cached_source_varname]:
     print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
