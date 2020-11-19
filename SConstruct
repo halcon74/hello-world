@@ -261,7 +261,7 @@ def _apply_cpp_linker_vars(global_vars):
     for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
         name_in_env = dict['name_in_env']
         if name_in_env:
-            pattern = re.compile("^[a-zA-Z]+$")
+            pattern = re.compile("^[A-Z]+$")
             match = pattern.match(path)
             if not match:
                 print('_apply_cpp_linker_vars ERROR: name_in_env contains forbidden characters')
