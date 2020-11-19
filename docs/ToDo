@@ -19,12 +19,12 @@
 4 CLOSED RESOLVED
 	to add support for 'CXX', 'CXXFLAGS', 'LDFLAGS'
 
-5
+5 IN PROGRESS
 	a normal class? or several classes
 	or at least
-		the first arg of _populate_os_dict args should be an object with elements of cpp_linker_vars + destdir + prefix and an extra info about their attributes (must be defined etc) ; all other = *args
-		to make a relation between cpp_linker_vars and env[NAMES]
-		to rewrite _apply_cpp_linker_vars in a loop using this relation
+		(DONE) the first arg of _populate_os_dict args should be an object with elements of cpp_linker_vars + destdir + prefix and an extra info about their attributes (must be defined etc) ; all other = *args
+		(DONE) to make a relation between cpp_linker_vars and env[NAMES]
+		(DONE) to rewrite _apply_cpp_linker_vars in a loop using this relation
 
 6
 	to add support for Debian

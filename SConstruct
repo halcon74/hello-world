@@ -98,20 +98,74 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def _populate_os_dict(name='', destdir='', prefix='', cpp_compiler='', cpp_compiler_flags='', linker_flags=''):
+def populate_os_data():
     mydict = {}
-    if not name:
-        print('_populate_os_dict ERROR: name argument is undefined or empty string')
-        sys.exit(1)
-    if not destdir:
-        print('_populate_os_dict ERROR: destdir argument is undefined or empty string')
-        sys.exit(1)
-    mydict['name'] = name
-    mydict['destdir'] = destdir
-    mydict['prefix'] = prefix
-    mydict['cpp_compiler'] = cpp_compiler
-    mydict['cpp_compiler_flags'] = cpp_compiler_flags
-    mydict['linker_flags'] = linker_flags
+    mydict['supported_oses'] = OrderedDict()
+    mydict['supported_oses'] = {
+        'gentoo' : {
+            'os_name' : 'Gentoo'
+        },
+        'debian' : {
+            'os_name' : 'Debian/Ubuntu'
+        }
+    }
+    mydict['os_vars'] = {
+        'install_vars' : {
+            'destdir' : {
+                'required' : 'non-empty',
+                'name_in_env' : '',
+                'names_in_supported_oses' : {
+                    'gentoo' : 'DESTDIR',
+                    'debian' : 'install_root'
+                }
+            },
+            'prefix' : {
+                'required' : '',
+                'name_in_env' : '',
+                'names_in_supported_oses' : {
+                    'gentoo' : 'PREFIX'
+                }
+            }
+        },
+        'cpp_linker_vars' : {
+            'cpp_compiler' : {
+                'required' : '',
+                'name_in_env' : 'CXX',
+                'names_in_supported_oses' : {
+                    'gentoo' : 'CXX'
+                }
+            },
+            'cpp_compiler_flags' : {
+                'required' : '',
+                'name_in_env' : 'CXXFLAGS',
+                'names_in_supported_oses' : {
+                    'gentoo' : 'CXXFLAGS'
+                }
+            },
+            'linker_flags' : {
+                'required' : '',
+                'name_in_env' : 'LINKFLAGS',
+                'names_in_supported_oses' : {
+                    'gentoo' : 'LDFLAGS'
+                }
+            }
+        }
+    }
+    def _populate_os_dict(supported_oses, os_vars):
+        for os_dict_key, os_dict in supported_oses.items():
+            for vars_dict_key, vars_dict in os_vars.items():
+                for var_dict_key, var_dict in vars_dict.items():
+                    for name_in_supported_oses_key, name_in_supported_oses in var_dict['names_in_supported_oses'].items():
+                        if name_in_supported_oses_key == os_dict_key:
+                            os_dict[var_dict_key] = name_in_supported_oses
+                            #Testing print
+                            #print('os_dict[' + var_dict_key + '] = ' + name_in_supported_oses)
+                    if var_dict['required'] == 'non-empty' and not os_dict[var_dict_key]:
+                        print('_populate_os_dict ERROR: ' + var_dict_key + ' is empty for ' + os_dict_key)
+                        sys.exit(1)
+    _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
+    #Testing print
+    #print(mydict)
     return mydict
 
 def _myown_env_variables_descriptions():
@@ -132,32 +186,27 @@ def populate_global_vars():
         'source_name' : 'main.cpp',
         'compile_path' : 'build',
         'install_path' : 'bin',
-        'binary_name' : 'Hello_World',
-        'supported_oses' : OrderedDict(),
-        'cpp_linker_vars' : ('cpp_compiler', 'cpp_compiler_flags', 'linker_flags'),
-        'os_detected_at' : 'destdir',
-
-        # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
-        # destdir -> the second argument of function _populate_os_dict ->
-        #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
-        #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
-        'detected_os' : '',
-
-        # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
-        'got_arguments' : {},
-
-        'variables_cache_file' : 'scons_variables_cache.conf'
+        'binary_name' : 'Hello_World'
     }
+    mydict['os_data'] = populate_os_data()
+    mydict['os_detected_at'] = 'destdir'
+
+    # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
+    #   (see in function populate_os_data)
+    #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
+    #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
+    mydict['detected_os'] = ''
+
+    # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
+    mydict['got_arguments'] = {}
+
+    mydict['variables_cache_file'] = 'scons_variables_cache.conf'
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
     mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
 
-    # Operating System is defined as a set of variables
-    mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
-    mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
-
     # This is a SCons.Variables.Variables class object for reading from / writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
-    mydict['install_args'] = Variables(mydict['variables_cache_file'])
+    mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
 
     return mydict
 
@@ -173,10 +222,10 @@ def _detect_os(global_vars):
     if global_vars['detected_os']:
         print('re-detecting Operating System is not supported')
         sys.exit(1)
-    for key, nested_dict in global_vars['supported_oses'].items():
+    for key, nested_dict in global_vars['os_data']['supported_oses'].items():
         os_detected_at = global_vars['os_detected_at']
         os_argname = nested_dict[os_detected_at]
-        print('checking for ' + os_detected_at + ' as ' + os_argname + '... (are we on ' + nested_dict['name'] + '?)')
+        print('checking for ' + os_detected_at + ' as ' + os_argname + '... (are we on ' + nested_dict['os_name'] + '?)')
         os_argvalue = ARGUMENTS.get(os_argname)
         if os_argvalue:
             global_vars['detected_os'] = key
@@ -194,13 +243,13 @@ def _get_argvalue(global_vars, argname):
     if (argname == global_vars['os_detected_at']):
         _detect_os(global_vars)
     detected_os = global_vars['detected_os']
-    this_os_argname = global_vars['supported_oses'][detected_os][argname]
+    this_os_argname = global_vars['os_data']['supported_oses'][detected_os][argname]
     argvalue = ARGUMENTS.get(this_os_argname)
     if argvalue:
-        print(argname + ' (' + this_os_argname + ' in ' + global_vars['supported_oses'][detected_os]['name'] + ') argument found: ' + argvalue)
+        print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument found: ' + argvalue)
         return argvalue
     else:
-        print(argname + ' (' + this_os_argname + ' in ' + global_vars['supported_oses'][detected_os]['name'] + ') argument not found')
+        print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument not found')
         return ''
 
 def _get_prefix_and_destdir(global_vars):
@@ -215,31 +264,37 @@ def _get_prefix_and_destdir(global_vars):
         print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
 
 def _get_cpp_linker_vars(global_vars):
-    for var in global_vars['cpp_linker_vars']:
-        os_argvalue = _get_argvalue(global_vars, var)
+    for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
+        os_argvalue = _get_argvalue(global_vars, key)
         if os_argvalue:
-            global_vars['got_arguments'][var] = os_argvalue
+            global_vars['got_arguments'][key] = os_argvalue
 
 def _apply_cpp_linker_vars(global_vars):
-    global_vars['env'].Replace(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
-    global_vars['env'].Replace(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
-    global_vars['env'].Replace(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
+    for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
+        if dict['name_in_env']:
+            # Replace's keyword (in keyword = value syntax) can't be an expression
+            evaling_string = "global_vars['env'].Replace(" + dict['name_in_env'] + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
+            eval(evaling_string)
+
+    #global_vars['env'].Replace(CXX = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler']))
+    #global_vars['env'].Replace(CXXFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['cpp_compiler_flags']))
+    #global_vars['env'].Replace(LINKFLAGS = SCons.Util.CLVar(global_vars['got_arguments']['linker_flags']))
 
 def read_variables_cache(global_vars):
-    global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
-    global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_source'])
+    global_vars['scons_var_obj'].Add(global_vars['myown_env_variables']['cached_dir'])
+    global_vars['scons_var_obj'].Add(global_vars['myown_env_variables']['cached_source'])
 
     # This adds new variables to Environment (doesn't rewrite it)
     # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-    global_vars['env'] = Environment(variables = global_vars['install_args'])
+    global_vars['env'] = Environment(variables = global_vars['scons_var_obj'])
 
 def _save_variables_cache(global_vars):
     _set_myown_env_variable(global_vars, 'cached_dir', global_vars['got_arguments']['destdir'])
     _set_myown_env_variable(global_vars, 'cached_source', global_vars['compile_target'])
 
-    # This saves only variables from 'install_args', not all variables from 'env' (here 'env' is the environment to get the option values from)
+    # This saves only variables from 'scons_var_obj', not all variables from 'env' (here 'env' is the environment to get the option values from)
     # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
-    global_vars['install_args'].Save(global_vars['variables_cache_file'], global_vars['env'])
+    global_vars['scons_var_obj'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
 def get_and_save_variables_for_install(global_vars):
     print('getting and saving variables needed for install...')
