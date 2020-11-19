@@ -70,7 +70,7 @@
 # ==========================================================
 
 from collections import OrderedDict
-import os
+import os.path
 import re
 import sys
 
