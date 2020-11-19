@@ -203,7 +203,7 @@ def _get_prefix_and_destdir(global_vars):
 def read_variables_cache(global_vars):
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_dir'])
     global_vars['install_args'].Add(global_vars['myown_env_variables']['cached_source'])
-    # This adds new variables to Environment
+    # This adds new variables to Environment (doesn't rewrite them)
     # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
     global_vars['env'] = Environment(variables = global_vars['install_args'])
 
