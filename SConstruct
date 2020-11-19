@@ -248,9 +248,10 @@ def get_and_save_variables_for_install(global_vars):
     _save_variables_cache(global_vars)
 
 def compile(global_vars):
+    print('before: ' + global_vars['env'].Dump())
     get_cpp_linker_vars(global_vars)
     apply_cpp_linker_vars(global_vars)
-    print(global_vars['env'].Dump())
+    print('after: ' + global_vars['env'].Dump())
     target = global_vars['env'].Program(target = global_vars['compile_target'], source = global_vars['source_full'])
     Default(target)
     print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])
