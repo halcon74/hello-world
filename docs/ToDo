@@ -16,8 +16,18 @@
 3 CLOSED RESOLVED
 	to try to build in Gentoo (write an ebuild)
 
-4
-	to add support of 'CXX', 'CXXFLAGS', 'LDFLAGS'
+4 CLOSED RESOLVED
+	to add support for 'CXX', 'CXXFLAGS', 'LDFLAGS'
+
+5
+	a normal class? or several classes
+	or at least
+		to make _populate_os_dict args from elements of cpp_linker_vars + destdir + prefix (move defaults ='' inside function)
+		to make relation between cpp_linker_vars and env[NAMES]
+		rewrite _apply_cpp_linker_vars in a loop using this relation
+
+6
+	to add support for Debian
 
 NOTES
 
