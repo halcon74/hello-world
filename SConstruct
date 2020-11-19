@@ -123,8 +123,10 @@ def _myown_env_variables_descriptions():
 def populate_global_vars():
     mydict = {
         # 2 my own env variables are added in function read_variables_cache and then their values are set in function _save_variables_cache
-        # The names of all my own env variables are the first elements of tuples in ['myown_env_variables']
         'env' : Environment(),
+
+        # All that I add to env variables must be defined in tuples here
+        'myown_env_variables' : _myown_env_variables_descriptions(),
 
         'source_path' : 'src',
         'source_name' : 'main.cpp',
@@ -132,6 +134,7 @@ def populate_global_vars():
         'install_path' : 'bin',
         'binary_name' : 'Hello_World',
         'supported_oses' : OrderedDict(),
+        'cpp_linker_vars' : ('cpp_compiler', 'cpp_compiler_flags', 'linker_flags'),
         'os_detected_at' : 'destdir',
 
         # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
@@ -140,7 +143,9 @@ def populate_global_vars():
         #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
         'detected_os' : '',
 
-        'cpp_linker_vars' : ('cpp_compiler', 'cpp_compiler_flags', 'linker_flags'),
+        # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
+        'got_arguments' : {},
+
         'variables_cache_file' : 'scons_variables_cache.conf'
     }
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
@@ -149,12 +154,6 @@ def populate_global_vars():
     # Operating System is defined as a set of variables
     mydict['supported_oses']['gentoo'] = _populate_os_dict('Gentoo',         'DESTDIR',      'PREFIX', 'CXX', 'CXXFLAGS', 'LDFLAGS')
     mydict['supported_oses']['debian'] = _populate_os_dict('Debian/Ubuntu',  'install_root')
-
-    # ['got_arguments']['prefix'] and ['got_arguments']['destdir'] are set in function _get_prefix_and_destdir
-    mydict['got_arguments'] = {}
-
-    # All that I add to env variables must be defined in tuples here
-    mydict['myown_env_variables'] = _myown_env_variables_descriptions()
 
     # This is a SCons.Variables.Variables class object for reading from / writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
