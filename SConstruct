@@ -191,6 +191,7 @@ def populate_global_vars():
     #   (see function populate_os_data)
     #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
+    # I don't use special tools for detecting OS intentionally, because I define OS here as a set of variables
     mydict['detected_os'] = ''
 
     # Values are set in functions _get_prefix_and_destdir and _get_cpp_linker_vars
@@ -221,7 +222,7 @@ def _detect_os(global_vars):
             return 1
     print('Operating System not detected')
     print('If your Operating System is not supported, you can simulate one of supported OSes by passing parameters with names that it has')
-    print('Parameter names that each of supported Operating Systems has, you can see them in function populate_global_vars (calls to function _populate_os_dict)')
+    print('Parameter names that each of supported Operating Systems has, you can see them in function populate_os_data)
     sys.exit(1)
 
 def _get_argvalue(global_vars, argname):
