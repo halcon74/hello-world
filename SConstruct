@@ -284,16 +284,9 @@ def _apply_cpp_linker_vars(obj):
     for key, mydict in obj['os_data']['os_vars']['cpp_linker_vars'].items():
         name_in_env = mydict['name_in_env']
         if name_in_env:
-            pattern = re.compile("^[A-Z]+$")
-            match = pattern.match(name_in_env)
-            if not match:
-                print('_apply_cpp_linker_vars ERROR: name_in_env contains forbidden characters')
-                sys.exit(1)
-            print('setting ' + name_in_env + ' to ' + obj['got_arguments'][key])
-            # Replace's keyword (in 'keyword = value' syntax) can't be an expression
-            evaling_string = "obj['env'].Replace(" + name_in_env + \
-                                "= SCons.Util.CLVar(obj['got_arguments'][key]))"
-            eval(evaling_string)
+            replace_args = {}
+            replace_args[name_in_env] = SCons.Util.CLVar(obj['got_arguments'][key])
+            obj['env'].Replace(**replace_args)
 
 def get_myown_env_variable(obj, usedname):
     varname = obj['myown_env_variables'][usedname][0]
