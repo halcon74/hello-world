@@ -192,6 +192,8 @@ def populate_global_vars():
         'install_path' : 'bin',
         'binary_name' : 'Hello_World'
     }
+    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
+    mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
     mydict['os_data'] = _populate_os_data()
     mydict['os_detected_at'] = 'destdir'
 
@@ -210,8 +212,6 @@ def populate_global_vars():
     mydict['got_arguments'] = {}
 
     mydict['variables_cache_file'] = 'scons_variables_cache.conf'
-    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
-    mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
 
     # This is a SCons.Variables.Variables class object for reading from /
     # writing to the variables cache file
