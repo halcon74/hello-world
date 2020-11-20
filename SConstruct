@@ -257,19 +257,18 @@ def _get_argvalue(obj, argname):
     return ''
 
 def _get_prefix_and_destdir(obj):
-    os_destdir_argvalue = _get_argvalue(obj, 'destdir')
-    # No check 'if os_destdir_argvalue' here because if it is not 'true',
-    # OS will not be defined and the script will exit in function _detect_os
-    obj['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, \
-                                                                obj['install_path'])
+    for key in obj['os_data']['os_vars']['install_vars'].keys():
+        os_argvalue = _get_argvalue(obj, key)
+        if os_argvalue:
+            obj['got_arguments'][key] = os_argvalue
+
     print('until prefix is found, destdir is set for default value without prefix: ' + \
-                                                    obj['got_arguments']['destdir'])
-    os_prefix_argvalue = _get_argvalue(obj, 'prefix')
-    if os_prefix_argvalue:
-        obj['got_arguments']['prefix'] = os_prefix_argvalue
-        obj['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, \
-                            obj['got_arguments']['prefix'], obj['install_path'])
-        print('destdir is reset using prefix: ' + obj['got_arguments']['destdir'])
+                                                        obj['got_arguments']['destdir'])
+    if obj['got_arguments']['prefix']:
+        obj['got_arguments']['destdir'] = _myown_os_path_join(\
+                                        obj['got_arguments']['destdir'], \
+                                        obj['got_arguments']['prefix'], obj['install_path'])
+        print('destdir is reset using prefix and install_path: ' + obj['got_arguments']['destdir'])
 
 def _get_cpp_linker_vars(obj):
     for key in obj['os_data']['os_vars']['cpp_linker_vars'].keys():
