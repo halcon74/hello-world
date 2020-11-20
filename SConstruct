@@ -115,7 +115,7 @@ def _populate_os_data():
             'destdir' : {
                 'required' : 'non-empty',
                 'name_in_env' : '',
-                'names_in_supported_oses' : {
+                'names_in_oses' : {
                     'gentoo' : 'DESTDIR',
                     'debian' : 'install_root'
                 }
@@ -123,7 +123,7 @@ def _populate_os_data():
             'prefix' : {
                 'required' : '',
                 'name_in_env' : '',
-                'names_in_supported_oses' : {
+                'names_in_oses' : {
                     'gentoo' : 'PREFIX'
                 }
             }
@@ -132,21 +132,21 @@ def _populate_os_data():
             'cpp_compiler' : {
                 'required' : '',
                 'name_in_env' : 'CXX',
-                'names_in_supported_oses' : {
+                'names_in_oses' : {
                     'gentoo' : 'CXX'
                 }
             },
             'cpp_compiler_flags' : {
                 'required' : '',
                 'name_in_env' : 'CXXFLAGS',
-                'names_in_supported_oses' : {
+                'names_in_oses' : {
                     'gentoo' : 'CXXFLAGS'
                 }
             },
             'linker_flags' : {
                 'required' : '',
                 'name_in_env' : 'LINKFLAGS',
-                'names_in_supported_oses' : {
+                'names_in_oses' : {
                     'gentoo' : 'LDFLAGS'
                 }
             }
@@ -154,14 +154,15 @@ def _populate_os_data():
     }
     def _populate_os_dict(supported_oses, os_vars):
         for os_dict_key, os_dict in supported_oses.items():
-            for vars_dict_key, vars_dict in os_vars.items():
-                for var_dict_key, var_dict in vars_dict.items():
-                    for name_in_supported_oses_key, name_in_supported_oses in \
-                                            var_dict['names_in_supported_oses'].items():
-                        if name_in_supported_oses_key == os_dict_key:
-                            os_dict[var_dict_key] = name_in_supported_oses
-                    if var_dict['required'] == 'non-empty' and not os_dict[var_dict_key]:
-                        print('_populate_os_dict ERROR: ' + var_dict_key + \
+            for vars_key in os_vars.keys():
+                os_vars_dict = os_vars[vars_key]
+                for var_key in os_vars_dict.keys():
+                    os_var_dict = os_vars_dict[var_key]
+                    for key in os_var_dict['names_in_oses'].keys():
+                        if key == os_dict_key:
+                            os_dict[var_key] = os_var_dict['names_in_oses'][key]
+                    if os_var_dict['required'] == 'non-empty' and os_dict[var_key] == '':
+                        print('_populate_os_dict ERROR: ' + var_key + \
                                                         ' is empty for ' + os_dict_key)
                         sys.exit(1)
     _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
@@ -275,7 +276,7 @@ def _get_prefix_and_destdir(obj):
         print('destdir is reset using prefix: ' + obj['got_arguments']['destdir'])
 
 def _get_cpp_linker_vars(obj):
-    for key, mydict in obj['os_data']['os_vars']['cpp_linker_vars'].items():
+    for key in obj['os_data']['os_vars']['cpp_linker_vars'].keys():
         os_argvalue = _get_argvalue(obj, key)
         if os_argvalue:
             obj['got_arguments'][key] = os_argvalue
@@ -285,6 +286,7 @@ def _apply_cpp_linker_vars(obj):
         name_in_env = mydict['name_in_env']
         if name_in_env:
             replace_args = {}
+            print('setting ' + name_in_env + ' to ' + obj['got_arguments'][key])
             replace_args[name_in_env] = SCons.Util.CLVar(obj['got_arguments'][key])
             obj['env'].Replace(**replace_args)
 
