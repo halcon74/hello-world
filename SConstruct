@@ -80,7 +80,8 @@ import re
 import sys
 import SCons.Util
 
-# os.path.join drops all other parts when one part is an absolute path; os.path.normpath takes only one argument...
+# os.path.join drops all other parts when one part is an absolute path;
+# os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
 def _myown_os_path_join(*paths):
     joined = ''
@@ -155,24 +156,29 @@ def _populate_os_data():
         for os_dict_key, os_dict in supported_oses.items():
             for vars_dict_key, vars_dict in os_vars.items():
                 for var_dict_key, var_dict in vars_dict.items():
-                    for name_in_supported_oses_key, name_in_supported_oses in var_dict['names_in_supported_oses'].items():
+                    for name_in_supported_oses_key, name_in_supported_oses in \
+                                            var_dict['names_in_supported_oses'].items():
                         if name_in_supported_oses_key == os_dict_key:
                             os_dict[var_dict_key] = name_in_supported_oses
                     if var_dict['required'] == 'non-empty' and not os_dict[var_dict_key]:
-                        print('_populate_os_dict ERROR: ' + var_dict_key + ' is empty for ' + os_dict_key)
+                        print('_populate_os_dict ERROR: ' + var_dict_key + \
+                                                        ' is empty for ' + os_dict_key)
                         sys.exit(1)
     _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
     return mydict
 
 def _myown_env_variables_descriptions():
     mydict = {}
-    mydict['cached_dir'] = ('MYCACHEDDIR', "cached 'dir' argument for global_vars['env'].Install", '')
-    mydict['cached_source'] = ('MYCACHEDSOURCE', "cached 'source' argument for global_vars['env'].Install", '')
+    mydict['cached_dir'] = ('MYCACHEDDIR', \
+                            "cached 'dir' argument for global_vars['env'].Install", '')
+    mydict['cached_source'] = ('MYCACHEDSOURCE', \
+                            "cached 'source' argument for global_vars['env'].Install", '')
     return mydict
 
 def populate_global_vars():
     mydict = {
-        # 2 my own env variables are added in function read_variables_cache and then their values are set in function _save_variables_cache
+        # 2 my own env variables are added in function read_variables_cache and then
+        # their values are set in function _save_variables_cache
         'env' : Environment(),
 
         # All that I add to env variables must be defined in tuples here
@@ -187,11 +193,15 @@ def populate_global_vars():
     mydict['os_data'] = _populate_os_data()
     mydict['os_detected_at'] = 'destdir'
 
-    # Set in function _detect_os, by finding non-empty value of scons argument which name is determined by the key 'os_detected_at' above:
+    # Set in function _detect_os, by finding non-empty value of scons argument
+    # which name is determined by the key 'os_detected_at' above:
     #   (see function _populate_os_data)
-    #      if we found argument 'DESTDIR' with non-empty value, then, OS is detected as Gentoo,
-    #      if we found argument 'install_root' with non-empty value, then, OS is detected as Debian/Ubuntu
-    # I don't use special tools for detecting OS intentionally, because I define OS here as a set of variables
+    #      if we found argument 'DESTDIR' with non-empty value, then,
+    #         OS is detected as Gentoo,
+    #      if we found argument 'install_root' with non-empty value, then,
+    #         OS is detected as Debian/Ubuntu
+    # I don't use special tools for detecting OS intentionally,
+    # because I define OS here as a set of variables
     mydict['detected_os'] = ''
 
     # Values are set in functions _get_prefix_and_destdir and _get_cpp_linker_vars
@@ -201,7 +211,8 @@ def populate_global_vars():
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
     mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
 
-    # This is a SCons.Variables.Variables class object for reading from / writing to the variables cache file
+    # This is a SCons.Variables.Variables class object for reading from /
+    # writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
     mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
 
@@ -214,20 +225,24 @@ def _detect_os(global_vars):
     for key, nested_dict in global_vars['os_data']['supported_oses'].items():
         os_detected_at = global_vars['os_detected_at']
         os_argname = nested_dict[os_detected_at]
-        print('checking for ' + os_detected_at + ' as ' + os_argname + '... (are we on ' + nested_dict['os_name'] + '?)')
+        print('checking for ' + os_detected_at + ' as ' + os_argname + \
+                                        '... (are we on ' + nested_dict['os_name'] + '?)')
         os_argvalue = ARGUMENTS.get(os_argname)
         if os_argvalue:
             global_vars['detected_os'] = key
             print('detected Operating System: ' + global_vars['detected_os'])
             return 1
     print('Operating System not detected')
-    print('If your Operating System is not supported, you can simulate one of supported OSes by passing parameters with names that it has')
-    print('Parameter names that each of supported Operating Systems has, you can see them in function _populate_os_data')
+    print('If your Operating System is not supported, you can simulate one of \
+                            supported OSes by passing parameters with names that it has')
+    print('Parameter names that each of supported Operating Systems has, \
+                                    you can see them in function _populate_os_data')
     sys.exit(1)
 
 def _get_argvalue(global_vars, argname):
     if global_vars['detected_os'] == '' and argname != global_vars['os_detected_at']:
-        print('_get_argvalue ERROR: when getting ' + argname + ' value, OS should be already detected')
+        print('_get_argvalue ERROR: when getting ' + argname + \
+                                ' value, OS should be already detected')
         sys.exit(1)
     if argname == global_vars['os_detected_at']:
         _detect_os(global_vars)
@@ -235,21 +250,29 @@ def _get_argvalue(global_vars, argname):
     this_os_argname = global_vars['os_data']['supported_oses'][detected_os][argname]
     argvalue = ARGUMENTS.get(this_os_argname)
     if argvalue:
-        print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument found: ' + argvalue)
+        print(argname + ' (' + this_os_argname + ' in ' + \
+                global_vars['os_data']['supported_oses'][detected_os]['os_name'] + \
+                ') argument found: ' + argvalue)
         return argvalue
-    print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument not found')
+    print(argname + ' (' + this_os_argname + ' in ' + \
+                global_vars['os_data']['supported_oses'][detected_os]['os_name'] + \
+                ') argument not found')
     return ''
 
 def _get_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_argvalue(global_vars, 'destdir')
-    # No check 'if os_destdir_argvalue' here because if it is not 'true', OS will not be defined and the script will exit in function _detect_os
-    global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['install_path'])
-    print("until prefix is found, global_vars['got_arguments']['destdir'] is set for default value without prefix: " + global_vars['got_arguments']['destdir'])
+    # No check 'if os_destdir_argvalue' here because if it is not 'true',
+    # OS will not be defined and the script will exit in function _detect_os
+    global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, \
+                                                                global_vars['install_path'])
+    print('until prefix is found, destdir is set for default value without prefix: ' + \
+                                                    global_vars['got_arguments']['destdir'])
     os_prefix_argvalue = _get_argvalue(global_vars, 'prefix')
     if os_prefix_argvalue:
         global_vars['got_arguments']['prefix'] = os_prefix_argvalue
-        global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, global_vars['got_arguments']['prefix'], global_vars['install_path'])
-        print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
+        global_vars['got_arguments']['destdir'] = _myown_os_path_join(os_destdir_argvalue, \
+                            global_vars['got_arguments']['prefix'], global_vars['install_path'])
+        print('destdir is reset using prefix: ' + global_vars['got_arguments']['destdir'])
 
 def _get_cpp_linker_vars(global_vars):
     for key, mydict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
@@ -268,7 +291,8 @@ def _apply_cpp_linker_vars(global_vars):
                 sys.exit(1)
             print('setting ' + name_in_env + ' to ' + global_vars['got_arguments'][key])
             # Replace's keyword (in 'keyword = value' syntax) can't be an expression
-            evaling_string = "global_vars['env'].Replace(" + name_in_env + "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
+            evaling_string = "global_vars['env'].Replace(" + name_in_env + \
+                                "= SCons.Util.CLVar(global_vars['got_arguments'][key]))"
             eval(evaling_string)
 
 def get_myown_env_variable(global_vars, usedname):
@@ -291,7 +315,8 @@ def _save_variables_cache(global_vars):
     _set_myown_env_variable(global_vars, 'cached_dir', global_vars['got_arguments']['destdir'])
     _set_myown_env_variable(global_vars, 'cached_source', global_vars['compile_target'])
 
-    # This saves only variables from 'scons_var_obj', not all variables from 'env' (here 'env' is the environment to get the option values from)
+    # This saves only variables from 'scons_var_obj', not all variables from 'env'
+    # (here 'env' is the environment to get the option values from)
     # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
     global_vars['scons_var_obj'].Save(global_vars['variables_cache_file'], global_vars['env'])
 
@@ -303,26 +328,32 @@ def get_and_save_variables_for_install(global_vars):
 def mycompile(global_vars):
     _get_cpp_linker_vars(global_vars)
     _apply_cpp_linker_vars(global_vars)
-    target = global_vars['env'].Program(target = global_vars['compile_target'], source = global_vars['source_full'])
+    target = global_vars['env'].Program(target = global_vars['compile_target'], \
+                                            source = global_vars['source_full'])
     Default(target)
-    print('will compile: target = ' + global_vars['compile_target'] + ', source = ' + global_vars['source_full'])
+    print('will compile: target = ' + global_vars['compile_target'] + ', \
+                                            source = ' + global_vars['source_full'])
 
 def install(global_vars):
-    target = global_vars['env'].Install(dir = get_myown_env_variable(global_vars, 'cached_dir'), source = get_myown_env_variable(global_vars, 'cached_source'))
+    target = global_vars['env'].Install(dir = get_myown_env_variable(global_vars, 'cached_dir'), \
+                                    source = get_myown_env_variable(global_vars, 'cached_source'))
     Default(target)
-    print('will install: dir = ' + get_myown_env_variable(global_vars, 'cached_dir') + ', source = ' + get_myown_env_variable(global_vars, 'cached_source'))
+    print('will install: dir = ' + get_myown_env_variable(global_vars, 'cached_dir') + \
+                        ', source = ' + get_myown_env_variable(global_vars, 'cached_source'))
 
 global_vars = populate_global_vars()
 
 read_variables_cache(global_vars)
 
-if get_myown_env_variable(global_vars, 'cached_dir') and get_myown_env_variable(global_vars, 'cached_source'):
+if get_myown_env_variable(global_vars, 'cached_dir') and \
+            get_myown_env_variable(global_vars, 'cached_source'):
     print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
         install(global_vars)
     else:
-        print('will not install; this SConscript requires passing "INSTALL=1" in command-line arguments instead of "install" after them')
+        print('will not install; this SConscript requires passing "INSTALL=1" \
+                                in command-line arguments instead of "install" after them')
         mycompile(global_vars)
 else:
     print('variables for install not retrieved')
