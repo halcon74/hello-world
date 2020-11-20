@@ -229,7 +229,7 @@ def _get_argvalue(global_vars, argname):
     if global_vars['detected_os'] == '' and argname != global_vars['os_detected_at']:
         print('_get_argvalue ERROR: when getting ' + argname + ' value, OS should be already detected')
         sys.exit(1)
-    if (argname == global_vars['os_detected_at']):
+    if argname == global_vars['os_detected_at']:
         _detect_os(global_vars)
     detected_os = global_vars['detected_os']
     this_os_argname = global_vars['os_data']['supported_oses'][detected_os][argname]
@@ -237,9 +237,8 @@ def _get_argvalue(global_vars, argname):
     if argvalue:
         print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument found: ' + argvalue)
         return argvalue
-    else:
-        print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument not found')
-        return ''
+    print(argname + ' (' + this_os_argname + ' in ' + global_vars['os_data']['supported_oses'][detected_os]['os_name'] + ') argument not found')
+    return ''
 
 def _get_prefix_and_destdir(global_vars):
     os_destdir_argvalue = _get_argvalue(global_vars, 'destdir')
@@ -253,14 +252,14 @@ def _get_prefix_and_destdir(global_vars):
         print("global_vars['got_arguments']['destdir'] is reset using prefix: " + global_vars['got_arguments']['destdir'])
 
 def _get_cpp_linker_vars(global_vars):
-    for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
+    for key, mydict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
         os_argvalue = _get_argvalue(global_vars, key)
         if os_argvalue:
             global_vars['got_arguments'][key] = os_argvalue
 
 def _apply_cpp_linker_vars(global_vars):
-    for key, dict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
-        name_in_env = dict['name_in_env']
+    for key, mydict in global_vars['os_data']['os_vars']['cpp_linker_vars'].items():
+        name_in_env = mydict['name_in_env']
         if name_in_env:
             pattern = re.compile("^[A-Z]+$")
             match = pattern.match(name_in_env)
@@ -301,7 +300,7 @@ def get_and_save_variables_for_install(global_vars):
     _get_prefix_and_destdir(global_vars)
     _save_variables_cache(global_vars)
 
-def compile(global_vars):
+def mycompile(global_vars):
     _get_cpp_linker_vars(global_vars)
     _apply_cpp_linker_vars(global_vars)
     target = global_vars['env'].Program(target = global_vars['compile_target'], source = global_vars['source_full'])
@@ -324,8 +323,8 @@ if get_myown_env_variable(global_vars, 'cached_dir') and get_myown_env_variable(
         install(global_vars)
     else:
         print('will not install; this SConscript requires passing "INSTALL=1" in command-line arguments instead of "install" after them')
-        compile(global_vars)
+        mycompile(global_vars)
 else:
     print('variables for install not retrieved')
     get_and_save_variables_for_install(global_vars)
-    compile(global_vars)
+    mycompile(global_vars)
