@@ -99,7 +99,7 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def _populate_os_data():
+def _populate_os_data(os_detected_at):
     mydict = {}
     mydict['supported_oses'] = OrderedDict()
     mydict['supported_oses'] = {
@@ -113,7 +113,6 @@ def _populate_os_data():
     mydict['os_vars'] = {
         'install_vars' : {
             'destdir' : {
-                'required' : 'non-empty',
                 'name_in_env' : '',
                 'names_in_oses' : {
                     'gentoo' : 'DESTDIR',
@@ -121,7 +120,6 @@ def _populate_os_data():
                 }
             },
             'prefix' : {
-                'required' : '',
                 'name_in_env' : '',
                 'names_in_oses' : {
                     'gentoo' : 'PREFIX'
@@ -130,21 +128,18 @@ def _populate_os_data():
         },
         'cpp_linker_vars' : {
             'cpp_compiler' : {
-                'required' : '',
                 'name_in_env' : 'CXX',
                 'names_in_oses' : {
                     'gentoo' : 'CXX'
                 }
             },
             'cpp_compiler_flags' : {
-                'required' : '',
                 'name_in_env' : 'CXXFLAGS',
                 'names_in_oses' : {
                     'gentoo' : 'CXXFLAGS'
                 }
             },
             'linker_flags' : {
-                'required' : '',
                 'name_in_env' : 'LINKFLAGS',
                 'names_in_oses' : {
                     'gentoo' : 'LDFLAGS'
@@ -162,7 +157,7 @@ def _populate_os_data():
                     for key in os_var_dict['names_in_oses'].keys():
                         if key == os_dict_key:
                             os_dict[var_key] = os_var_dict['names_in_oses'][key]
-                    if os_var_dict['required'] == 'non-empty' and os_dict[var_key] == '':
+                    if var_key == os_detected_at and os_dict[var_key] == '':
                         print('_populate_os_dict ERROR: ' + var_key + \
                                                         ' is empty for ' + os_dict_key)
                         sys.exit(1)
@@ -194,8 +189,8 @@ def populate_global_vars():
     }
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
     mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
-    mydict['os_data'] = _populate_os_data()
     mydict['os_detected_at'] = 'destdir'
+    mydict['os_data'] = _populate_os_data(mydict['os_detected_at'])
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by the key 'os_detected_at' above:
