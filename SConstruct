@@ -324,7 +324,7 @@ def mycompile(obj):
     print('will compile: target = ' + obj['compile_target'] + ', \
                                             source = ' + obj['source_full'])
 
-def install(obj):
+def myinstall(obj):
     target = obj['env'].Install(dir = get_myown_env_variable(obj, 'cached_dir'), \
                                     source = get_myown_env_variable(obj, 'cached_source'))
     Default(target)
@@ -340,7 +340,7 @@ if get_myown_env_variable(global_vars, 'cached_dir') and \
     print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
-        install(global_vars)
+        myinstall(global_vars)
     else:
         print('will not install; this SConscript requires passing "INSTALL=1" \
                                 in command-line arguments instead of "install" after them')
