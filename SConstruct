@@ -153,7 +153,8 @@ def _populate_os_data():
         }
     }
     def _populate_os_dict(supported_oses, os_vars):
-        for os_dict_key, os_dict in supported_oses.items():
+        for os_dict_key in supported_oses.keys():
+            os_dict = supported_oses[os_dict_key]
             for vars_key in os_vars.keys():
                 os_vars_dict = os_vars[vars_key]
                 for var_key in os_vars_dict.keys():
