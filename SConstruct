@@ -99,101 +99,108 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def _populate_os_data(os_detected_at):
-    mydict = {}
-    mydict['supported_oses'] = OrderedDict()
-    mydict['supported_oses'] = {
-        'gentoo' : {
-            'os_name' : 'Gentoo'
-        },
-        'debian' : {
-            'os_name' : 'Debian/Ubuntu'
+def populate_global_vars():
+    def _define_vars(os_detected_at):
+        defining_obj = {}
+        defining_obj['supported_oses'] = OrderedDict()
+        defining_obj['supported_oses'] = {
+            'gentoo' : {
+                'os_name' : 'Gentoo'
+            },
+            'debian' : {
+                'os_name' : 'Debian/Ubuntu'
+            }
         }
-    }
-    mydict['os_vars'] = {
-        'install_vars' : {
-            'destdir' : {
-                'name_in_env' : '',
-                'var_goes_to_cache' : 'cached_dir',
-                'scons_add_tuple' : ('MYCACHEDDIR', \
-                                "cached 'dir' argument for global_vars['env'].Install", ''),
+        defining_obj['os_vars'] = {
+            'install_vars' : {
+                'destdir' : {
+                    'name_in_env' : '',
+                    'var_goes_to_cache' : 'cached_dir',
+                    'scons_add_tuple' : ('MYCACHEDDIR', \
+                                    "cached 'dir' argument for global_vars['env'].Install", ''),
+                    'get_from_os' : 1,
+                    'names_in_oses' : {
+                        'gentoo' : 'DESTDIR',
+                        'debian' : 'install_root'
+                    }
+                },
+                'prefix' : {
+                    'name_in_env' : '',
+                    'var_goes_to_cache' : '',
+                    'get_from_os' : 1,
+                    'names_in_oses' : {
+                        'gentoo' : 'PREFIX'
+                    }
+                },
+                'compile_target' : {
+                    'name_in_env' : '',
+                    'var_goes_to_cache' : 'cached_source',
+                    'scons_add_tuple' : ('MYCACHEDSOURCE', \
+                                    "cached 'source' argument for global_vars['env'].Install", ''),
+                    'get_from_os' : 0
+                }
+            },
+            'cpp_linker_vars' : {
+                'cpp_compiler' : {
+                    'name_in_env' : 'CXX',
+                    'var_goes_to_cache' : '',
+                    'get_from_os' : 1,
+                    'names_in_oses' : {
+                        'gentoo' : 'CXX'
+                    }
+                },
+                'cpp_compiler_flags' : {
+                    'name_in_env' : 'CXXFLAGS',
+                    'var_goes_to_cache' : '',
+                    'get_from_os' : 1,
+                    'names_in_oses' : {
+                        'gentoo' : 'CXXFLAGS'
+                    }
+                },
+                'linker_flags' : {
+                    'name_in_env' : 'LINKFLAGS',
+                    'var_goes_to_cache' : '',
+                    'get_from_os' : 1,
+                    'names_in_oses' : {
+                        'gentoo' : 'LDFLAGS'
+                    }
+                }
+            }
+        }
 
-                'names_in_oses' : {
-                    'gentoo' : 'DESTDIR',
-                    'debian' : 'install_root'
-                }
-            },
-            'prefix' : {
-                'name_in_env' : '',
-                'var_goes_to_cache' : '',
-                'names_in_oses' : {
-                    'gentoo' : 'PREFIX'
-                }
-            },
-            'compile_target' : {
-                'name_in_env' : '',
-                'var_goes_to_cache' : 'cached_source',
-                'scons_add_tuple' : ('MYCACHEDSOURCE', \
-                                "cached 'source' argument for global_vars['env'].Install", ''),
-                'names_in_oses' : {}
-            }
-        },
-        'cpp_linker_vars' : {
-            'cpp_compiler' : {
-                'name_in_env' : 'CXX',
-                'var_goes_to_cache' : '',
-                'names_in_oses' : {
-                    'gentoo' : 'CXX'
-                }
-            },
-            'cpp_compiler_flags' : {
-                'name_in_env' : 'CXXFLAGS',
-                'var_goes_to_cache' : '',
-                'names_in_oses' : {
-                    'gentoo' : 'CXXFLAGS'
-                }
-            },
-            'linker_flags' : {
-                'name_in_env' : 'LINKFLAGS',
-                'var_goes_to_cache' : '',
-                'names_in_oses' : {
-                    'gentoo' : 'LDFLAGS'
-                }
-            }
-        }
-    }
-    def _populate_os_dict(supported_oses, os_vars):
-        for os_dict_key in supported_oses.keys():
-            os_dict = supported_oses[os_dict_key]
+        def _populate_os_dict(supported_oses, os_vars):
+            for os_dict_key in supported_oses.keys():
+                os_dict = supported_oses[os_dict_key]
+                for vars_key in os_vars.keys():
+                    os_vars_dict = os_vars[vars_key]
+                    for var_key in os_vars_dict.keys():
+                        os_var_dict = os_vars_dict[var_key]
+                        if os_var_dict['get_from_os']:
+                            for key in os_var_dict['names_in_oses'].keys():
+                                if key == os_dict_key:
+                                    os_dict[var_key] = os_var_dict['names_in_oses'][key]
+                            if var_key == os_detected_at and os_dict[var_key] == '':
+                                print('_populate_os_dict ERROR: ' + var_key + \
+                                                                ' is empty for ' + os_dict_key)
+                                sys.exit(1)
+        _populate_os_dict(defining_obj['supported_oses'], defining_obj['os_vars'])
+
+        def _myown_env_variables_descriptions(os_vars):
+            myowndict = {}
             for vars_key in os_vars.keys():
                 os_vars_dict = os_vars[vars_key]
                 for var_key in os_vars_dict.keys():
                     os_var_dict = os_vars_dict[var_key]
-                    for key in os_var_dict['names_in_oses'].keys():
-                        if key == os_dict_key:
-                            os_dict[var_key] = os_var_dict['names_in_oses'][key]
-                    if var_key == os_detected_at and os_dict[var_key] == '':
-                        print('_populate_os_dict ERROR: ' + var_key + \
-                                                        ' is empty for ' + os_dict_key)
-                        sys.exit(1)
-    _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
-    def _myown_env_variables_descriptions(os_vars):
-        myowndict = {}
-        for vars_key in os_vars.keys():
-            os_vars_dict = os_vars[vars_key]
-            for var_key in os_vars_dict.keys():
-                os_var_dict = os_vars_dict[var_key]
-                var_goes_to_cache = os_var_dict['var_goes_to_cache']
-                if var_goes_to_cache:
-                    myowndict[var_goes_to_cache] = os_var_dict['scons_add_tuple']
-        return myowndict
-    myown_env_variables = _myown_env_variables_descriptions(mydict['os_vars'])
-    return mydict, myown_env_variables
+                    var_goes_to_cache = os_var_dict['var_goes_to_cache']
+                    if var_goes_to_cache:
+                        myowndict[var_goes_to_cache] = os_var_dict['scons_add_tuple']
+            return myowndict
+        myown_env_variables = _myown_env_variables_descriptions(defining_obj['os_vars'])
+        return defining_obj, myown_env_variables
 
-def populate_global_vars():
     mydict = {}
     mydict['os_detected_at'] = 'destdir'
-    os_data, myown_env_variables = _populate_os_data(mydict['os_detected_at'])
+    os_data, myown_env_variables = _define_vars(mydict['os_detected_at'])
 
     # 2 my own env variables are added in function read_variables_cache and then
     # their values are set in function _save_variables_cache
@@ -212,9 +219,12 @@ def populate_global_vars():
     mydict['os_detected_at'] = 'destdir'
     mydict['os_data'] = os_data
 
+    mydict['my_vars'] = {}
+    mydict['my_vars']['compile_target'] = mydict['compile_target']
+
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by the key 'os_detected_at' above:
-    #   (see function _populate_os_data)
+    #   (see function _define_vars)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then,
@@ -224,7 +234,7 @@ def populate_global_vars():
     mydict['detected_os'] = ''
 
     # Values are set in functions _get_prefix_and_destdir and _get_cpp_linker_vars
-    mydict['got_arguments'] = {}
+    mydict['got_vars'] = {}
 
     mydict['variables_cache_file'] = 'scons_variables_cache.conf'
 
@@ -233,7 +243,7 @@ def populate_global_vars():
     # Changed by calling method "Add" in function read_variables_cache
     mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
 
-    # A "class method"
+    # Internal method
     def _detect_os(self):
         if self['detected_os']:
             print('re-detecting Operating System is not supported')
@@ -252,13 +262,13 @@ def populate_global_vars():
         print('If your Operating System is not supported, you can simulate one of \
                                 supported OSes by passing parameters with names that it has')
         print('Parameter names that each of supported Operating Systems has, \
-                                        you can see them in function _populate_os_data')
+                                        you can see them in function _define_vars')
         sys.exit(1)
 
-    # A "class method"
-    def get_argvalue(self, argname):
+    # Internal method
+    def _get_from_os(self, argname):
         if self['detected_os'] == '' and argname != self['os_detected_at']:
-            print('_get_argvalue ERROR: when getting ' + argname + \
+            print('_get_from_os ERROR: when getting ' + argname + \
                                     ' value, OS should be already detected')
             sys.exit(1)
         if argname == self['os_detected_at']:
@@ -275,36 +285,48 @@ def populate_global_vars():
                     self['os_data']['supported_oses'][detected_os]['os_name'] + \
                     ') argument not found')
         return ''
-    mydict['get_argvalue'] = get_argvalue
+
+    # External method
+    def get_vars(self, vars_name):
+        print('get_vars: ' + vars_name)
+        os_vars = self['os_data']['os_vars']
+        for vars_key in os_vars.keys():
+            if vars_key == vars_name:
+                os_vars_dict = os_vars[vars_key]
+                for var_key in os_vars_dict.keys():
+                    os_var_dict = os_vars_dict[var_key]
+                    if os_var_dict['get_from_os']:
+                        var_value = _get_from_os(self, var_key)
+                        if var_value:
+                            mydict['got_vars'][var_key] = var_value
+                    else:
+                        mydict['got_vars'][var_key] = mydict['my_vars']
+        return
+
+    mydict['get_vars'] = get_vars
     return mydict
 
 def _get_prefix_and_destdir(obj):
-    for key in obj['os_data']['os_vars']['install_vars'].keys():
-        os_argvalue = obj['get_argvalue'](obj, key)
-        if os_argvalue:
-            obj['got_arguments'][key] = os_argvalue
+    obj['get_vars'](obj, 'install_vars')
 
     print('until prefix is found, destdir is set for default value without prefix: ' + \
-                                                        obj['got_arguments']['destdir'])
-    if obj['got_arguments']['prefix']:
-        obj['got_arguments']['destdir'] = _myown_os_path_join(\
-                                        obj['got_arguments']['destdir'], \
-                                        obj['got_arguments']['prefix'], obj['install_path'])
-        print('destdir is reset using prefix and install_path: ' + obj['got_arguments']['destdir'])
+                                                        obj['got_vars']['destdir'])
+    if obj['got_vars']['prefix']:
+        obj['got_vars']['destdir'] = _myown_os_path_join(\
+                                        obj['got_vars']['destdir'], \
+                                        obj['got_vars']['prefix'], obj['install_path'])
+        print('destdir is reset using prefix and install_path: ' + obj['got_vars']['destdir'])
 
 def _get_cpp_linker_vars(obj):
-    for key in obj['os_data']['os_vars']['cpp_linker_vars'].keys():
-        os_argvalue = obj['get_argvalue'](obj, key)
-        if os_argvalue:
-            obj['got_arguments'][key] = os_argvalue
+    obj['get_vars'](obj, 'cpp_linker_vars')
 
 def _apply_cpp_linker_vars(obj):
     for key, mydict in obj['os_data']['os_vars']['cpp_linker_vars'].items():
         name_in_env = mydict['name_in_env']
         if name_in_env:
             replace_args = {}
-            print('setting ' + name_in_env + ' to ' + obj['got_arguments'][key])
-            replace_args[name_in_env] = SCons.Util.CLVar(obj['got_arguments'][key])
+            print('setting ' + name_in_env + ' to ' + obj['got_vars'][key])
+            replace_args[name_in_env] = SCons.Util.CLVar(obj['got_vars'][key])
             obj['env'].Replace(**replace_args)
 
 def get_myown_env_variable(obj, usedname):
@@ -324,7 +346,7 @@ def read_variables_cache(obj):
     obj['env'] = Environment(variables = obj['scons_var_obj'])
 
 def _save_variables_cache(obj):
-    _set_myown_env_variable(obj, 'cached_dir', obj['got_arguments']['destdir'])
+    _set_myown_env_variable(obj, 'cached_dir', obj['got_vars']['destdir'])
     _set_myown_env_variable(obj, 'cached_source', obj['compile_target'])
 
     # This saves only variables from 'scons_var_obj', not all variables from 'env'
@@ -343,8 +365,8 @@ def mycompile(obj):
     target = obj['env'].Program(target = obj['compile_target'], \
                                             source = obj['source_full'])
     Default(target)
-    print('will compile: target = ' + obj['compile_target'] + ', \
-                                            source = ' + obj['source_full'])
+    print('will compile: target = ' + obj['compile_target'] + \
+                                            ', source = ' + obj['source_full'])
 
 def myinstall(obj):
     target = obj['env'].Install(dir = get_myown_env_variable(obj, 'cached_dir'), \
