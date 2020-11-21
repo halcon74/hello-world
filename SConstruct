@@ -124,12 +124,14 @@ def helpers_class():
             }
         }
         vars_data = {
-            # All that I add to env variables must be defined in values of 'is_saved_to_cache_file' here
+            # All that I add to env variables must be defined
+            # in values of 'is_saved_to_cache_file' here
             'install_vars' : {
                 'destdir' : {
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : ('MYCACHEDDIR', \
-                                    "cached 'dir' argument for int_obj['scons_objects']['env'].Install", ''),
+                                    "cached 'dir' argument for " + \
+                                    "int_obj['scons_objects']['env'].Install", ''),
                     'is_getting_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
                     'is_post_processed_in_a_function' : 'reset_destdir'
                 },
@@ -142,7 +144,8 @@ def helpers_class():
                 'compile_target' : {
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
-                                    "cached 'source' argument for int_obj['scons_objects']['env'].Install", ''),
+                                    "cached 'source' argument for " + \
+                                    "int_obj['scons_objects']['env'].Install", ''),
                     'is_getting_from_arguments' : '',
                     'is_post_processed_in_a_function' : ''
                 }
@@ -331,7 +334,8 @@ def helpers_class():
             if is_applied_to_scons_env:
                 replace_args = {}
                 print('setting ' + is_applied_to_scons_env + ' to ' + int_obj['got_vars'][var_key])
-                replace_args[is_applied_to_scons_env] = SCons.Util.CLVar(int_obj['got_vars'][var_key])
+                replace_args[is_applied_to_scons_env] = \
+                                            SCons.Util.CLVar(int_obj['got_vars'][var_key])
                 int_obj['scons_objects']['env'].Replace(**replace_args)
 
     # External method
