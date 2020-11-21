@@ -21,7 +21,7 @@
 # creates a variables-cache file.
 #
 # The name of this file is set in function helpers_class,
-# variable 'variables_cache_file'.
+# variable int_obj['variables_cache_file'].
 #
 # With this file, no redundant actions (that are usually called
 # 're-configuring') will be performed during the second and all the
@@ -101,7 +101,9 @@ def _myown_os_path_join(*paths):
 
 def helpers_class():
 
-    paths_and_names = {
+    int_obj = {}
+
+    int_obj['paths_and_names'] = {
         'source_path' : 'src',
         'source_name' : 'main.cpp',
         'compile_path' : 'build',
@@ -109,12 +111,7 @@ def helpers_class():
         'binary_name' : 'Hello_World'
     }
 
-    source_full = _myown_os_path_join(paths_and_names['source_path'], \
-                                                    paths_and_names['source_name'])
-    compile_target = _myown_os_path_join(paths_and_names['compile_path'], \
-                                                    paths_and_names['binary_name'])
-
-    variables_cache_file = 'scons_variables_cache.conf'
+    int_obj['variables_cache_file'] = 'scons_variables_cache.conf'
 
     def _define_os_data_and_myown_env_variables(os_detected_at):
         os_dict = {}
@@ -128,6 +125,7 @@ def helpers_class():
             }
         }
         os_dict['os_vars'] = {
+            # All that I add to env variables must be defined in values of 'scons_add_tuple' here
             'install_vars' : {
                 'destdir' : {
                     'name_in_env' : '',
@@ -226,10 +224,10 @@ def helpers_class():
         myown_env_dict = _myown_env_variables_descriptions(os_dict['os_vars'])
         return os_dict, myown_env_dict
 
-    os_detected_at = 'destdir'
-    os_data, myown_env_variables = _define_os_data_and_myown_env_variables(os_detected_at)
+    int_obj['os_detected_at'] = 'destdir'
+    int_obj['os_data'], int_obj['myown_env_variables'] = _define_os_data_and_myown_env_variables(int_obj['os_detected_at'])
 
-    scons_objects = {
+    int_obj['scons_objects'] = {
         # 2 my own env variables are added in function read_variables_cache and then
         # their values are set in function _save_variables_cache
         'env' : Environment(),
@@ -237,23 +235,18 @@ def helpers_class():
         # This is a SCons.Variables.Variables class object for reading from /
         # writing to the variables cache file
         # Changed by calling method "Add" in function read_variables_cache
-        'scons_var_obj' : Variables(variables_cache_file)
+        'scons_var_obj' : Variables(int_obj['variables_cache_file'])
     }
 
-    obj = {}
-
-    obj['os_data'] = os_data
-
-    # All that I add to env variables must be defined in tuples here
-    obj['myown_env_variables'] = myown_env_variables
-
-    obj['my_vars'] = {
-        'source_full' : source_full,
-        'compile_target' : compile_target,
+    int_obj['my_vars'] = {
+        'source_full' : _myown_os_path_join(int_obj['paths_and_names']['source_path'], \
+                                                int_obj['paths_and_names']['source_name']),
+        'compile_target' : _myown_os_path_join(int_obj['paths_and_names']['compile_path'], \
+                                                int_obj['paths_and_names']['binary_name'])
     }
 
     # Set in function _detect_os, by finding non-empty value of scons argument
-    # which name is determined by variable 'os_detected_at' above:
+    # which name is determined by variable int_obj['os_detected_at']:
     #   (see function _define_os_data_and_myown_env_variables)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
@@ -261,24 +254,24 @@ def helpers_class():
     #         OS is detected as Debian/Ubuntu
     # I don't use special tools for detecting OS intentionally,
     # because I define OS here as a set of variables
-    obj['detected_os'] = ''
+    int_obj['detected_os'] = ''
 
     # Values are set in function get_vars
-    obj['got_vars'] = {}
+    int_obj['got_vars'] = {}
 
     # Internal method
-    def _detect_os(self):
-        if self['detected_os']:
+    def _detect_os():
+        if int_obj['detected_os']:
             print('re-detecting Operating System is not supported')
             sys.exit(1)
-        for key, nested_dict in self['os_data']['supported_oses'].items():
-            os_argname = nested_dict[os_detected_at]
-            print('checking for ' + os_detected_at + ' as ' + os_argname + \
+        for key, nested_dict in int_obj['os_data']['supported_oses'].items():
+            os_argname = nested_dict[int_obj['os_detected_at']]
+            print('checking for ' + int_obj['os_detected_at'] + ' as ' + os_argname + \
                                             '... (are we on ' + nested_dict['os_name'] + '?)')
             os_argvalue = ARGUMENTS.get(os_argname)
             if os_argvalue:
-                self['detected_os'] = key
-                print('detected Operating System: ' + self['detected_os'])
+                int_obj['detected_os'] = key
+                print('detected Operating System: ' + int_obj['detected_os'])
                 return 1
         print('Operating System not detected')
         print('If your Operating System is not supported, you can simulate one of \
@@ -288,129 +281,126 @@ def helpers_class():
         sys.exit(1)
 
     # Internal method
-    def _get_from_os(self, argname):
-        if self['detected_os'] == '' and argname != os_detected_at:
+    def _get_from_os(argname):
+        if int_obj['detected_os'] == '' and argname != int_obj['os_detected_at']:
             print('_get_from_os ERROR: when getting ' + argname + \
                                     ' value, OS should be already detected')
             sys.exit(1)
-        if argname == os_detected_at:
-            _detect_os(self)
-        detected_os = self['detected_os']
-        this_os_argname = self['os_data']['supported_oses'][detected_os][argname]
+        if argname == int_obj['os_detected_at']:
+            _detect_os()
+        detected_os = int_obj['detected_os']
+        this_os_argname = int_obj['os_data']['supported_oses'][detected_os][argname]
         argvalue = ARGUMENTS.get(this_os_argname)
         if argvalue:
             print(argname + ' (' + this_os_argname + ' in ' + \
-                    self['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    int_obj['os_data']['supported_oses'][detected_os]['os_name'] + \
                     ') argument found: ' + argvalue)
             return argvalue
         print(argname + ' (' + this_os_argname + ' in ' + \
-                    self['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    int_obj['os_data']['supported_oses'][detected_os]['os_name'] + \
                     ') argument not found')
         return ''
 
     # Internal method, goes to post_process_funcs
-    def _reset_destdir(self):
+    def _reset_destdir():
         print('initially, destdir is set for default value without prefix: ' + \
-                                                            self['got_vars']['destdir'])
-        if 'prefix' in self['got_vars'] and self['got_vars']['prefix']:
-            self['got_vars']['destdir'] = _myown_os_path_join(\
-                                    self['got_vars']['destdir'], \
-                                    self['got_vars']['prefix'], paths_and_names['install_path'])
-            print('destdir is reset using prefix and install_path: ' + self['got_vars']['destdir'])
+                                                            int_obj['got_vars']['destdir'])
+        if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
+            int_obj['got_vars']['destdir'] = _myown_os_path_join(\
+                                    int_obj['got_vars']['destdir'], \
+                                    int_obj['got_vars']['prefix'], int_obj['paths_and_names']['install_path'])
+            print('destdir is reset using prefix and install_path: ' + int_obj['got_vars']['destdir'])
 
     # Contains internal methods
     post_process_funcs = {}
     post_process_funcs['reset_destdir'] = _reset_destdir
 
     # Internal method, uses post_process_funcs
-    def _post_process(self, funcname):
+    def _post_process(funcname):
         if funcname in post_process_funcs:
-            post_process_funcs[funcname](self)
+            post_process_funcs[funcname]()
         else:
             print('_post_process ERROR: function ' + funcname + ' is not defined')
             sys.exit(1)
 
     # Internal method
-    def _launch_post_process(self, vars_name):
-        for var_dict in os_data['os_vars'][vars_name].values():
+    def _launch_post_process(vars_name):
+        for var_dict in int_obj['os_data']['os_vars'][vars_name].values():
             post_processing_key = var_dict['post_processing']
             if post_processing_key:
-                _post_process(self, post_processing_key)
+                _post_process(post_processing_key)
 
-    # External method (FACADE: _get_from_os | use self['my_vars'])
+    # External method (FACADE: _get_from_os | use int_obj['my_vars'])
     def get_vars(vars_name):
-        self = obj
-        for var_key, var_dict in os_data['os_vars'][vars_name].items():
+        for var_key, var_dict in int_obj['os_data']['os_vars'][vars_name].items():
             if var_dict['get_from_os']:
-                var_value = _get_from_os(self, var_key)
+                var_value = _get_from_os(var_key)
                 if var_value:
-                    self['got_vars'][var_key] = var_value
+                    int_obj['got_vars'][var_key] = var_value
             else:
-                self['got_vars'][var_key] = self['my_vars'][var_key]
-        _launch_post_process(self, vars_name)
+                int_obj['got_vars'][var_key] = int_obj['my_vars'][var_key]
+        _launch_post_process(vars_name)
 
     # External method
     def apply_vars(vars_name):
-        self = obj
-        for var_key, var_dict in os_data['os_vars'][vars_name].items():
+        for var_key, var_dict in int_obj['os_data']['os_vars'][vars_name].items():
             name_in_env = var_dict['name_in_env']
             if name_in_env:
                 replace_args = {}
-                print('setting ' + name_in_env + ' to ' + self['got_vars'][var_key])
-                replace_args[name_in_env] = SCons.Util.CLVar(self['got_vars'][var_key])
-                scons_objects['env'].Replace(**replace_args)
+                print('setting ' + name_in_env + ' to ' + int_obj['got_vars'][var_key])
+                replace_args[name_in_env] = SCons.Util.CLVar(int_obj['got_vars'][var_key])
+                int_obj['scons_objects']['env'].Replace(**replace_args)
 
     # External method
     def get_myown_env_variable(usedname):
-        varname = myown_env_variables[usedname][0]
-        value = scons_objects['env'][varname]
+        varname = int_obj['myown_env_variables'][usedname][0]
+        value = int_obj['scons_objects']['env'][varname]
         if value:
-            return scons_objects['env'][varname][0]
-        return scons_objects['env'][varname]
+            return int_obj['scons_objects']['env'][varname][0]
+        return int_obj['scons_objects']['env'][varname]
 
     # Internal method
     def _set_myown_env_variable(usedname, value):
-        varname = myown_env_variables[usedname][0]
-        scons_objects['env'][varname] = SCons.Util.CLVar(value)
+        varname = int_obj['myown_env_variables'][usedname][0]
+        int_obj['scons_objects']['env'][varname] = SCons.Util.CLVar(value)
 
     # External method
     def read_variables_cache():
-        for varname, scons_add_tuple in myown_env_variables.items():
+        for varname, scons_add_tuple in int_obj['myown_env_variables'].items():
             print('Reading ' + varname + ' from cache as ' + scons_add_tuple[0] + '...')
-            scons_objects['scons_var_obj'].Add(scons_add_tuple)
+            int_obj['scons_objects']['scons_var_obj'].Add(scons_add_tuple)
         # This adds new variables to Environment (doesn't rewrite it)
         # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-        scons_objects['env'] = Environment(variables = scons_objects['scons_var_obj'])
+        int_obj['scons_objects']['env'] = Environment(variables = int_obj['scons_objects']['scons_var_obj'])
 
     # External method
     def save_variables_cache():
-        self = obj
-        for varname, scons_add_tuple in myown_env_variables.items():
+        for varname, scons_add_tuple in int_obj['myown_env_variables'].items():
             print('Saving ' + varname + ' to cache as ' + scons_add_tuple[0] + '...')
-            _set_myown_env_variable(varname, self['got_vars'][varname])
+            _set_myown_env_variable(varname, int_obj['got_vars'][varname])
         # This saves only variables from 'scons_var_obj', not all variables from 'env'
         # (here 'env' is the environment to get the option values from)
         # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
-        scons_objects['scons_var_obj'].Save(variables_cache_file, scons_objects['env'])
+        int_obj['scons_objects']['scons_var_obj'].Save(int_obj['variables_cache_file'], int_obj['scons_objects']['env'])
 
     # External method
     def program_compile():
-        self = obj
-        target = scons_objects['env'].Program(target = self['got_vars']['compile_target'], \
-                                                source = self['got_vars']['source_full'])
+        target = int_obj['scons_objects']['env'].Program(target = int_obj['got_vars']['compile_target'], \
+                                                source = int_obj['got_vars']['source_full'])
         Default(target)
-        print('will compile: target = ' + self['got_vars']['compile_target'] + \
-                                                ', source = ' + self['got_vars']['source_full'])
+        print('will compile: target = ' + int_obj['got_vars']['compile_target'] + \
+                                                ', source = ' + int_obj['got_vars']['source_full'])
 
     # External method
     def program_install():
-        target = scons_objects['env'].Install(dir = get_myown_env_variable('destdir'), \
+        target = int_obj['scons_objects']['env'].Install(dir = get_myown_env_variable('destdir'), \
                                         source = get_myown_env_variable('compile_target'))
         Default(target)
         print('will install: dir = ' + get_myown_env_variable('destdir') + \
                             ', source = ' + get_myown_env_variable('compile_target'))
 
 
+    obj = {}
     obj['get_vars'] = get_vars
     obj['apply_vars'] = apply_vars
     obj['get_myown_env_variable'] = get_myown_env_variable
