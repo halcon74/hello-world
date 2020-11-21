@@ -406,15 +406,15 @@ def helpers_class():
                             ', source = ' + get_myown_env_variable('compile_target'))
 
 
-    obj = {}
-    obj['get_vars'] = get_vars
-    obj['apply_vars'] = apply_vars
-    obj['get_myown_env_variable'] = get_myown_env_variable
-    obj['read_variables_cache'] = read_variables_cache
-    obj['save_variables_cache'] = save_variables_cache
-    obj['program_compile'] = program_compile
-    obj['program_install'] = program_install
-    return obj
+    ext_obj = {}
+    ext_obj['get_vars'] = get_vars
+    ext_obj['apply_vars'] = apply_vars
+    ext_obj['get_myown_env_variable'] = get_myown_env_variable
+    ext_obj['read_variables_cache'] = read_variables_cache
+    ext_obj['save_variables_cache'] = save_variables_cache
+    ext_obj['program_compile'] = program_compile
+    ext_obj['program_install'] = program_install
+    return ext_obj
 
 def get_and_save_variables_for_install(helpers_):
     print('getting and saving variables needed for install...')
