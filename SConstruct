@@ -213,52 +213,56 @@ def populate_global_vars():
     # Changed by calling method "Add" in function read_variables_cache
     mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
 
-    return mydict
-
-def _detect_os(obj):
-    if obj['detected_os']:
-        print('re-detecting Operating System is not supported')
+    # A "class method"
+    def _detect_os(self):
+        if self['detected_os']:
+            print('re-detecting Operating System is not supported')
+            sys.exit(1)
+        for key, nested_dict in self['os_data']['supported_oses'].items():
+            os_detected_at = self['os_detected_at']
+            os_argname = nested_dict[os_detected_at]
+            print('checking for ' + os_detected_at + ' as ' + os_argname + \
+                                            '... (are we on ' + nested_dict['os_name'] + '?)')
+            os_argvalue = ARGUMENTS.get(os_argname)
+            if os_argvalue:
+                self['detected_os'] = key
+                print('detected Operating System: ' + self['detected_os'])
+                return 1
+        print('Operating System not detected')
+        print('If your Operating System is not supported, you can simulate one of \
+                                supported OSes by passing parameters with names that it has')
+        print('Parameter names that each of supported Operating Systems has, \
+                                        you can see them in function _populate_os_data')
         sys.exit(1)
-    for key, nested_dict in obj['os_data']['supported_oses'].items():
-        os_detected_at = obj['os_detected_at']
-        os_argname = nested_dict[os_detected_at]
-        print('checking for ' + os_detected_at + ' as ' + os_argname + \
-                                        '... (are we on ' + nested_dict['os_name'] + '?)')
-        os_argvalue = ARGUMENTS.get(os_argname)
-        if os_argvalue:
-            obj['detected_os'] = key
-            print('detected Operating System: ' + obj['detected_os'])
-            return 1
-    print('Operating System not detected')
-    print('If your Operating System is not supported, you can simulate one of \
-                            supported OSes by passing parameters with names that it has')
-    print('Parameter names that each of supported Operating Systems has, \
-                                    you can see them in function _populate_os_data')
-    sys.exit(1)
 
-def _get_argvalue(obj, argname):
-    if obj['detected_os'] == '' and argname != obj['os_detected_at']:
-        print('_get_argvalue ERROR: when getting ' + argname + \
-                                ' value, OS should be already detected')
-        sys.exit(1)
-    if argname == obj['os_detected_at']:
-        _detect_os(obj)
-    detected_os = obj['detected_os']
-    this_os_argname = obj['os_data']['supported_oses'][detected_os][argname]
-    argvalue = ARGUMENTS.get(this_os_argname)
-    if argvalue:
+    # A "class method"
+    def _get_argvalue(self, argname):
+        if self['detected_os'] == '' and argname != self['os_detected_at']:
+            print('_get_argvalue ERROR: when getting ' + argname + \
+                                    ' value, OS should be already detected')
+            sys.exit(1)
+        if argname == self['os_detected_at']:
+            _detect_os(self)
+        detected_os = self['detected_os']
+        this_os_argname = self['os_data']['supported_oses'][detected_os][argname]
+        argvalue = ARGUMENTS.get(this_os_argname)
+        if argvalue:
+            print(argname + ' (' + this_os_argname + ' in ' + \
+                    self['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    ') argument found: ' + argvalue)
+            return argvalue
         print(argname + ' (' + this_os_argname + ' in ' + \
-                obj['os_data']['supported_oses'][detected_os]['os_name'] + \
-                ') argument found: ' + argvalue)
-        return argvalue
-    print(argname + ' (' + this_os_argname + ' in ' + \
-                obj['os_data']['supported_oses'][detected_os]['os_name'] + \
-                ') argument not found')
-    return ''
+                    self['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    ') argument not found')
+        return ''
+
+    mydict['detect_os'] = _detect_os
+    mydict['get_argvalue'] = _get_argvalue
+    return mydict
 
 def _get_prefix_and_destdir(obj):
     for key in obj['os_data']['os_vars']['install_vars'].keys():
-        os_argvalue = _get_argvalue(obj, key)
+        os_argvalue = obj['get_argvalue'](obj, key)
         if os_argvalue:
             obj['got_arguments'][key] = os_argvalue
 
@@ -272,7 +276,7 @@ def _get_prefix_and_destdir(obj):
 
 def _get_cpp_linker_vars(obj):
     for key in obj['os_data']['os_vars']['cpp_linker_vars'].keys():
-        os_argvalue = _get_argvalue(obj, key)
+        os_argvalue = obj['get_argvalue'](obj, key)
         if os_argvalue:
             obj['got_arguments'][key] = os_argvalue
 
