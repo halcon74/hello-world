@@ -226,12 +226,12 @@ def helpers_class():
     obj['myown_env_variables'] = myown_env_variables
 
     obj['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
-    obj['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
+    compile_target = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
 
     obj['os_data'] = os_data
 
     obj['my_vars'] = {}
-    obj['my_vars']['compile_target'] = obj['compile_target']
+    obj['my_vars']['compile_target'] = compile_target
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable 'os_detected_at' above:
@@ -383,7 +383,7 @@ def read_variables_cache(helpers):
 
 def _save_variables_cache(helpers):
     _set_myown_env_variable(helpers, 'cached_dir', helpers['got_vars']['destdir'])
-    _set_myown_env_variable(helpers, 'cached_source', helpers['compile_target'])
+    _set_myown_env_variable(helpers, 'cached_source', helpers['got_vars']['compile_target'])
 
     # This saves only variables from 'scons_var_obj', not all variables from 'env'
     # (here 'env' is the environment to get the option values from)
@@ -398,10 +398,10 @@ def get_and_save_variables_for_install(helpers):
 def mycompile(helpers):
     _get_cpp_linker_vars(helpers)
     _apply_cpp_linker_vars(helpers)
-    target = helpers['env'].Program(target = helpers['compile_target'], \
+    target = helpers['env'].Program(target = helpers['got_vars']['compile_target'], \
                                             source = helpers['source_full'])
     Default(target)
-    print('will compile: target = ' + helpers['compile_target'] + \
+    print('will compile: target = ' + helpers['got_vars']['compile_target'] + \
                                             ', source = ' + helpers['source_full'])
 
 def myinstall(helpers):
