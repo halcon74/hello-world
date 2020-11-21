@@ -164,15 +164,15 @@ def _populate_os_data(os_detected_at):
     _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
     return mydict
 
-def _myown_env_variables_descriptions():
-    mydict = {}
-    mydict['cached_dir'] = ('MYCACHEDDIR', \
-                            "cached 'dir' argument for global_vars['env'].Install", '')
-    mydict['cached_source'] = ('MYCACHEDSOURCE', \
-                            "cached 'source' argument for global_vars['env'].Install", '')
-    return mydict
-
 def populate_global_vars():
+    def _myown_env_variables_descriptions():
+        mydict = {}
+        mydict['cached_dir'] = ('MYCACHEDDIR', \
+                                "cached 'dir' argument for global_vars['env'].Install", '')
+        mydict['cached_source'] = ('MYCACHEDSOURCE', \
+                                "cached 'source' argument for global_vars['env'].Install", '')
+        return mydict
+
     mydict = {
         # 2 my own env variables are added in function read_variables_cache and then
         # their values are set in function _save_variables_cache
@@ -236,7 +236,7 @@ def populate_global_vars():
         sys.exit(1)
 
     # A "class method"
-    def _get_argvalue(self, argname):
+    def get_argvalue(self, argname):
         if self['detected_os'] == '' and argname != self['os_detected_at']:
             print('_get_argvalue ERROR: when getting ' + argname + \
                                     ' value, OS should be already detected')
@@ -256,8 +256,7 @@ def populate_global_vars():
                     ') argument not found')
         return ''
 
-    mydict['detect_os'] = _detect_os
-    mydict['get_argvalue'] = _get_argvalue
+    mydict['get_argvalue'] = get_argvalue
     return mydict
 
 def _get_prefix_and_destdir(obj):
