@@ -123,7 +123,8 @@ def populate_global_vars():
                     'names_in_oses' : {
                         'gentoo' : 'DESTDIR',
                         'debian' : 'install_root'
-                    }
+                    },
+                    'post_processing' : 'reset_destdir'
                 },
                 'prefix' : {
                     'name_in_env' : '',
@@ -131,14 +132,16 @@ def populate_global_vars():
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'PREFIX'
-                    }
+                    },
+                    'post_processing' : ''
                 },
                 'compile_target' : {
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_source',
                     'scons_add_tuple' : ('MYCACHEDSOURCE', \
                                     "cached 'source' argument for global_vars['env'].Install", ''),
-                    'get_from_os' : 0
+                    'get_from_os' : 0,
+                    'post_processing' : ''
                 }
             },
             'cpp_linker_vars' : {
@@ -148,7 +151,8 @@ def populate_global_vars():
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'CXX'
-                    }
+                    },
+                    'post_processing' : ''
                 },
                 'cpp_compiler_flags' : {
                     'name_in_env' : 'CXXFLAGS',
@@ -156,7 +160,8 @@ def populate_global_vars():
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'CXXFLAGS'
-                    }
+                    },
+                    'post_processing' : ''
                 },
                 'linker_flags' : {
                     'name_in_env' : 'LINKFLAGS',
@@ -164,7 +169,8 @@ def populate_global_vars():
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'LDFLAGS'
-                    }
+                    },
+                    'post_processing' : ''
                 }
             }
         }
@@ -287,9 +293,30 @@ def populate_global_vars():
                     ') argument not found')
         return ''
 
+    # Internal method, goes to post_process_funcs
+    def _reset_destdir(self):
+        print('until prefix is found, destdir is set for default value without prefix: ' + \
+                                                            self['got_vars']['destdir'])
+        if 'prefix' in self['got_vars'] and self['got_vars']['prefix']:
+            self['got_vars']['destdir'] = _myown_os_path_join(\
+                                            self['got_vars']['destdir'], \
+                                            self['got_vars']['prefix'], self['install_path'])
+            print('destdir is reset using prefix and install_path: ' + self['got_vars']['destdir'])
+
+    # Contains internal methods
+    post_process_funcs = {}
+    post_process_funcs['reset_destdir'] = _reset_destdir
+
+    # Internal method, uses post_process_funcs
+    def _post_process(self, funcname):
+        if funcname in post_process_funcs:
+            post_process_funcs[funcname](self)
+        else:
+            print('_post_process ERROR: function ' + funcname + ' is not defined')
+            sys.exit(1)
+
     # External method (FACADE: _get_from_os | use mydict['my_vars'])
     def get_vars(self, vars_name):
-        print('get_vars: ' + vars_name)
         os_vars = self['os_data']['os_vars']
         for vars_key in os_vars.keys():
             if vars_key == vars_name:
@@ -302,21 +329,24 @@ def populate_global_vars():
                             self['got_vars'][var_key] = var_value
                     else:
                         self['got_vars'][var_key] = self['my_vars']
-        return
+        launch_post_process(self, vars_name)
+
+    def launch_post_process(self, vars_name):
+        os_vars = self['os_data']['os_vars']
+        for vars_key in os_vars.keys():
+            if vars_key == vars_name:
+                os_vars_dict = os_vars[vars_key]
+                for var_key in os_vars_dict.keys():
+                    os_var_dict = os_vars_dict[var_key]
+                    post_processing_key = os_var_dict['post_processing']
+                    if post_processing_key:
+                        _post_process(self, post_processing_key)
 
     mydict['get_vars'] = get_vars
     return mydict
 
 def _get_prefix_and_destdir(obj):
     obj['get_vars'](obj, 'install_vars')
-
-    print('until prefix is found, destdir is set for default value without prefix: ' + \
-                                                        obj['got_vars']['destdir'])
-    if obj['got_vars']['prefix']:
-        obj['got_vars']['destdir'] = _myown_os_path_join(\
-                                        obj['got_vars']['destdir'], \
-                                        obj['got_vars']['prefix'], obj['install_path'])
-        print('destdir is reset using prefix and install_path: ' + obj['got_vars']['destdir'])
 
 def _get_cpp_linker_vars(obj):
     obj['get_vars'](obj, 'cpp_linker_vars')
