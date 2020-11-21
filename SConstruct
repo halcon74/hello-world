@@ -135,9 +135,7 @@ def _populate_os_data(os_detected_at):
                 'var_goes_to_cache' : 'cached_source',
                 'scons_add_tuple' : ('MYCACHEDSOURCE', \
                                 "cached 'source' argument for global_vars['env'].Install", ''),
-                'names_in_oses' : {
-                    'gentoo' : 'CXX'
-                }
+                'names_in_oses' : {}
             }
         },
         'cpp_linker_vars' : {
