@@ -126,7 +126,7 @@ def helpers_class():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_dir',
                     'scons_add_tuple' : ('MYCACHEDDIR', \
-                                    "cached 'dir' argument for obj['env'].Install", ''),
+                                    "cached 'dir' argument for (helpers)obj['env'].Install", ''),
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'DESTDIR',
@@ -147,7 +147,7 @@ def helpers_class():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_source',
                     'scons_add_tuple' : ('MYCACHEDSOURCE', \
-                                    "cached 'source' argument for obj['env'].Install", ''),
+                                    "cached 'source' argument for (helpers)obj['env'].Install", ''),
                     'get_from_os' : 0,
                     'post_processing' : ''
                 }
@@ -350,66 +350,66 @@ def helpers_class():
     obj['get_vars'] = get_vars
     return obj
 
-def _get_prefix_and_destdir(obj):
-    obj['get_vars']('install_vars')
+def _get_prefix_and_destdir(helpers):
+    helpers['get_vars']('install_vars')
 
-def _get_cpp_linker_vars(obj):
-    obj['get_vars']('cpp_linker_vars')
+def _get_cpp_linker_vars(helpers):
+    helpers['get_vars']('cpp_linker_vars')
 
-def _apply_cpp_linker_vars(obj):
-    for key, mydict in obj['os_data']['os_vars']['cpp_linker_vars'].items():
+def _apply_cpp_linker_vars(helpers):
+    for key, mydict in helpers['os_data']['os_vars']['cpp_linker_vars'].items():
         name_in_env = mydict['name_in_env']
         if name_in_env:
             replace_args = {}
-            print('setting ' + name_in_env + ' to ' + obj['got_vars'][key])
-            replace_args[name_in_env] = SCons.Util.CLVar(obj['got_vars'][key])
-            obj['env'].Replace(**replace_args)
+            print('setting ' + name_in_env + ' to ' + helpers['got_vars'][key])
+            replace_args[name_in_env] = SCons.Util.CLVar(helpers['got_vars'][key])
+            helpers['env'].Replace(**replace_args)
 
-def get_myown_env_variable(obj, usedname):
-    varname = obj['myown_env_variables'][usedname][0]
-    return obj['env'][varname]
+def get_myown_env_variable(helpers, usedname):
+    varname = helpers['myown_env_variables'][usedname][0]
+    return helpers['env'][varname]
 
-def _set_myown_env_variable(obj, usedname, value):
-    varname = obj['myown_env_variables'][usedname][0]
-    obj['env'][varname] = value
+def _set_myown_env_variable(helpers, usedname, value):
+    varname = helpers['myown_env_variables'][usedname][0]
+    helpers['env'][varname] = value
 
-def read_variables_cache(obj):
-    obj['scons_var_obj'].Add(obj['myown_env_variables']['cached_dir'])
-    obj['scons_var_obj'].Add(obj['myown_env_variables']['cached_source'])
+def read_variables_cache(helpers):
+    helpers['scons_var_obj'].Add(helpers['myown_env_variables']['cached_dir'])
+    helpers['scons_var_obj'].Add(helpers['myown_env_variables']['cached_source'])
 
     # This adds new variables to Environment (doesn't rewrite it)
     # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-    obj['env'] = Environment(variables = obj['scons_var_obj'])
+    helpers['env'] = Environment(variables = helpers['scons_var_obj'])
 
-def _save_variables_cache(obj):
-    _set_myown_env_variable(obj, 'cached_dir', obj['got_vars']['destdir'])
-    _set_myown_env_variable(obj, 'cached_source', obj['compile_target'])
+def _save_variables_cache(helpers):
+    _set_myown_env_variable(helpers, 'cached_dir', helpers['got_vars']['destdir'])
+    _set_myown_env_variable(helpers, 'cached_source', helpers['compile_target'])
 
     # This saves only variables from 'scons_var_obj', not all variables from 'env'
     # (here 'env' is the environment to get the option values from)
     # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
-    obj['scons_var_obj'].Save(obj['variables_cache_file'], obj['env'])
+    helpers['scons_var_obj'].Save(helpers['variables_cache_file'], helpers['env'])
 
-def get_and_save_variables_for_install(obj):
+def get_and_save_variables_for_install(helpers):
     print('getting and saving variables needed for install...')
-    _get_prefix_and_destdir(obj)
-    _save_variables_cache(obj)
+    _get_prefix_and_destdir(helpers)
+    _save_variables_cache(helpers)
 
-def mycompile(obj):
-    _get_cpp_linker_vars(obj)
-    _apply_cpp_linker_vars(obj)
-    target = obj['env'].Program(target = obj['compile_target'], \
-                                            source = obj['source_full'])
+def mycompile(helpers):
+    _get_cpp_linker_vars(helpers)
+    _apply_cpp_linker_vars(helpers)
+    target = helpers['env'].Program(target = helpers['compile_target'], \
+                                            source = helpers['source_full'])
     Default(target)
-    print('will compile: target = ' + obj['compile_target'] + \
-                                            ', source = ' + obj['source_full'])
+    print('will compile: target = ' + helpers['compile_target'] + \
+                                            ', source = ' + helpers['source_full'])
 
-def myinstall(obj):
-    target = obj['env'].Install(dir = get_myown_env_variable(obj, 'cached_dir'), \
-                                    source = get_myown_env_variable(obj, 'cached_source'))
+def myinstall(helpers):
+    target = helpers['env'].Install(dir = get_myown_env_variable(helpers, 'cached_dir'), \
+                                    source = get_myown_env_variable(helpers, 'cached_source'))
     Default(target)
-    print('will install: dir = ' + get_myown_env_variable(obj, 'cached_dir') + \
-                        ', source = ' + get_myown_env_variable(obj, 'cached_source'))
+    print('will install: dir = ' + get_myown_env_variable(helpers, 'cached_dir') + \
+                        ', source = ' + get_myown_env_variable(helpers, 'cached_source'))
 
 helpers = helpers_class()
 
