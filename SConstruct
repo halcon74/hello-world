@@ -206,8 +206,8 @@ def populate_global_vars():
         return defining_obj, myown_env_variables
 
     mydict = {}
-    mydict['os_detected_at'] = 'destdir'
-    os_data, myown_env_variables = _define_vars(mydict['os_detected_at'])
+    os_detected_at = 'destdir'
+    os_data, myown_env_variables = _define_vars(os_detected_at)
 
     # 2 my own env variables are added in function read_variables_cache and then
     # their values are set in function _save_variables_cache
@@ -226,15 +226,13 @@ def populate_global_vars():
 
     mydict['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
     mydict['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
-
-    mydict['os_detected_at'] = 'destdir'
     mydict['os_data'] = os_data
 
     mydict['my_vars'] = {}
     mydict['my_vars']['compile_target'] = mydict['compile_target']
 
     # Set in function _detect_os, by finding non-empty value of scons argument
-    # which name is determined by the key 'os_detected_at' above:
+    # which name is determined by variable 'os_detected_at' above:
     #   (see function _define_vars)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
@@ -260,7 +258,6 @@ def populate_global_vars():
             print('re-detecting Operating System is not supported')
             sys.exit(1)
         for key, nested_dict in self['os_data']['supported_oses'].items():
-            os_detected_at = self['os_detected_at']
             os_argname = nested_dict[os_detected_at]
             print('checking for ' + os_detected_at + ' as ' + os_argname + \
                                             '... (are we on ' + nested_dict['os_name'] + '?)')
@@ -278,11 +275,11 @@ def populate_global_vars():
 
     # Internal method
     def _get_from_os(self, argname):
-        if self['detected_os'] == '' and argname != self['os_detected_at']:
+        if self['detected_os'] == '' and argname != os_detected_at:
             print('_get_from_os ERROR: when getting ' + argname + \
                                     ' value, OS should be already detected')
             sys.exit(1)
-        if argname == self['os_detected_at']:
+        if argname == os_detected_at:
             _detect_os(self)
         detected_os = self['detected_os']
         this_os_argname = self['os_data']['supported_oses'][detected_os][argname]
