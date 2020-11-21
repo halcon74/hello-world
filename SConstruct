@@ -132,13 +132,13 @@ def helpers_class():
                     'is_saved_to_cache_file' : ('MYCACHEDDIR', \
                                     "cached 'dir' argument for " + \
                                     "int_obj['scons_objects']['env'].Install", ''),
-                    'is_getting_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
+                    'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
                     'is_post_processed_in_a_function' : 'reset_destdir'
                 },
                 'prefix' : {
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : '',
-                    'is_getting_from_arguments' : {'gentoo' : 'PREFIX'},
+                    'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'compile_target' : {
@@ -146,7 +146,7 @@ def helpers_class():
                     'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
                                     "cached 'source' argument for " + \
                                     "int_obj['scons_objects']['env'].Install", ''),
-                    'is_getting_from_arguments' : '',
+                    'is_got_from_arguments' : '',
                     'is_post_processed_in_a_function' : ''
                 }
             },
@@ -154,25 +154,25 @@ def helpers_class():
                 'cpp_compiler' : {
                     'is_applied_to_scons_env' : 'CXX',
                     'is_saved_to_cache_file' : '',
-                    'is_getting_from_arguments' : {'gentoo' : 'CXX'},
+                    'is_got_from_arguments' : {'gentoo' : 'CXX'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'cpp_compiler_flags' : {
                     'is_applied_to_scons_env' : 'CXXFLAGS',
                     'is_saved_to_cache_file' : '',
-                    'is_getting_from_arguments' : {'gentoo' : 'CXXFLAGS'},
+                    'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'linker_flags' : {
                     'is_applied_to_scons_env' : 'LINKFLAGS',
                     'is_saved_to_cache_file' : '',
-                    'is_getting_from_arguments' : {'gentoo' : 'LDFLAGS'},
+                    'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'source_full' : {
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : '',
-                    'is_getting_from_arguments' : '',
+                    'is_got_from_arguments' : '',
                     'is_post_processed_in_a_function' : ''
                 }
             }
@@ -185,10 +185,10 @@ def helpers_class():
                     vars_data_dict = vars_data[vars_key]
                     for var_key in vars_data_dict.keys():
                         os_var_dict = vars_data_dict[var_key]
-                        if os_var_dict['is_getting_from_arguments']:
-                            for key in os_var_dict['is_getting_from_arguments'].keys():
+                        if os_var_dict['is_got_from_arguments']:
+                            for key in os_var_dict['is_got_from_arguments'].keys():
                                 if key == os_dict_key:
-                                    os_dict[var_key] = os_var_dict['is_getting_from_arguments'][key]
+                                    os_dict[var_key] = os_var_dict['is_got_from_arguments'][key]
                             if var_key == os_detected_at and os_dict[var_key] == '':
                                 print('_populate_os_dict ERROR: ' + var_key + \
                                                                 ' is empty for ' + os_dict_key)
@@ -319,7 +319,7 @@ def helpers_class():
     # External method (FACADE: _get_from_os | use int_obj['my_vars'])
     def get_vars(vars_name):
         for var_key, var_dict in int_obj['vars_data'][vars_name].items():
-            if var_dict['is_getting_from_arguments']:
+            if var_dict['is_got_from_arguments']:
                 var_value = _get_from_os(var_key)
                 if var_value:
                     int_obj['got_vars'][var_key] = var_value
