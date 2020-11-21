@@ -217,8 +217,7 @@ def helpers_class():
                 os_vars_dict = os_vars[vars_key]
                 for var_key in os_vars_dict.keys():
                     os_var_dict = os_vars_dict[var_key]
-                    var_goes_to_cache = os_var_dict['var_goes_to_cache']
-                    if var_goes_to_cache:
+                    if os_var_dict['var_goes_to_cache']:
                         myowndict[var_key] = os_var_dict['scons_add_tuple']
             return myowndict
         myown_env_dict = _myown_env_variables_descriptions(os_dict['os_vars'])
