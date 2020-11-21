@@ -114,7 +114,7 @@ def _populate_os_data(os_detected_at):
         'install_vars' : {
             'destdir' : {
                 'name_in_env' : '',
-                'name_in_cache' : 'cached_dir',
+                'var_goes_to_cache' : 'cached_dir',
                 'scons_add_tuple' : ('MYCACHEDDIR', \
                                 "cached 'dir' argument for global_vars['env'].Install", ''),
 
@@ -125,7 +125,7 @@ def _populate_os_data(os_detected_at):
             },
             'prefix' : {
                 'name_in_env' : '',
-                'name_in_cache' : 'cached_source',
+                'var_goes_to_cache' : 'cached_source',
                 'scons_add_tuple' : ('MYCACHEDSOURCE', \
                                 "cached 'source' argument for global_vars['env'].Install", ''),
                 'names_in_oses' : {
@@ -136,21 +136,21 @@ def _populate_os_data(os_detected_at):
         'cpp_linker_vars' : {
             'cpp_compiler' : {
                 'name_in_env' : 'CXX',
-                'name_in_cache' : '',
+                'var_goes_to_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'CXX'
                 }
             },
             'cpp_compiler_flags' : {
                 'name_in_env' : 'CXXFLAGS',
-                'name_in_cache' : '',
+                'var_goes_to_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'CXXFLAGS'
                 }
             },
             'linker_flags' : {
                 'name_in_env' : 'LINKFLAGS',
-                'name_in_cache' : '',
+                'var_goes_to_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'LDFLAGS'
                 }
@@ -178,9 +178,9 @@ def _populate_os_data(os_detected_at):
             os_vars_dict = os_vars[vars_key]
             for var_key in os_vars_dict.keys():
                 os_var_dict = os_vars_dict[var_key]
-                name_in_cache = os_var_dict['name_in_cache']
-                if name_in_cache:
-                    myowndict[name_in_cache] = os_var_dict['scons_add_tuple']
+                var_goes_to_cache = os_var_dict['var_goes_to_cache']
+                if var_goes_to_cache:
+                    myowndict[var_goes_to_cache] = os_var_dict['scons_add_tuple']
         return myowndict
     myown_env_variables = _myown_env_variables_descriptions(mydict['os_vars'])
     return mydict, myown_env_variables
