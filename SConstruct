@@ -131,7 +131,7 @@ def helpers_class():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_dir',
                     'scons_add_tuple' : ('MYCACHEDDIR', \
-                                    "cached 'dir' argument for (helpers)obj['env'].Install", ''),
+                                    "cached 'dir' argument for int_obj['scons_objects']['env'].Install", ''),
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'DESTDIR',
@@ -152,7 +152,7 @@ def helpers_class():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_source',
                     'scons_add_tuple' : ('MYCACHEDSOURCE', \
-                                    "cached 'source' argument for (helpers)obj['env'].Install", ''),
+                                    "cached 'source' argument for int_obj['scons_objects']['env'].Install", ''),
                     'get_from_os' : 0,
                     'post_processing' : ''
                 }
@@ -404,7 +404,6 @@ def helpers_class():
         Default(target)
         print('will install: dir = ' + get_myown_env_variable('destdir') + \
                             ', source = ' + get_myown_env_variable('compile_target'))
-
 
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
