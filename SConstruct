@@ -109,6 +109,9 @@ def helpers_class():
         'binary_name' : 'Hello_World'
     }
 
+    source_full = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
+    compile_target = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
+
     def _define_os_data_and_myown_env_variables(os_detected_at):
         os_dict = {}
         os_dict['supported_oses'] = OrderedDict()
@@ -230,9 +233,6 @@ def helpers_class():
 
     # All that I add to env variables must be defined in tuples here
     obj['myown_env_variables'] = myown_env_variables
-
-    source_full = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
-    compile_target = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
 
     obj['os_data'] = os_data
 
