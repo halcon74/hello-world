@@ -316,7 +316,7 @@ def populate_global_vars():
             sys.exit(1)
 
     # Internal method
-    def launch_post_process(self, vars_name):
+    def _launch_post_process(self, vars_name):
         os_vars = self['os_data']['os_vars']
         for vars_key in os_vars.keys():
             if vars_key == vars_name:
@@ -341,7 +341,7 @@ def populate_global_vars():
                             self['got_vars'][var_key] = var_value
                     else:
                         self['got_vars'][var_key] = self['my_vars']
-        launch_post_process(self, vars_name)
+        _launch_post_process(self, vars_name)
 
     mydict['get_vars'] = get_vars
     return mydict
