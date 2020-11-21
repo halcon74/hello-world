@@ -287,7 +287,7 @@ def populate_global_vars():
                     ') argument not found')
         return ''
 
-    # External method (FACADE: _get_from_os | use mydict['got_vars'])
+    # External method (FACADE: _get_from_os | use mydict['my_vars'])
     def get_vars(self, vars_name):
         print('get_vars: ' + vars_name)
         os_vars = self['os_data']['os_vars']
