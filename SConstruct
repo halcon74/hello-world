@@ -179,6 +179,12 @@ def helpers_class():
                         'gentoo' : 'LDFLAGS'
                     },
                     'post_processing' : ''
+                },
+                'source_full' : {
+                    'name_in_env' : '',
+                    'var_goes_to_cache' : '',
+                    'get_from_os' : 0,
+                    'post_processing' : ''
                 }
             }
         }
@@ -225,13 +231,15 @@ def helpers_class():
     # All that I add to env variables must be defined in tuples here
     obj['myown_env_variables'] = myown_env_variables
 
-    obj['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
+    source_full = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
     compile_target = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
 
     obj['os_data'] = os_data
 
-    obj['my_vars'] = {}
-    obj['my_vars']['compile_target'] = compile_target
+    obj['my_vars'] = {
+        'source_full' : source_full,
+        'compile_target' : compile_target,
+    }
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable 'os_detected_at' above:
@@ -399,10 +407,10 @@ def mycompile(helpers):
     _get_cpp_linker_vars(helpers)
     _apply_cpp_linker_vars(helpers)
     target = helpers['env'].Program(target = helpers['got_vars']['compile_target'], \
-                                            source = helpers['source_full'])
+                                            source = helpers['got_vars']['source_full'])
     Default(target)
     print('will compile: target = ' + helpers['got_vars']['compile_target'] + \
-                                            ', source = ' + helpers['source_full'])
+                                            ', source = ' + helpers['got_vars']['source_full'])
 
 def myinstall(helpers):
     target = helpers['env'].Install(dir = get_myown_env_variable(helpers, 'cached_dir'), \
