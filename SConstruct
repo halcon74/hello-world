@@ -114,6 +114,10 @@ def _populate_os_data(os_detected_at):
         'install_vars' : {
             'destdir' : {
                 'name_in_env' : '',
+                'name_in_cache' : 'cached_dir',
+                'scons_add_tuple' : ('MYCACHEDDIR', \
+                                "cached 'dir' argument for global_vars['env'].Install", ''),
+
                 'names_in_oses' : {
                     'gentoo' : 'DESTDIR',
                     'debian' : 'install_root'
@@ -121,6 +125,9 @@ def _populate_os_data(os_detected_at):
             },
             'prefix' : {
                 'name_in_env' : '',
+                'name_in_cache' : 'cached_source',
+                'scons_add_tuple' : ('MYCACHEDSOURCE', \
+                                "cached 'source' argument for global_vars['env'].Install", ''),
                 'names_in_oses' : {
                     'gentoo' : 'PREFIX'
                 }
@@ -129,18 +136,21 @@ def _populate_os_data(os_detected_at):
         'cpp_linker_vars' : {
             'cpp_compiler' : {
                 'name_in_env' : 'CXX',
+                'name_in_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'CXX'
                 }
             },
             'cpp_compiler_flags' : {
                 'name_in_env' : 'CXXFLAGS',
+                'name_in_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'CXXFLAGS'
                 }
             },
             'linker_flags' : {
                 'name_in_env' : 'LINKFLAGS',
+                'name_in_cache' : '',
                 'names_in_oses' : {
                     'gentoo' : 'LDFLAGS'
                 }
@@ -162,35 +172,40 @@ def _populate_os_data(os_detected_at):
                                                         ' is empty for ' + os_dict_key)
                         sys.exit(1)
     _populate_os_dict(mydict['supported_oses'], mydict['os_vars'])
-    return mydict
+    def _myown_env_variables_descriptions(os_vars):
+        myowndict = {}
+        for vars_key in os_vars.keys():
+            os_vars_dict = os_vars[vars_key]
+            for var_key in os_vars_dict.keys():
+                os_var_dict = os_vars_dict[var_key]
+                name_in_cache = os_var_dict['name_in_cache']
+                if name_in_cache:
+                    myowndict[name_in_cache] = os_var_dict['scons_add_tuple']
+        return myowndict
+    myown_env_variables = _myown_env_variables_descriptions(mydict['os_vars'])
+    return mydict, myown_env_variables
 
 def populate_global_vars():
-    def _myown_env_variables_descriptions():
-        mydict = {}
-        mydict['cached_dir'] = ('MYCACHEDDIR', \
-                                "cached 'dir' argument for global_vars['env'].Install", '')
-        mydict['cached_source'] = ('MYCACHEDSOURCE', \
-                                "cached 'source' argument for global_vars['env'].Install", '')
-        return mydict
+    mydict = {}
+    mydict['os_detected_at'] = 'destdir'
+    os_data, myown_env_variables = _populate_os_data(mydict['os_detected_at'])
 
-    mydict = {
-        # 2 my own env variables are added in function read_variables_cache and then
-        # their values are set in function _save_variables_cache
-        'env' : Environment(),
+    # 2 my own env variables are added in function read_variables_cache and then
+    # their values are set in function _save_variables_cache
+    mydict['env'] = Environment()
 
-        # All that I add to env variables must be defined in tuples here
-        'myown_env_variables' : _myown_env_variables_descriptions(),
+    # All that I add to env variables must be defined in tuples here
+    mydict['myown_env_variables'] = myown_env_variables
 
-        'source_path' : 'src',
-        'source_name' : 'main.cpp',
-        'compile_path' : 'build',
-        'install_path' : 'bin',
-        'binary_name' : 'Hello_World'
-    }
+    mydict['source_path'] = 'src'
+    mydict['source_name'] = 'main.cpp'
+    mydict['compile_path'] = 'build'
+    mydict['install_path'] = 'bin'
+    mydict['binary_name'] = 'Hello_World'
     mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
     mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
     mydict['os_detected_at'] = 'destdir'
-    mydict['os_data'] = _populate_os_data(mydict['os_detected_at'])
+    mydict['os_data'] = os_data
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by the key 'os_detected_at' above:
