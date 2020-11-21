@@ -20,7 +20,7 @@
 # and
 # creates a variables-cache file.
 #
-# The name of this file is set in function populate_global_vars,
+# The name of this file is set in function helpers_class,
 # for the dictionary key 'variables_cache_file'.
 #
 # With this file, no redundant actions (that are usually called
@@ -99,7 +99,7 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
-def populate_global_vars():
+def helpers_class():
 
     paths_and_names = {
         'source_path' : 'src',
@@ -126,7 +126,7 @@ def populate_global_vars():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_dir',
                     'scons_add_tuple' : ('MYCACHEDDIR', \
-                                    "cached 'dir' argument for global_vars['env'].Install", ''),
+                                    "cached 'dir' argument for obj['env'].Install", ''),
                     'get_from_os' : 1,
                     'names_in_oses' : {
                         'gentoo' : 'DESTDIR',
@@ -147,7 +147,7 @@ def populate_global_vars():
                     'name_in_env' : '',
                     'var_goes_to_cache' : 'cached_source',
                     'scons_add_tuple' : ('MYCACHEDSOURCE', \
-                                    "cached 'source' argument for global_vars['env'].Install", ''),
+                                    "cached 'source' argument for obj['env'].Install", ''),
                     'get_from_os' : 0,
                     'post_processing' : ''
                 }
@@ -411,21 +411,21 @@ def myinstall(obj):
     print('will install: dir = ' + get_myown_env_variable(obj, 'cached_dir') + \
                         ', source = ' + get_myown_env_variable(obj, 'cached_source'))
 
-global_vars = populate_global_vars()
+helpers = helpers_class()
 
-read_variables_cache(global_vars)
+read_variables_cache(helpers)
 
-if get_myown_env_variable(global_vars, 'cached_dir') and \
-            get_myown_env_variable(global_vars, 'cached_source'):
+if get_myown_env_variable(helpers, 'cached_dir') and \
+            get_myown_env_variable(helpers, 'cached_source'):
     print('variables for install retrieved successfully; no need for re-configuring!')
     install_passed = ARGUMENTS.get('INSTALL')
     if install_passed == '1':
-        myinstall(global_vars)
+        myinstall(helpers)
     else:
         print('will not install; this SConscript requires passing "INSTALL=1" \
                                 in command-line arguments instead of "install" after them')
-        mycompile(global_vars)
+        mycompile(helpers)
 else:
     print('variables for install not retrieved')
-    get_and_save_variables_for_install(global_vars)
-    mycompile(global_vars)
+    get_and_save_variables_for_install(helpers)
+    mycompile(helpers)
