@@ -255,7 +255,6 @@ def populate_global_vars():
                     self['os_data']['supported_oses'][detected_os]['os_name'] + \
                     ') argument not found')
         return ''
-
     mydict['get_argvalue'] = get_argvalue
     return mydict
 
