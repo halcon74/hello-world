@@ -113,10 +113,9 @@ def helpers_class():
 
     int_obj['variables_cache_file'] = 'scons_variables_cache.conf'
 
-    def _define_os_data_and_myown_env_variables(os_detected_at):
-        os_dict = {}
-        os_dict['supported_oses'] = OrderedDict()
-        os_dict['supported_oses'] = {
+    def _define_vars_data_and_myown_env_variables(os_detected_at):
+        supported_oses = OrderedDict()
+        supported_oses = {
             'gentoo' : {
                 'os_name' : 'Gentoo'
             },
@@ -124,108 +123,90 @@ def helpers_class():
                 'os_name' : 'Debian/Ubuntu'
             }
         }
-        os_dict['os_vars'] = {
-            # All that I add to env variables must be defined in values of 'scons_add_tuple' here
+        vars_data = {
+            # All that I add to env variables must be defined in values of 'is_saved_to_cache_file' here
             'install_vars' : {
                 'destdir' : {
-                    'name_in_env' : '',
-                    'var_goes_to_cache' : 'cached_dir',
-                    'scons_add_tuple' : ('MYCACHEDDIR', \
+                    'is_applied_to_scons_env' : '',
+                    'is_saved_to_cache_file' : ('MYCACHEDDIR', \
                                     "cached 'dir' argument for int_obj['scons_objects']['env'].Install", ''),
-                    'get_from_os' : 1,
-                    'names_in_oses' : {
-                        'gentoo' : 'DESTDIR',
-                        'debian' : 'install_root'
-                    },
-                    'post_processing' : 'reset_destdir'
+                    'is_getting_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
+                    'is_post_processed_in_a_function' : 'reset_destdir'
                 },
                 'prefix' : {
-                    'name_in_env' : '',
-                    'var_goes_to_cache' : '',
-                    'get_from_os' : 1,
-                    'names_in_oses' : {
-                        'gentoo' : 'PREFIX'
-                    },
-                    'post_processing' : ''
+                    'is_applied_to_scons_env' : '',
+                    'is_saved_to_cache_file' : '',
+                    'is_getting_from_arguments' : {'gentoo' : 'PREFIX'},
+                    'is_post_processed_in_a_function' : ''
                 },
                 'compile_target' : {
-                    'name_in_env' : '',
-                    'var_goes_to_cache' : 'cached_source',
-                    'scons_add_tuple' : ('MYCACHEDSOURCE', \
+                    'is_applied_to_scons_env' : '',
+                    'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
                                     "cached 'source' argument for int_obj['scons_objects']['env'].Install", ''),
-                    'get_from_os' : 0,
-                    'post_processing' : ''
+                    'is_getting_from_arguments' : '',
+                    'is_post_processed_in_a_function' : ''
                 }
             },
             'cpp_linker_vars' : {
                 'cpp_compiler' : {
-                    'name_in_env' : 'CXX',
-                    'var_goes_to_cache' : '',
-                    'get_from_os' : 1,
-                    'names_in_oses' : {
-                        'gentoo' : 'CXX'
-                    },
-                    'post_processing' : ''
+                    'is_applied_to_scons_env' : 'CXX',
+                    'is_saved_to_cache_file' : '',
+                    'is_getting_from_arguments' : {'gentoo' : 'CXX'},
+                    'is_post_processed_in_a_function' : ''
                 },
                 'cpp_compiler_flags' : {
-                    'name_in_env' : 'CXXFLAGS',
-                    'var_goes_to_cache' : '',
-                    'get_from_os' : 1,
-                    'names_in_oses' : {
-                        'gentoo' : 'CXXFLAGS'
-                    },
-                    'post_processing' : ''
+                    'is_applied_to_scons_env' : 'CXXFLAGS',
+                    'is_saved_to_cache_file' : '',
+                    'is_getting_from_arguments' : {'gentoo' : 'CXXFLAGS'},
+                    'is_post_processed_in_a_function' : ''
                 },
                 'linker_flags' : {
-                    'name_in_env' : 'LINKFLAGS',
-                    'var_goes_to_cache' : '',
-                    'get_from_os' : 1,
-                    'names_in_oses' : {
-                        'gentoo' : 'LDFLAGS'
-                    },
-                    'post_processing' : ''
+                    'is_applied_to_scons_env' : 'LINKFLAGS',
+                    'is_saved_to_cache_file' : '',
+                    'is_getting_from_arguments' : {'gentoo' : 'LDFLAGS'},
+                    'is_post_processed_in_a_function' : ''
                 },
                 'source_full' : {
-                    'name_in_env' : '',
-                    'var_goes_to_cache' : '',
-                    'get_from_os' : 0,
-                    'post_processing' : ''
+                    'is_applied_to_scons_env' : '',
+                    'is_saved_to_cache_file' : '',
+                    'is_getting_from_arguments' : '',
+                    'is_post_processed_in_a_function' : ''
                 }
             }
         }
 
-        def _populate_os_dict(supported_oses, os_vars):
+        def _populate_os_dict():
             for os_dict_key in supported_oses.keys():
                 os_dict = supported_oses[os_dict_key]
-                for vars_key in os_vars.keys():
-                    os_vars_dict = os_vars[vars_key]
-                    for var_key in os_vars_dict.keys():
-                        os_var_dict = os_vars_dict[var_key]
-                        if os_var_dict['get_from_os']:
-                            for key in os_var_dict['names_in_oses'].keys():
+                for vars_key in vars_data.keys():
+                    vars_data_dict = vars_data[vars_key]
+                    for var_key in vars_data_dict.keys():
+                        os_var_dict = vars_data_dict[var_key]
+                        if os_var_dict['is_getting_from_arguments']:
+                            for key in os_var_dict['is_getting_from_arguments'].keys():
                                 if key == os_dict_key:
-                                    os_dict[var_key] = os_var_dict['names_in_oses'][key]
+                                    os_dict[var_key] = os_var_dict['is_getting_from_arguments'][key]
                             if var_key == os_detected_at and os_dict[var_key] == '':
                                 print('_populate_os_dict ERROR: ' + var_key + \
                                                                 ' is empty for ' + os_dict_key)
                                 sys.exit(1)
-        _populate_os_dict(os_dict['supported_oses'], os_dict['os_vars'])
+        _populate_os_dict()
 
-        def _myown_env_variables_descriptions(os_vars):
+        def _myown_env_variables_descriptions():
             myowndict = {}
-            for vars_key in os_vars.keys():
-                os_vars_dict = os_vars[vars_key]
-                for var_key in os_vars_dict.keys():
-                    os_var_dict = os_vars_dict[var_key]
-                    if os_var_dict['var_goes_to_cache']:
-                        myowndict[var_key] = os_var_dict['scons_add_tuple']
+            for vars_key in vars_data.keys():
+                vars_data_dict = vars_data[vars_key]
+                for var_key in vars_data_dict.keys():
+                    os_var_dict = vars_data_dict[var_key]
+                    if os_var_dict['is_saved_to_cache_file']:
+                        myowndict[var_key] = os_var_dict['is_saved_to_cache_file']
             return myowndict
-        myown_env_dict = _myown_env_variables_descriptions(os_dict['os_vars'])
-        return os_dict, myown_env_dict
+        myown_env_dict = _myown_env_variables_descriptions()
+        return supported_oses, vars_data, myown_env_dict
 
     int_obj['os_detected_at'] = 'destdir'
-    int_obj['os_data'], int_obj['myown_env_variables'] = \
-                            _define_os_data_and_myown_env_variables(int_obj['os_detected_at'])
+    int_obj['supported_oses'], int_obj['vars_data'], int_obj['myown_env_variables'] = \
+                            _define_vars_data_and_myown_env_variables(int_obj['os_detected_at'])
 
     int_obj['scons_objects'] = {
         # 2 my own env variables are added in function read_variables_cache and then
@@ -247,7 +228,7 @@ def helpers_class():
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable int_obj['os_detected_at']:
-    #   (see function _define_os_data_and_myown_env_variables)
+    #   (see function _define_vars_data_and_myown_env_variables)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then,
@@ -264,7 +245,7 @@ def helpers_class():
         if int_obj['detected_os']:
             print('re-detecting Operating System is not supported')
             sys.exit(1)
-        for key, nested_dict in int_obj['os_data']['supported_oses'].items():
+        for key, nested_dict in int_obj['supported_oses'].items():
             os_argname = nested_dict[int_obj['os_detected_at']]
             print('checking for ' + int_obj['os_detected_at'] + ' as ' + os_argname + \
                                             '... (are we on ' + nested_dict['os_name'] + '?)')
@@ -277,7 +258,7 @@ def helpers_class():
         print('If your Operating System is not supported, you can simulate one of \
                         supported OSes by passing parameters with names that it has')
         print('Parameter names that each of supported Operating Systems has, \
-                        you can see them in function _define_os_data_and_myown_env_variables')
+                        you can see them in function _define_vars_data_and_myown_env_variables')
         sys.exit(1)
 
     # Internal method
@@ -289,15 +270,15 @@ def helpers_class():
         if argname == int_obj['os_detected_at']:
             _detect_os()
         detected_os = int_obj['detected_os']
-        this_os_argname = int_obj['os_data']['supported_oses'][detected_os][argname]
+        this_os_argname = int_obj['supported_oses'][detected_os][argname]
         argvalue = ARGUMENTS.get(this_os_argname)
         if argvalue:
             print(argname + ' (' + this_os_argname + ' in ' + \
-                    int_obj['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    int_obj['supported_oses'][detected_os]['os_name'] + \
                     ') argument found: ' + argvalue)
             return argvalue
         print(argname + ' (' + this_os_argname + ' in ' + \
-                    int_obj['os_data']['supported_oses'][detected_os]['os_name'] + \
+                    int_obj['supported_oses'][detected_os]['os_name'] + \
                     ') argument not found')
         return ''
 
@@ -327,15 +308,15 @@ def helpers_class():
 
     # Internal method
     def _launch_post_process(vars_name):
-        for var_dict in int_obj['os_data']['os_vars'][vars_name].values():
-            post_processing_key = var_dict['post_processing']
-            if post_processing_key:
-                _post_process(post_processing_key)
+        for var_dict in int_obj['vars_data'][vars_name].values():
+            is_post_processed_in_a_function_key = var_dict['is_post_processed_in_a_function']
+            if is_post_processed_in_a_function_key:
+                _post_process(is_post_processed_in_a_function_key)
 
     # External method (FACADE: _get_from_os | use int_obj['my_vars'])
     def get_vars(vars_name):
-        for var_key, var_dict in int_obj['os_data']['os_vars'][vars_name].items():
-            if var_dict['get_from_os']:
+        for var_key, var_dict in int_obj['vars_data'][vars_name].items():
+            if var_dict['is_getting_from_arguments']:
                 var_value = _get_from_os(var_key)
                 if var_value:
                     int_obj['got_vars'][var_key] = var_value
@@ -345,12 +326,12 @@ def helpers_class():
 
     # External method
     def apply_vars(vars_name):
-        for var_key, var_dict in int_obj['os_data']['os_vars'][vars_name].items():
-            name_in_env = var_dict['name_in_env']
-            if name_in_env:
+        for var_key, var_dict in int_obj['vars_data'][vars_name].items():
+            is_applied_to_scons_env = var_dict['is_applied_to_scons_env']
+            if is_applied_to_scons_env:
                 replace_args = {}
-                print('setting ' + name_in_env + ' to ' + int_obj['got_vars'][var_key])
-                replace_args[name_in_env] = SCons.Util.CLVar(int_obj['got_vars'][var_key])
+                print('setting ' + is_applied_to_scons_env + ' to ' + int_obj['got_vars'][var_key])
+                replace_args[is_applied_to_scons_env] = SCons.Util.CLVar(int_obj['got_vars'][var_key])
                 int_obj['scons_objects']['env'].Replace(**replace_args)
 
     # External method
@@ -368,9 +349,9 @@ def helpers_class():
 
     # External method
     def read_variables_cache():
-        for varname, scons_add_tuple in int_obj['myown_env_variables'].items():
-            print('Reading ' + varname + ' from cache as ' + scons_add_tuple[0] + '...')
-            int_obj['scons_objects']['scons_var_obj'].Add(scons_add_tuple)
+        for varname, is_saved_to_cache_file in int_obj['myown_env_variables'].items():
+            print('Reading ' + varname + ' from cache as ' + is_saved_to_cache_file[0] + '...')
+            int_obj['scons_objects']['scons_var_obj'].Add(is_saved_to_cache_file)
         # This adds new variables to Environment (doesn't rewrite it)
         # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
         int_obj['scons_objects']['env'] = Environment(variables = \
@@ -378,8 +359,8 @@ def helpers_class():
 
     # External method
     def save_variables_cache():
-        for varname, scons_add_tuple in int_obj['myown_env_variables'].items():
-            print('Saving ' + varname + ' to cache as ' + scons_add_tuple[0] + '...')
+        for varname, is_saved_to_cache_file in int_obj['myown_env_variables'].items():
+            print('Saving ' + varname + ' to cache as ' + is_saved_to_cache_file[0] + '...')
             _set_myown_env_variable(varname, int_obj['got_vars'][varname])
         # This saves only variables from 'scons_var_obj', not all variables from 'env'
         # (here 'env' is the environment to get the option values from)
