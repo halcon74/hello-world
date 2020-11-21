@@ -22,25 +22,25 @@ Total: 1 package (1 new), Size of downloads: 0 KiB
  * 
  * Fetching https://github.com/halcon74/hello-world.git ...
 git fetch https://github.com/halcon74/hello-world.git +HEAD:refs/git-r3/HEAD
-remote: Enumerating objects: 33, done.
-remote: Counting objects: 100% (33/33), done.
-remote: Compressing objects: 100% (20/20), done.
-remote: Total 33 (delta 19), reused 27 (delta 13), pack-reused 0
-Unpacking objects: 100% (33/33), 14.39 KiB | 320.00 KiB/s, done.
+remote: Enumerating objects: 126, done.
+remote: Counting objects: 100% (126/126), done.
+remote: Compressing objects: 100% (83/83), done.
+remote: Total 151 (delta 83), reused 86 (delta 43), pack-reused 25
+Receiving objects: 100% (151/151), 62.90 KiB | 277.00 KiB/s, done.
+Resolving deltas: 100% (97/97), completed with 3 local objects.
 From https://github.com/halcon74/hello-world
-   d42d304..e21f54a             -> refs/git-r3/HEAD
- * [new tag]         v0.4       -> v0.4
+   e21f54a..07a8de4             -> refs/git-r3/HEAD
+ * [new tag]         v0.4.1     -> v0.4.1
 git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
  * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 git checkout --quiet refs/git-r3/HEAD
 GIT update -->
    repository:               https://github.com/halcon74/hello-world.git
-   updating from commit:     d42d304b4b95c3e85ed24e250f4f4485b0aedf89
-   to commit:                e21f54aa4a3227d68e8870827313f189f8e5dff8
- SConstruct           | 172 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------------
- docs/ToDo            |  14 +++++++++++--
- gentoo/emerge_output |  26 ++++++++---------------
- 3 files changed, 131 insertions(+), 81 deletions(-)
+   updating from commit:     e21f54aa4a3227d68e8870827313f189f8e5dff8
+   to commit:                07a8de4e24c2831e25c1d058ecf6d8e4aa3fff8d
+ SConstruct           | 518 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------
+ gentoo/emerge_output |  20 ++++-
+ 2 files changed, 339 insertions(+), 199 deletions(-)
 >>> Source unpacked in /var/tmp/portage/app-misc/Hello_World-9999/work
 >>> Preparing source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 >>> Source prepared.
@@ -49,14 +49,18 @@ GIT update -->
 >>> Compiling source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 scons -j15 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe LDFLAGS=-Wl,-O1 -Wl,--as-needed
 scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
 variables for install not retrieved
 getting and saving variables needed for install...
 checking for destdir as DESTDIR... (are we on Gentoo?)
 detected Operating System: gentoo
 destdir (DESTDIR in Gentoo) argument found: /var/tmp/portage/app-misc/Hello_World-9999/image
-until prefix is found, global_vars['got_arguments']['destdir'] is set for default value without prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/bin
 prefix (PREFIX in Gentoo) argument found: /usr
-global_vars['got_arguments']['destdir'] is reset using prefix: /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin
+initially, destdir is set for default value without prefix: /var/tmp/portage/app-misc/Hello_World-9999/image
+destdir is reset using prefix and install_path: /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin
+Saving destdir to cache as MYCACHEDDIR...
+Saving compile_target to cache as MYCACHEDSOURCE...
 cpp_compiler (CXX in Gentoo) argument found: x86_64-pc-linux-gnu-g++
 cpp_compiler_flags (CXXFLAGS in Gentoo) argument found: -O2 -march=native -pipe
 linker_flags (LDFLAGS in Gentoo) argument found: -Wl,-O1 -Wl,--as-needed
@@ -75,6 +79,8 @@ scons: done building targets.
 >>> Install app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
 scons -j15 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe LDFLAGS=-Wl,-O1 -Wl,--as-needed INSTALL=1
 scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
 variables for install retrieved successfully; no need for re-configuring!
 will install: dir = /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin, source = build/Hello_World
 scons: done reading SConscript files.
@@ -83,7 +89,7 @@ Install file: "build/Hello_World" as "/var/tmp/portage/app-misc/Hello_World-9999
 scons: done building targets.
 >>> Completed installing app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
 
- * Final size of build directory: 296 KiB
+ * Final size of build directory: 304 KiB
  * Final size of installed tree:   52 KiB
 
 strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R .comment -R .GCC.command.line -R .note.gnu.gold-version

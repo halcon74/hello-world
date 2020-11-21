@@ -19,7 +19,7 @@
 4 CLOSED RESOLVED
 	to add support for 'CXX', 'CXXFLAGS', 'LDFLAGS'
 
-5 IN PROGRESS
+5 CLOSED RESOLVED
 	a normal class? or several classes
 	or at least
 		(DONE) the first arg of _populate_os_dict args should be an object with elements of cpp_linker_vars + destdir + prefix and an extra info about their attributes (must be defined etc) ; all other = *args
