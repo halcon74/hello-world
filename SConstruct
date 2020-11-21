@@ -101,6 +101,14 @@ def _myown_os_path_join(*paths):
 
 def populate_global_vars():
 
+    paths_and_names = {
+        'source_path' : 'src',
+        'source_name' : 'main.cpp',
+        'compile_path' : 'build',
+        'install_path' : 'bin',
+        'binary_name' : 'Hello_World'
+    }
+
     def _define_vars(os_detected_at):
         os_dict = {}
         os_dict['supported_oses'] = OrderedDict()
@@ -205,9 +213,10 @@ def populate_global_vars():
         myown_env_dict = _myown_env_variables_descriptions(os_dict['os_vars'])
         return os_dict, myown_env_dict
 
-    obj = {}
     os_detected_at = 'destdir'
     os_data, myown_env_variables = _define_vars(os_detected_at)
+
+    obj = {}
 
     # 2 my own env variables are added in function read_variables_cache and then
     # their values are set in function _save_variables_cache
@@ -216,16 +225,9 @@ def populate_global_vars():
     # All that I add to env variables must be defined in tuples here
     obj['myown_env_variables'] = myown_env_variables
 
-    paths_and_names = {
-        'source_path' : 'src',
-        'source_name' : 'main.cpp',
-        'compile_path' : 'build',
-        'install_path' : 'bin',
-        'binary_name' : 'Hello_World'
-    }
-
     obj['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
     obj['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
+
     obj['os_data'] = os_data
 
     obj['my_vars'] = {}
