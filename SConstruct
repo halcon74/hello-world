@@ -216,13 +216,20 @@ def populate_global_vars():
     # All that I add to env variables must be defined in tuples here
     mydict['myown_env_variables'] = myown_env_variables
 
-    mydict['source_path'] = 'src'
-    mydict['source_name'] = 'main.cpp'
-    mydict['compile_path'] = 'build'
-    mydict['install_path'] = 'bin'
-    mydict['binary_name'] = 'Hello_World'
-    mydict['source_full'] = _myown_os_path_join(mydict['source_path'], mydict['source_name'])
-    mydict['compile_target'] = _myown_os_path_join(mydict['compile_path'], mydict['binary_name'])
+    def _paths_and_names():
+        p_and_n = {
+            'source_path' : 'src',
+            'source_name' : 'main.cpp',
+            'compile_path' : 'build',
+            'install_path' : 'bin',
+            'binary_name' : 'Hello_World'
+        }
+        return p_and_n
+    paths_and_names = _paths_and_names()
+
+    mydict['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
+    mydict['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
+
     mydict['os_detected_at'] = 'destdir'
     mydict['os_data'] = os_data
 
@@ -300,7 +307,7 @@ def populate_global_vars():
         if 'prefix' in self['got_vars'] and self['got_vars']['prefix']:
             self['got_vars']['destdir'] = _myown_os_path_join(\
                                             self['got_vars']['destdir'], \
-                                            self['got_vars']['prefix'], self['install_path'])
+                                            self['got_vars']['prefix'], paths_and_names['install_path'])
             print('destdir is reset using prefix and install_path: ' + self['got_vars']['destdir'])
 
     # Contains internal methods
