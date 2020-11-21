@@ -125,11 +125,18 @@ def _populate_os_data(os_detected_at):
             },
             'prefix' : {
                 'name_in_env' : '',
+                'var_goes_to_cache' : '',
+                'names_in_oses' : {
+                    'gentoo' : 'PREFIX'
+                }
+            },
+            'compile_target' : {
+                'name_in_env' : '',
                 'var_goes_to_cache' : 'cached_source',
                 'scons_add_tuple' : ('MYCACHEDSOURCE', \
                                 "cached 'source' argument for global_vars['env'].Install", ''),
                 'names_in_oses' : {
-                    'gentoo' : 'PREFIX'
+                    'gentoo' : 'CXX'
                 }
             }
         },
