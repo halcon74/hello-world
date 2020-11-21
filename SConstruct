@@ -109,7 +109,7 @@ def populate_global_vars():
         'binary_name' : 'Hello_World'
     }
 
-    def _define_vars(os_detected_at):
+    def _define_os_data_and_myown_env_variables(os_detected_at):
         os_dict = {}
         os_dict['supported_oses'] = OrderedDict()
         os_dict['supported_oses'] = {
@@ -214,7 +214,7 @@ def populate_global_vars():
         return os_dict, myown_env_dict
 
     os_detected_at = 'destdir'
-    os_data, myown_env_variables = _define_vars(os_detected_at)
+    os_data, myown_env_variables = _define_os_data_and_myown_env_variables(os_detected_at)
 
     obj = {}
 
@@ -235,7 +235,7 @@ def populate_global_vars():
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable 'os_detected_at' above:
-    #   (see function _define_vars)
+    #   (see function _define_os_data_and_myown_env_variables)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then,
@@ -272,7 +272,7 @@ def populate_global_vars():
         print('If your Operating System is not supported, you can simulate one of \
                                 supported OSes by passing parameters with names that it has')
         print('Parameter names that each of supported Operating Systems has, \
-                                        you can see them in function _define_vars')
+                                        you can see them in function _define_os_data_and_myown_env_variables')
         sys.exit(1)
 
     # Internal method
