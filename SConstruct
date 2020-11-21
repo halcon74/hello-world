@@ -344,7 +344,7 @@ def helpers_class():
                         if var_value:
                             self['got_vars'][var_key] = var_value
                     else:
-                        self['got_vars'][var_key] = self['my_vars']
+                        self['got_vars'][var_key] = self['my_vars'][var_key]
         _launch_post_process(self, vars_name)
 
     obj['get_vars'] = get_vars
