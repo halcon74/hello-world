@@ -255,10 +255,10 @@ def helpers_class():
                 print('detected Operating System: ' + int_obj['detected_os'])
                 return 1
         print('Operating System not detected')
-        print('If your Operating System is not supported, you can simulate one of \
-                        supported OSes by passing parameters with names that it has')
-        print('Parameter names that each of supported Operating Systems has, \
-                        you can see them in function _define_vars_data_and_myown_env_variables')
+        print('If your Operating System is not supported, you can simulate one of ' + \
+                        'supported OSes by passing parameters with names that it has')
+        print('Parameter names that each of supported Operating Systems has, ' + \
+                        'you can see them in function _define_vars_data_and_myown_env_variables')
         sys.exit(1)
 
     # Internal method
@@ -419,8 +419,8 @@ if helpers['get_myown_env_variable']('destdir') and \
     if install_passed == '1':
         myinstall(helpers)
     else:
-        print('will not install; this SConscript requires passing "INSTALL=1" \
-                                in command-line arguments instead of "install" after them')
+        print('will not install; this SConscript requires passing "INSTALL=1" ' + \
+                                'in command-line arguments instead of "install" after them')
         mycompile(helpers)
 else:
     print('variables for install not retrieved')
