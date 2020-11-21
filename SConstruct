@@ -100,6 +100,7 @@ def _myown_os_path_join(*paths):
     return joined
 
 def populate_global_vars():
+
     def _define_vars(os_detected_at):
         defining_obj = {}
         defining_obj['supported_oses'] = OrderedDict()
@@ -286,7 +287,7 @@ def populate_global_vars():
                     ') argument not found')
         return ''
 
-    # External method
+    # External method (FACADE: _get_from_os | use mydict['got_vars'])
     def get_vars(self, vars_name):
         print('get_vars: ' + vars_name)
         os_vars = self['os_data']['os_vars']
