@@ -225,7 +225,8 @@ def helpers_class():
         return os_dict, myown_env_dict
 
     int_obj['os_detected_at'] = 'destdir'
-    int_obj['os_data'], int_obj['myown_env_variables'] = _define_os_data_and_myown_env_variables(int_obj['os_detected_at'])
+    int_obj['os_data'], int_obj['myown_env_variables'] = \
+                            _define_os_data_and_myown_env_variables(int_obj['os_detected_at'])
 
     int_obj['scons_objects'] = {
         # 2 my own env variables are added in function read_variables_cache and then
@@ -308,8 +309,10 @@ def helpers_class():
         if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
             int_obj['got_vars']['destdir'] = _myown_os_path_join(\
                                     int_obj['got_vars']['destdir'], \
-                                    int_obj['got_vars']['prefix'], int_obj['paths_and_names']['install_path'])
-            print('destdir is reset using prefix and install_path: ' + int_obj['got_vars']['destdir'])
+                                    int_obj['got_vars']['prefix'], \
+                                    int_obj['paths_and_names']['install_path'])
+            print('destdir is reset using prefix and install_path: ' + \
+                                    int_obj['got_vars']['destdir'])
 
     # Contains internal methods
     post_process_funcs = {}
@@ -371,7 +374,8 @@ def helpers_class():
             int_obj['scons_objects']['scons_var_obj'].Add(scons_add_tuple)
         # This adds new variables to Environment (doesn't rewrite it)
         # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-        int_obj['scons_objects']['env'] = Environment(variables = int_obj['scons_objects']['scons_var_obj'])
+        int_obj['scons_objects']['env'] = Environment(variables = \
+                                            int_obj['scons_objects']['scons_var_obj'])
 
     # External method
     def save_variables_cache():
@@ -381,11 +385,13 @@ def helpers_class():
         # This saves only variables from 'scons_var_obj', not all variables from 'env'
         # (here 'env' is the environment to get the option values from)
         # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
-        int_obj['scons_objects']['scons_var_obj'].Save(int_obj['variables_cache_file'], int_obj['scons_objects']['env'])
+        int_obj['scons_objects']['scons_var_obj'].Save(int_obj['variables_cache_file'], \
+                                                                    int_obj['scons_objects']['env'])
 
     # External method
     def program_compile():
-        target = int_obj['scons_objects']['env'].Program(target = int_obj['got_vars']['compile_target'], \
+        target = int_obj['scons_objects']['env'].Program(target = \
+                                                int_obj['got_vars']['compile_target'], \
                                                 source = int_obj['got_vars']['source_full'])
         Default(target)
         print('will compile: target = ' + int_obj['got_vars']['compile_target'] + \
@@ -410,18 +416,18 @@ def helpers_class():
     obj['program_install'] = program_install
     return obj
 
-def get_and_save_variables_for_install(hs):
+def get_and_save_variables_for_install(helpers_):
     print('getting and saving variables needed for install...')
-    hs['get_vars']('install_vars')
-    hs['save_variables_cache']()
+    helpers_['get_vars']('install_vars')
+    helpers_['save_variables_cache']()
 
-def mycompile(hs):
-    hs['get_vars']('cpp_linker_vars')
-    hs['apply_vars']('cpp_linker_vars')
-    hs['program_compile']()
+def mycompile(helpers_):
+    helpers_['get_vars']('cpp_linker_vars')
+    helpers_['apply_vars']('cpp_linker_vars')
+    helpers_['program_compile']()
 
-def myinstall(hs):
-    hs['program_install']()
+def myinstall(helpers_):
+    helpers_['program_install']()
 
 helpers = helpers_class()
 
