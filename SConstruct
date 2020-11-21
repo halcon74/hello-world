@@ -299,9 +299,9 @@ def populate_global_vars():
                     if os_var_dict['get_from_os']:
                         var_value = _get_from_os(self, var_key)
                         if var_value:
-                            mydict['got_vars'][var_key] = var_value
+                            self['got_vars'][var_key] = var_value
                     else:
-                        mydict['got_vars'][var_key] = mydict['my_vars']
+                        self['got_vars'][var_key] = self['my_vars']
         return
 
     mydict['get_vars'] = get_vars
