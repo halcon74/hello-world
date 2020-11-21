@@ -102,9 +102,9 @@ def _myown_os_path_join(*paths):
 def populate_global_vars():
 
     def _define_vars(os_detected_at):
-        defining_obj = {}
-        defining_obj['supported_oses'] = OrderedDict()
-        defining_obj['supported_oses'] = {
+        os_dict = {}
+        os_dict['supported_oses'] = OrderedDict()
+        os_dict['supported_oses'] = {
             'gentoo' : {
                 'os_name' : 'Gentoo'
             },
@@ -112,7 +112,7 @@ def populate_global_vars():
                 'os_name' : 'Debian/Ubuntu'
             }
         }
-        defining_obj['os_vars'] = {
+        os_dict['os_vars'] = {
             'install_vars' : {
                 'destdir' : {
                     'name_in_env' : '',
@@ -190,7 +190,7 @@ def populate_global_vars():
                                 print('_populate_os_dict ERROR: ' + var_key + \
                                                                 ' is empty for ' + os_dict_key)
                                 sys.exit(1)
-        _populate_os_dict(defining_obj['supported_oses'], defining_obj['os_vars'])
+        _populate_os_dict(os_dict['supported_oses'], os_dict['os_vars'])
 
         def _myown_env_variables_descriptions(os_vars):
             myowndict = {}
@@ -202,19 +202,19 @@ def populate_global_vars():
                     if var_goes_to_cache:
                         myowndict[var_goes_to_cache] = os_var_dict['scons_add_tuple']
             return myowndict
-        myown_env_variables = _myown_env_variables_descriptions(defining_obj['os_vars'])
-        return defining_obj, myown_env_variables
+        myown_env_dict = _myown_env_variables_descriptions(os_dict['os_vars'])
+        return os_dict, myown_env_dict
 
-    mydict = {}
+    obj = {}
     os_detected_at = 'destdir'
     os_data, myown_env_variables = _define_vars(os_detected_at)
 
     # 2 my own env variables are added in function read_variables_cache and then
     # their values are set in function _save_variables_cache
-    mydict['env'] = Environment()
+    obj['env'] = Environment()
 
     # All that I add to env variables must be defined in tuples here
-    mydict['myown_env_variables'] = myown_env_variables
+    obj['myown_env_variables'] = myown_env_variables
 
     paths_and_names = {
         'source_path' : 'src',
@@ -224,12 +224,12 @@ def populate_global_vars():
         'binary_name' : 'Hello_World'
     }
 
-    mydict['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
-    mydict['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
-    mydict['os_data'] = os_data
+    obj['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
+    obj['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
+    obj['os_data'] = os_data
 
-    mydict['my_vars'] = {}
-    mydict['my_vars']['compile_target'] = mydict['compile_target']
+    obj['my_vars'] = {}
+    obj['my_vars']['compile_target'] = obj['compile_target']
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable 'os_detected_at' above:
@@ -240,17 +240,17 @@ def populate_global_vars():
     #         OS is detected as Debian/Ubuntu
     # I don't use special tools for detecting OS intentionally,
     # because I define OS here as a set of variables
-    mydict['detected_os'] = ''
+    obj['detected_os'] = ''
 
     # Values are set in functions _get_prefix_and_destdir and _get_cpp_linker_vars
-    mydict['got_vars'] = {}
+    obj['got_vars'] = {}
 
-    mydict['variables_cache_file'] = 'scons_variables_cache.conf'
+    obj['variables_cache_file'] = 'scons_variables_cache.conf'
 
     # This is a SCons.Variables.Variables class object for reading from /
     # writing to the variables cache file
     # Changed by calling method "Add" in function read_variables_cache
-    mydict['scons_var_obj'] = Variables(mydict['variables_cache_file'])
+    obj['scons_var_obj'] = Variables(obj['variables_cache_file'])
 
     # Internal method
     def _detect_os(self):
@@ -328,7 +328,7 @@ def populate_global_vars():
                     if post_processing_key:
                         _post_process(self, post_processing_key)
 
-    # External method (FACADE: _get_from_os | use mydict['my_vars'])
+    # External method (FACADE: _get_from_os | use obj['my_vars'])
     def get_vars(self, vars_name):
         os_vars = self['os_data']['os_vars']
         for vars_key in os_vars.keys():
@@ -344,8 +344,8 @@ def populate_global_vars():
                         self['got_vars'][var_key] = self['my_vars']
         _launch_post_process(self, vars_name)
 
-    mydict['get_vars'] = get_vars
-    return mydict
+    obj['get_vars'] = get_vars
+    return obj
 
 def _get_prefix_and_destdir(obj):
     obj['get_vars'](obj, 'install_vars')
