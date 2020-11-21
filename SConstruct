@@ -315,6 +315,18 @@ def populate_global_vars():
             print('_post_process ERROR: function ' + funcname + ' is not defined')
             sys.exit(1)
 
+    # Internal method
+    def launch_post_process(self, vars_name):
+        os_vars = self['os_data']['os_vars']
+        for vars_key in os_vars.keys():
+            if vars_key == vars_name:
+                os_vars_dict = os_vars[vars_key]
+                for var_key in os_vars_dict.keys():
+                    os_var_dict = os_vars_dict[var_key]
+                    post_processing_key = os_var_dict['post_processing']
+                    if post_processing_key:
+                        _post_process(self, post_processing_key)
+
     # External method (FACADE: _get_from_os | use mydict['my_vars'])
     def get_vars(self, vars_name):
         os_vars = self['os_data']['os_vars']
@@ -330,17 +342,6 @@ def populate_global_vars():
                     else:
                         self['got_vars'][var_key] = self['my_vars']
         launch_post_process(self, vars_name)
-
-    def launch_post_process(self, vars_name):
-        os_vars = self['os_data']['os_vars']
-        for vars_key in os_vars.keys():
-            if vars_key == vars_name:
-                os_vars_dict = os_vars[vars_key]
-                for var_key in os_vars_dict.keys():
-                    os_var_dict = os_vars_dict[var_key]
-                    post_processing_key = os_var_dict['post_processing']
-                    if post_processing_key:
-                        _post_process(self, post_processing_key)
 
     mydict['get_vars'] = get_vars
     return mydict
