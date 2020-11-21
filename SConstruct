@@ -331,7 +331,8 @@ def populate_global_vars():
                         _post_process(self, post_processing_key)
 
     # External method (FACADE: _get_from_os | use obj['my_vars'])
-    def get_vars(self, vars_name):
+    def get_vars(vars_name):
+        self = obj
         os_vars = self['os_data']['os_vars']
         for vars_key in os_vars.keys():
             if vars_key == vars_name:
@@ -350,10 +351,10 @@ def populate_global_vars():
     return obj
 
 def _get_prefix_and_destdir(obj):
-    obj['get_vars'](obj, 'install_vars')
+    obj['get_vars']('install_vars')
 
 def _get_cpp_linker_vars(obj):
-    obj['get_vars'](obj, 'cpp_linker_vars')
+    obj['get_vars']('cpp_linker_vars')
 
 def _apply_cpp_linker_vars(obj):
     for key, mydict in obj['os_data']['os_vars']['cpp_linker_vars'].items():
