@@ -216,16 +216,13 @@ def populate_global_vars():
     # All that I add to env variables must be defined in tuples here
     mydict['myown_env_variables'] = myown_env_variables
 
-    def _paths_and_names():
-        p_and_n = {
-            'source_path' : 'src',
-            'source_name' : 'main.cpp',
-            'compile_path' : 'build',
-            'install_path' : 'bin',
-            'binary_name' : 'Hello_World'
-        }
-        return p_and_n
-    paths_and_names = _paths_and_names()
+    paths_and_names = {
+        'source_path' : 'src',
+        'source_name' : 'main.cpp',
+        'compile_path' : 'build',
+        'install_path' : 'bin',
+        'binary_name' : 'Hello_World'
+    }
 
     mydict['source_full'] = _myown_os_path_join(paths_and_names['source_path'], paths_and_names['source_name'])
     mydict['compile_target'] = _myown_os_path_join(paths_and_names['compile_path'], paths_and_names['binary_name'])
