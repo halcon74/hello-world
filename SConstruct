@@ -39,8 +39,8 @@
 # INSTALL action and to save them in the variables-cache file.
 #
 # THE MOST IMPORTANT PART: this script does not contain an usual
-# Alias "install", because I prefer to use command-line arguments
-# instead of Aliases.
+# target "install", because I prefer to use command-line arguments
+# instead of targets.
 #
 # For this reason, this script requires
 # passing "INSTALL=1" IN ARGUMENTS
