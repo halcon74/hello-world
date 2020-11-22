@@ -113,7 +113,7 @@ def helpers_class():
 
     int_obj['variables_cache_file'] = 'scons_variables_cache.conf'
 
-    def _define_vars_data_and_myown_env_variables(os_detected_at):
+    def _define_vars_data(os_detected_at):
         supported_oses = OrderedDict()
 
         # Is populated further in function _populate_supported_oses
@@ -222,7 +222,7 @@ def helpers_class():
 
     int_obj['os_detected_at'] = 'destdir'
     int_obj['supported_oses'], int_obj['vars_data'], int_obj['myown_env_variables'] = \
-                            _define_vars_data_and_myown_env_variables(int_obj['os_detected_at'])
+                            _define_vars_data(int_obj['os_detected_at'])
 
     int_obj['scons_objects'] = {
         # 2 my own env variables are added in function read_variables_cache and then
@@ -246,7 +246,7 @@ def helpers_class():
 
     # Set in function _detect_os, by finding non-empty value of scons argument
     # which name is determined by variable int_obj['os_detected_at']:
-    #   (see function _define_vars_data_and_myown_env_variables)
+    #   (see function _define_vars_data)
     #      if we found argument 'DESTDIR' with non-empty value, then,
     #         OS is detected as Gentoo,
     #      if we found argument 'install_root' with non-empty value, then,
@@ -276,7 +276,7 @@ def helpers_class():
         print('If your Operating System is not supported, you can simulate one of ' + \
                         'supported OSes by passing parameters with names that it has')
         print('Parameter names that each of supported Operating Systems has, ' + \
-                        'you can see them in function _define_vars_data_and_myown_env_variables')
+                        'you can see them in function _define_vars_data')
         sys.exit(1)
 
     # Internal method
