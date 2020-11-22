@@ -79,6 +79,7 @@ import os.path
 import re
 import sys
 import SCons.Util
+from SCons.Script import Environment, Variables, ARGUMENTS, COMMAND_LINE_TARGETS
 
 # os.path.join drops all other parts when one part is an absolute path;
 # os.path.normpath takes only one argument...
