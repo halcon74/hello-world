@@ -99,6 +99,9 @@ def _myown_os_path_join(*paths):
         joined += path
     return joined
 
+# If you are surprised that I call it a class:
+# https://forums.gentoo.org/viewtopic-p-8527031.html#8527031
+# (search string: "OOP, because perl") :)
 def helpers_class():
 
     int_obj = {}
