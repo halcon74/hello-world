@@ -186,7 +186,8 @@ def helpers_class():
 
         def _populate_supported_oses():
             for supported_oses_key in supported_oses:
-                # Otherwise here is "dictionary changed size during iteration" RuntimeError
+                # Otherwise here is
+                # "dictionary changed size during iteration" RuntimeError
                 supported_oses_dict = supported_oses[supported_oses_key]
                 for vars_key in vars_data:
                     vars_dict = vars_data[vars_key]
@@ -195,11 +196,13 @@ def helpers_class():
                         if var_dict['is_got_from_arguments']:
                             for key in var_dict['is_got_from_arguments']:
                                 if key == supported_oses_key:
-                                    # Otherwise here is "dictionary changed size during iteration" RuntimeError
-                                    supported_oses_dict[var_key] = var_dict['is_got_from_arguments'][key]
+                                    # Otherwise here is
+                                    # "dictionary changed size during iteration" RuntimeError
+                                    supported_oses_dict[var_key] = \
+                                                        var_dict['is_got_from_arguments'][key]
                             if var_key == os_detected_at and supported_oses_dict[var_key] == '':
                                 print('_populate_supported_oses ERROR: ' + var_key + \
-                                                                ' is empty for ' + supported_oses_key)
+                                                        ' is empty for ' + supported_oses_key)
                                 sys.exit(1)
         _populate_supported_oses()
         # Uncomment to look at the dictionary
@@ -212,7 +215,8 @@ def helpers_class():
                 for var_key in vars_data_dict:
                     os_var_dict = vars_data_dict[var_key]
                     if os_var_dict['is_saved_to_cache_file']:
-                        myown_env_variables_descriptions[var_key] = os_var_dict['is_saved_to_cache_file']
+                        myown_env_variables_descriptions[var_key] = \
+                                                        os_var_dict['is_saved_to_cache_file']
         _populate_myown_env_variables_descriptions()
         # Uncomment to look at the dictionary
         # print('myown_env_variables_descriptions dictionary dump:')
