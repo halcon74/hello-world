@@ -43,9 +43,9 @@
 # instead of Aliases.
 #
 # For this reason, this script requires
-# passing "INSTALL=1" IN command-line arguments
+# passing "INSTALL=1" IN ARGUMENTS
 # instead of
-# passing "install" AFTER command-line arguments
+# passing "install" in COMMAND_LINE_TARGETS
 #
 # That is, if you run
 # scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" install
@@ -123,6 +123,7 @@ def helpers_class():
                 'os_name' : 'Debian/Ubuntu'
             }
         }
+
         vars_data = {
             # All that I add to env variables must be defined
             # in values of 'is_saved_to_cache_file' here
@@ -205,6 +206,7 @@ def helpers_class():
                         myowndict[var_key] = os_var_dict['is_saved_to_cache_file']
             return myowndict
         myown_env_dict = _myown_env_variables_descriptions()
+
         return supported_oses, vars_data, myown_env_dict
 
     int_obj['os_detected_at'] = 'destdir'
@@ -414,6 +416,10 @@ def myinstall(helpers_):
 
 helpers = helpers_class()
 
+if COMMAND_LINE_TARGETS:
+    print('this SConsctruct does not support COMMAND_LINE_TARGETS')
+    sys.exit(1)
+
 helpers['read_variables_cache']()
 
 if helpers['get_myown_env_variable']('destdir') and \
@@ -423,7 +429,7 @@ if helpers['get_myown_env_variable']('destdir') and \
     if install_passed == '1':
         myinstall(helpers)
     else:
-        print('will not install; this SConscript requires passing "INSTALL=1" ' + \
+        print('will not install; this SConstruct requires passing "INSTALL=1" ' + \
                                 'in command-line arguments instead of "install" after them')
         mycompile(helpers)
 else:
