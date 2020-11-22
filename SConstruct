@@ -115,6 +115,8 @@ def helpers_class():
 
     def _define_vars_data_and_myown_env_variables(os_detected_at):
         supported_oses = OrderedDict()
+
+        # Is populated further in function _populate_supported_oses
         supported_oses = {
             'gentoo' : {
                 'os_name' : 'Gentoo'
@@ -129,85 +131,94 @@ def helpers_class():
             # in values of 'is_saved_to_cache_file' here
             'install_vars' : {
                 'destdir' : {
+                    'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : ('MYCACHEDDIR', \
                                     "cached 'dir' argument for " + \
                                     "int_obj['scons_objects']['env'].Install", ''),
-                    'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
                     'is_post_processed_in_a_function' : 'reset_destdir'
                 },
                 'prefix' : {
+                    'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : '',
-                    'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'compile_target' : {
+                    'is_got_from_arguments' : '',
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
                                     "cached 'source' argument for " + \
                                     "int_obj['scons_objects']['env'].Install", ''),
-                    'is_got_from_arguments' : '',
                     'is_post_processed_in_a_function' : ''
                 }
             },
             'cpp_linker_vars' : {
                 'cpp_compiler' : {
+                    'is_got_from_arguments' : {'gentoo' : 'CXX'},
                     'is_applied_to_scons_env' : 'CXX',
                     'is_saved_to_cache_file' : '',
-                    'is_got_from_arguments' : {'gentoo' : 'CXX'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'cpp_compiler_flags' : {
+                    'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
                     'is_applied_to_scons_env' : 'CXXFLAGS',
                     'is_saved_to_cache_file' : '',
-                    'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'linker_flags' : {
+                    'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
                     'is_applied_to_scons_env' : 'LINKFLAGS',
                     'is_saved_to_cache_file' : '',
-                    'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
                     'is_post_processed_in_a_function' : ''
                 },
                 'source_full' : {
+                    'is_got_from_arguments' : '',
                     'is_applied_to_scons_env' : '',
                     'is_saved_to_cache_file' : '',
-                    'is_got_from_arguments' : '',
                     'is_post_processed_in_a_function' : ''
                 }
             }
         }
 
-        def _populate_os_dict():
-            for os_dict_key in supported_oses.keys():
-                os_dict = supported_oses[os_dict_key]
-                for vars_key in vars_data.keys():
-                    vars_data_dict = vars_data[vars_key]
-                    for var_key in vars_data_dict.keys():
-                        os_var_dict = vars_data_dict[var_key]
-                        if os_var_dict['is_got_from_arguments']:
-                            for key in os_var_dict['is_got_from_arguments'].keys():
-                                if key == os_dict_key:
-                                    os_dict[var_key] = os_var_dict['is_got_from_arguments'][key]
-                            if var_key == os_detected_at and os_dict[var_key] == '':
-                                print('_populate_os_dict ERROR: ' + var_key + \
-                                                                ' is empty for ' + os_dict_key)
-                                sys.exit(1)
-        _populate_os_dict()
+        # Is populated further in function _populate_myown_env_variables_descriptions
+        myown_env_variables_descriptions = {}
 
-        def _myown_env_variables_descriptions():
-            myowndict = {}
-            for vars_key in vars_data.keys():
+        def _populate_supported_oses():
+            for supported_oses_key in supported_oses:
+                # Otherwise here is "dictionary changed size during iteration" RuntimeError
+                supported_oses_dict = supported_oses[supported_oses_key]
+                for vars_key in vars_data:
+                    vars_dict = vars_data[vars_key]
+                    for var_key in vars_dict:
+                        var_dict = vars_dict[var_key]
+                        if var_dict['is_got_from_arguments']:
+                            for key in var_dict['is_got_from_arguments']:
+                                if key == supported_oses_key:
+                                    # Otherwise here is "dictionary changed size during iteration" RuntimeError
+                                    supported_oses_dict[var_key] = var_dict['is_got_from_arguments'][key]
+                            if var_key == os_detected_at and supported_oses_dict[var_key] == '':
+                                print('_populate_supported_oses ERROR: ' + var_key + \
+                                                                ' is empty for ' + supported_oses_key)
+                                sys.exit(1)
+        _populate_supported_oses()
+        # Uncomment to look at the dictionary
+        # print('supported_oses dictionary dump:')
+        # print(supported_oses)
+
+        def _populate_myown_env_variables_descriptions():
+            for vars_key in vars_data:
                 vars_data_dict = vars_data[vars_key]
-                for var_key in vars_data_dict.keys():
+                for var_key in vars_data_dict:
                     os_var_dict = vars_data_dict[var_key]
                     if os_var_dict['is_saved_to_cache_file']:
-                        myowndict[var_key] = os_var_dict['is_saved_to_cache_file']
-            return myowndict
-        myown_env_dict = _myown_env_variables_descriptions()
+                        myown_env_variables_descriptions[var_key] = os_var_dict['is_saved_to_cache_file']
+        _populate_myown_env_variables_descriptions()
+        # Uncomment to look at the dictionary
+        # print('myown_env_variables_descriptions dictionary dump:')
+        # print(myown_env_variables_descriptions)
 
-        return supported_oses, vars_data, myown_env_dict
+        return supported_oses, vars_data, myown_env_variables_descriptions
 
     int_obj['os_detected_at'] = 'destdir'
     int_obj['supported_oses'], int_obj['vars_data'], int_obj['myown_env_variables'] = \
@@ -224,6 +235,8 @@ def helpers_class():
         'scons_var_obj' : Variables(int_obj['variables_cache_file'])
     }
 
+    # These are "ready values" for variables not got from ARGUMENTS
+    # (see FACADE in function get_vars)
     int_obj['my_vars'] = {
         'source_full' : _myown_os_path_join(int_obj['paths_and_names']['source_path'], \
                                                 int_obj['paths_and_names']['source_name']),
@@ -346,7 +359,7 @@ def helpers_class():
         value = int_obj['scons_objects']['env'][varname]
         if value:
             return int_obj['scons_objects']['env'][varname][0]
-        return int_obj['scons_objects']['env'][varname]
+        return ''
 
     # Internal method
     def _set_myown_env_variable(usedname, value):
@@ -414,11 +427,11 @@ def mycompile(helpers_):
 def myinstall(helpers_):
     helpers_['program_install']()
 
-helpers = helpers_class()
-
 if COMMAND_LINE_TARGETS:
     print('this SConsctruct does not support COMMAND_LINE_TARGETS')
     sys.exit(1)
+
+helpers = helpers_class()
 
 helpers['read_variables_cache']()
 
@@ -429,8 +442,8 @@ if helpers['get_myown_env_variable']('destdir') and \
     if install_passed == '1':
         myinstall(helpers)
     else:
-        print('will not install; this SConstruct requires passing "INSTALL=1" ' + \
-                                'in command-line arguments instead of "install" after them')
+        print('will not install; this SConstruct requires passing "INSTALL=1" in ARGUMENTS' + \
+                        'in command-line arguments instead of "install" in COMMAND_LINE_TARGETS')
         mycompile(helpers)
 else:
     print('variables for install not retrieved')
