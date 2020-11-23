@@ -28,7 +28,7 @@ variable int_obj['variables_cache_file'].
 
 With this file, no redundant actions (that are usually called
 're-configuring') will be performed during the second and all the
-consequent runs (will be performed only populating global variables
+consequent runs (will be performed only constructing the class
 and reading variables cache).
 
 This file contains variables that are needed for INSTALL action
@@ -452,8 +452,8 @@ if helpers['get_myown_env_variable']('destdir') and \
     if install_passed == '1':
         myinstall(helpers)
     else:
-        print('will not install; this SConstruct requires passing "INSTALL=1" in ARGUMENTS' + \
-                        'in command-line arguments instead of "install" in COMMAND_LINE_TARGETS')
+        print('will not install; this SConstruct requires passing "INSTALL=1" in ' + \
+                        'ARGUMENTS instead of "install" in COMMAND_LINE_TARGETS')
         mycompile(helpers)
 else:
     print('variables for install not retrieved')
