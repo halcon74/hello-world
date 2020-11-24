@@ -123,67 +123,66 @@ def helpers_class():
         supported_oses = OrderedDict()
 
         # Is populated further in function _populate_supported_oses
-        supported_oses = {
-            'gentoo' : {
-                'os_name' : 'Gentoo'
-            },
-            'debian' : {
-                'os_name' : 'Debian/Ubuntu'
-            }
+        supported_oses['gentoo'] = {
+            'os_name' : 'Gentoo'
+        }
+        supported_oses['debian'] = {
+            'os_name' : 'Debian/Ubuntu'
         }
 
         vars_data = {
             # All that I add to env variables must be defined
             # in values of 'is_saved_to_cache_file' here
-            'install_vars' : {
-                'destdir' : {
-                    'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
-                    'is_applied_to_scons_env' : '',
-                    'is_saved_to_cache_file' : ('MYCACHEDDIR', \
-                                    "cached 'dir' argument for " + \
-                                    "int_obj['scons_objects']['env'].Install", ''),
-                    'is_post_processed_in_a_function' : 'reset_destdir'
-                },
-                'prefix' : {
-                    'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
-                    'is_applied_to_scons_env' : '',
-                    'is_saved_to_cache_file' : '',
-                    'is_post_processed_in_a_function' : ''
-                },
-                'compile_target' : {
-                    'is_got_from_arguments' : '',
-                    'is_applied_to_scons_env' : '',
-                    'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
-                                    "cached 'source' argument for " + \
-                                    "int_obj['scons_objects']['env'].Install", ''),
-                    'is_post_processed_in_a_function' : ''
-                }
+            'install_vars' : OrderedDict(),
+            'cpp_linker_vars' : OrderedDict()
+        }
+
+        vars_data['install_vars']['destdir'] = {
+                'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
+                'is_applied_to_scons_env' : '',
+                'is_saved_to_cache_file' : ('MYCACHEDDIR', \
+                                "cached 'dir' argument for " + \
+                                "int_obj['scons_objects']['env'].Install", ''),
+                'is_post_processed_in_a_function' : 'reset_destdir'
+        }
+        vars_data['install_vars']['prefix'] = {
+                'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
+                'is_applied_to_scons_env' : '',
+                'is_saved_to_cache_file' : '',
+                'is_post_processed_in_a_function' : ''
+        }
+        vars_data['install_vars']['compile_target'] = {
+                'is_got_from_arguments' : '',
+                'is_applied_to_scons_env' : '',
+                'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
+                                "cached 'source' argument for " + \
+                                "int_obj['scons_objects']['env'].Install", ''),
+                'is_post_processed_in_a_function' : ''
+        }
+        vars_data['cpp_linker_vars'] = {
+            'cpp_compiler' : {
+                'is_got_from_arguments' : {'gentoo' : 'CXX'},
+                'is_applied_to_scons_env' : 'CXX',
+                'is_saved_to_cache_file' : '',
+                'is_post_processed_in_a_function' : ''
             },
-            'cpp_linker_vars' : {
-                'cpp_compiler' : {
-                    'is_got_from_arguments' : {'gentoo' : 'CXX'},
-                    'is_applied_to_scons_env' : 'CXX',
-                    'is_saved_to_cache_file' : '',
-                    'is_post_processed_in_a_function' : ''
-                },
-                'cpp_compiler_flags' : {
-                    'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
-                    'is_applied_to_scons_env' : 'CXXFLAGS',
-                    'is_saved_to_cache_file' : '',
-                    'is_post_processed_in_a_function' : ''
-                },
-                'linker_flags' : {
-                    'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
-                    'is_applied_to_scons_env' : 'LINKFLAGS',
-                    'is_saved_to_cache_file' : '',
-                    'is_post_processed_in_a_function' : ''
-                },
-                'source_full' : {
-                    'is_got_from_arguments' : '',
-                    'is_applied_to_scons_env' : '',
-                    'is_saved_to_cache_file' : '',
-                    'is_post_processed_in_a_function' : ''
-                }
+            'cpp_compiler_flags' : {
+                'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
+                'is_applied_to_scons_env' : 'CXXFLAGS',
+                'is_saved_to_cache_file' : '',
+                'is_post_processed_in_a_function' : ''
+            },
+            'linker_flags' : {
+                'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
+                'is_applied_to_scons_env' : 'LINKFLAGS',
+                'is_saved_to_cache_file' : '',
+                'is_post_processed_in_a_function' : ''
+            },
+            'source_full' : {
+                'is_got_from_arguments' : '',
+                'is_applied_to_scons_env' : '',
+                'is_saved_to_cache_file' : '',
+                'is_post_processed_in_a_function' : ''
             }
         }
 
@@ -344,6 +343,7 @@ def helpers_class():
     # External method (FACADE: _get_from_os | use int_obj['my_vars'])
     def get_vars(vars_name):
         for var_key, var_dict in int_obj['vars_data'][vars_name].items():
+            print('get_vars: ' + var_key)
             if var_dict['is_got_from_arguments']:
                 var_value = _get_from_os(var_key)
                 if var_value:
@@ -414,6 +414,10 @@ def helpers_class():
         print('will install: dir = ' + get_myown_env_variable('destdir') + \
                             ', source = ' + get_myown_env_variable('compile_target'))
 
+    # External method
+    def is_clean():
+        return int_obj['scons_objects']['env'].GetOption('clean')
+
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
     ext_obj['apply_vars'] = apply_vars
@@ -422,6 +426,7 @@ def helpers_class():
     ext_obj['save_variables_cache'] = save_variables_cache
     ext_obj['program_compile'] = program_compile
     ext_obj['program_install'] = program_install
+    ext_obj['is_clean'] = is_clean
     return ext_obj
 
 def get_and_save_variables_for_install(helpers_):
@@ -442,20 +447,21 @@ if COMMAND_LINE_TARGETS:
     sys.exit(1)
 
 helpers = helpers_class()
+if not helpers['is_clean']():
+    
+    helpers['read_variables_cache']()
 
-helpers['read_variables_cache']()
-
-if helpers['get_myown_env_variable']('destdir') and \
-            helpers['get_myown_env_variable']('compile_target'):
-    print('variables for install retrieved successfully; no need for re-configuring!')
-    install_passed = ARGUMENTS.get('INSTALL')
-    if install_passed == '1':
-        myinstall(helpers)
+    if helpers['get_myown_env_variable']('destdir') and \
+                helpers['get_myown_env_variable']('compile_target'):
+        print('variables for install retrieved successfully; no need for re-configuring!')
+        install_passed = ARGUMENTS.get('INSTALL')
+        if install_passed == '1':
+            myinstall(helpers)
+        else:
+            print('will not install; this SConstruct requires passing "INSTALL=1" in ' + \
+                            'ARGUMENTS instead of "install" in COMMAND_LINE_TARGETS')
+            mycompile(helpers)
     else:
-        print('will not install; this SConstruct requires passing "INSTALL=1" in ' + \
-                        'ARGUMENTS instead of "install" in COMMAND_LINE_TARGETS')
+        print('variables for install not retrieved')
+        get_and_save_variables_for_install(helpers)
         mycompile(helpers)
-else:
-    print('variables for install not retrieved')
-    get_and_save_variables_for_install(helpers)
-    mycompile(helpers)
