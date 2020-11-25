@@ -26,7 +26,7 @@
 		(DONE) to make a relation between cpp_linker_vars and env[NAMES]
 		(DONE) to rewrite _apply_cpp_linker_vars in a loop using this relation
 
-6
+6 IN PROGRESS
 	to add support for Debian
 
 NOTES

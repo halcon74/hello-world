@@ -28,9 +28,19 @@ https://scons.org/doc/production/HTML/scons-user/apa.html
 
 10. https://wiki.gentoo.org/wiki/SCons
 
+11.
+https://asynchronous.in/2017/07/03/HOWTO-Create-a-.deb-package/
+and
+https://www.debian.org/doc/manuals/maint-guide/first.en.html
+and
+https://www.debian.org/doc/manuals/packaging-tutorial/packaging-tutorial.en.pdf
+
+
 And, sure,
 https://packages.gentoo.org/packages/dev-qt/qt-creator
 and
 https://packages.gentoo.org/packages/dev-util/scons
 and
 https://packages.gentoo.org/packages/dev-python/pylint
+and
+https://packages.gentoo.org/packages/app-emulation/virtualbox
