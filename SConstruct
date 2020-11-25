@@ -32,7 +32,7 @@ scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/de
 
 LONG VERSION
 
-==Guessing OS==
+==Detecting OS==
 
 This script is designed to detect Operating System it runs on
 by the names of command-line arguments passed.
