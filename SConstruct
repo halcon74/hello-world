@@ -447,7 +447,7 @@ def helpers_class():
                             ', source = ' + get_myown_env_variable('compile_target'))
 
     # External method
-    def is_clean():
+    def is_option_clean_passed():
         return int_obj['scons_objects']['env'].GetOption('clean')
 
     ext_obj = {}
@@ -458,7 +458,7 @@ def helpers_class():
     ext_obj['save_variables_cache'] = save_variables_cache
     ext_obj['program_compile'] = program_compile
     ext_obj['program_install'] = program_install
-    ext_obj['is_clean'] = is_clean
+    ext_obj['is_option_clean_passed'] = is_option_clean_passed
     return ext_obj
 
 def get_and_save_variables_for_install(helpers_):
@@ -479,15 +479,15 @@ if COMMAND_LINE_TARGETS:
     sys.exit(1)
 
 helpers = helpers_class()
-if not helpers['is_clean']():
-    
+
+if not helpers['is_option_clean_passed']():
     helpers['read_variables_cache']()
 
     if helpers['get_myown_env_variable']('destdir') and \
                 helpers['get_myown_env_variable']('compile_target'):
         print('variables for install retrieved successfully; no need for re-configuring!')
-        install_passed = ARGUMENTS.get('INSTALL')
-        if install_passed == '1':
+        is_install_target_passed = ARGUMENTS.get('INSTALL')
+        if is_install_target_passed == '1':
             myinstall(helpers)
         else:
             print('will not install; this SConstruct requires passing "INSTALL=1" in ' + \
