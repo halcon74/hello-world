@@ -1,2 +1,0 @@
-?package(hello-world):needs="text" section="Applications/Programming"\
-  title="hello-world" command="/usr/bin/hello-world"

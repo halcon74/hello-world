@@ -3,7 +3,7 @@
 
 DEB_SCONS_OPTIONS = \
 prefix=/usr \
-install_root=$(CURDIR)/debian/tmp/usr \
+install_root=$(CURDIR)/debian/hello-world \
 CXX=g++ \
 CXXFLAGS="$(shell dpkg-buildflags --get CXXFLAGS)" \
 LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
