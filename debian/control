@@ -13,7 +13,7 @@ Package: hello-world
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Test program printing 'Hello World!' to STDOUT
- Test program printing 'Hello World!' to STDOUT, thart actually 
+ Test program printing 'Hello World!' to STDOUT, that actually 
  turned into an attempt to make a helper for building/installing 
  on different (*nix primarily) OSes via SCons "out-of-the-box" 
  (that is without (distro's) maintainer patches).
