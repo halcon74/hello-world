@@ -6,15 +6,51 @@ An attempt to make a helper for building/installing
 on different (*nix primarily) OSes via SCons "out-of-the-box"
 (that is without (distro's) maintainer patches).
 
+
+
 TL;DR
 
-Supposing that these are your preferred arguments
--j2 DESTDIR="/some/dir" PREFIX="/some/dir"
-just run
-scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir"
-scons -j2 DESTDIR="/some/dir" PREFIX="/some/dir" INSTALL=1
+How to compile and install:
+
+Example for Gentoo
+scons -j2 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image \
+        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe \
+        LDFLAGS=-Wl,-O1 -Wl,--as-needed
+scons -j2 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image \
+        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe \
+        LDFLAGS=-Wl,-O1 -Wl,--as-needed INSTALL=1
+
+Example for Debian
+scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/debian/hello-world/usr \
+        CXX=g++ CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security" \
+        LDFLAGS="-Wl,-z,relro"
+scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/debian/hello-world/usr \
+        CXX=g++ CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security" \
+        LDFLAGS="-Wl,-z,relro" INSTALL=1
+
+
 
 LONG VERSION
+
+==Guessing OS==
+
+This script is designed to guess Operating System it runs on
+by the names of command-line arguments passed.
+I don't use special tools for detecting OS intentionally,
+because I define OS here as a set of variables, for:
+- making similar installs on similar Linux distributions derived
+from one distro;
+- giving the user full freedom to simulate another OS if he wants to.
+Currently, the guessing OS is doing so:
+in function _detect_os, by finding non-empty value of scons argument
+which name is determined by variable int_obj['os_detected_at']:
+    (see function _define_vars_data)
+        if we found argument 'DESTDIR' with non-empty value, then,
+            OS is detected as Gentoo,
+        if we found argument 'install_root' with non-empty value, then,
+            OS is detected as Debian/Ubuntu
+
+==Refusing COMMAND_LINE_TARGETS==
 
 When this script is running for the first time with usual
 command-line arguments, like
@@ -134,7 +170,7 @@ def helpers_class():
             # All that I add to env variables must be defined
             # in values of 'is_saved_to_cache_file' here
             'install_vars' : OrderedDict(),
-            'cpp_linker_vars' : OrderedDict()
+            'cpp_linker_vars' : {}
         }
 
         vars_data['install_vars']['destdir'] = {
@@ -253,15 +289,7 @@ def helpers_class():
                                                 int_obj['paths_and_names']['binary_name'])
     }
 
-    # Set in function _detect_os, by finding non-empty value of scons argument
-    # which name is determined by variable int_obj['os_detected_at']:
-    #   (see function _define_vars_data)
-    #      if we found argument 'DESTDIR' with non-empty value, then,
-    #         OS is detected as Gentoo,
-    #      if we found argument 'install_root' with non-empty value, then,
-    #         OS is detected as Debian/Ubuntu
-    # I don't use special tools for detecting OS intentionally,
-    # because I define OS here as a set of variables
+    # Set in function _detect_os
     int_obj['detected_os'] = ''
 
     # Values are set in function get_vars
@@ -311,15 +339,14 @@ def helpers_class():
 
     # Internal method, goes to post_process_funcs
     def _reset_destdir():
-        if int_obj['detected_os'] == 'gentoo':
-            print('initially, destdir is set for default value without prefix: ' + \
+        print('initially, destdir is set for default value without prefix: ' + \
                                                             int_obj['got_vars']['destdir'])
-            if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
-                int_obj['got_vars']['destdir'] = _myown_os_path_join(\
+        if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
+            int_obj['got_vars']['destdir'] = _myown_os_path_join(\
                                     int_obj['got_vars']['destdir'], \
                                     int_obj['got_vars']['prefix'], \
                                     int_obj['paths_and_names']['install_path'])
-                print('destdir is reset using prefix and install_path: ' + \
+            print('destdir is reset using prefix and install_path: ' + \
                                     int_obj['got_vars']['destdir'])
 
     # Contains internal methods
