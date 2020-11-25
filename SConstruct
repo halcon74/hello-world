@@ -14,11 +14,11 @@ How to compile and install:
 
 Example for Gentoo
 scons -j2 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image \
-        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe \
-        LDFLAGS=-Wl,-O1 -Wl,--as-needed
+        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS="-O2 -march=native -pipe" \
+        LDFLAGS="-Wl,-O1 -Wl,--as-needed"
 scons -j2 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image \
-        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS=-O2 -march=native -pipe \
-        LDFLAGS=-Wl,-O1 -Wl,--as-needed INSTALL=1
+        CXX=x86_64-pc-linux-gnu-g++ CXXFLAGS="-O2 -march=native -pipe" \
+        LDFLAGS="-Wl,-O1 -Wl,--as-needed" INSTALL=1
 
 Example for Debian
 scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/debian/hello-world/usr \
