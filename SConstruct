@@ -146,7 +146,7 @@ def helpers_class():
                 'is_post_processed_in_a_function' : 'reset_destdir'
         }
         vars_data['install_vars']['prefix'] = {
-                'is_got_from_arguments' : {'gentoo' : 'PREFIX'},
+                'is_got_from_arguments' : {'gentoo' : 'PREFIX', 'debian' : 'prefix'},
                 'is_applied_to_scons_env' : '',
                 'is_saved_to_cache_file' : '',
                 'is_post_processed_in_a_function' : ''
@@ -161,19 +161,19 @@ def helpers_class():
         }
         vars_data['cpp_linker_vars'] = {
             'cpp_compiler' : {
-                'is_got_from_arguments' : {'gentoo' : 'CXX'},
+                'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian' : 'CXX'},
                 'is_applied_to_scons_env' : 'CXX',
                 'is_saved_to_cache_file' : '',
                 'is_post_processed_in_a_function' : ''
             },
             'cpp_compiler_flags' : {
-                'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS'},
+                'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS', 'debian' : 'CXXFLAGS'},
                 'is_applied_to_scons_env' : 'CXXFLAGS',
                 'is_saved_to_cache_file' : '',
                 'is_post_processed_in_a_function' : ''
             },
             'linker_flags' : {
-                'is_got_from_arguments' : {'gentoo' : 'LDFLAGS'},
+                'is_got_from_arguments' : {'gentoo' : 'LDFLAGS', 'debian' : 'LDFLAGS'},
                 'is_applied_to_scons_env' : 'LINKFLAGS',
                 'is_saved_to_cache_file' : '',
                 'is_post_processed_in_a_function' : ''
@@ -311,14 +311,15 @@ def helpers_class():
 
     # Internal method, goes to post_process_funcs
     def _reset_destdir():
-        print('initially, destdir is set for default value without prefix: ' + \
+        if int_obj['detected_os'] == 'gentoo':
+            print('initially, destdir is set for default value without prefix: ' + \
                                                             int_obj['got_vars']['destdir'])
-        if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
-            int_obj['got_vars']['destdir'] = _myown_os_path_join(\
+            if 'prefix' in int_obj['got_vars'] and int_obj['got_vars']['prefix']:
+                int_obj['got_vars']['destdir'] = _myown_os_path_join(\
                                     int_obj['got_vars']['destdir'], \
                                     int_obj['got_vars']['prefix'], \
                                     int_obj['paths_and_names']['install_path'])
-            print('destdir is reset using prefix and install_path: ' + \
+                print('destdir is reset using prefix and install_path: ' + \
                                     int_obj['got_vars']['destdir'])
 
     # Contains internal methods
