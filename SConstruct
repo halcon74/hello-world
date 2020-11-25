@@ -34,7 +34,7 @@ LONG VERSION
 
 ==Guessing OS==
 
-This script is designed to guess Operating System it runs on
+This script is designed to detect Operating System it runs on
 by the names of command-line arguments passed.
 
 I don't use special tools for detecting OS intentionally,
@@ -44,7 +44,7 @@ because I define OS here as a set of variables, for:
 from one distro;
 - giving the user full freedom to simulate another OS if he wants to.
 
-Currently, the guessing OS is doing so:
+Currently, the detecting of OS is doing so:
 
 in function _detect_os, by finding non-empty value of scons argument
 which name is determined by variable int_obj['os_detected_at']:
