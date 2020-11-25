@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+DEB_SCONS_OPTIONS = \
+prefix=/usr \
+install_root=$(CURDIR)/debian/tmp/usr \
+CXX=g++ \
+CXXFLAGS="$(shell dpkg-buildflags --get CXXFLAGS)" \
+LDFLAGS="$(shell dpkg-buildflags --get LDFLAGS)"
+
+DEB_SCONS_INSTALL_OPTIONS = $(DEB_SCONS_OPTIONS)
+DEB_SCONS_INSTALL_OPTIONS += INSTALL=1
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	:
+
+override_dh_auto_build:
+	scons $(DEB_SCONS_OPTIONS)
+
+override_dh_auto_clean:
+	scons $(DEB_SCONS_OPTIONS) -c || true
+	dh_clean .sconsign.dblite scons_variables_cache.conf src/main.o build/Hello_World
+	dh_auto_clean
+
+override_dh_auto_install:
+	scons $(DEB_SCONS_INSTALL_OPTIONS)
+
