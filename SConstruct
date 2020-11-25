@@ -36,19 +36,23 @@ LONG VERSION
 
 This script is designed to guess Operating System it runs on
 by the names of command-line arguments passed.
+
 I don't use special tools for detecting OS intentionally,
 because I define OS here as a set of variables, for:
+
 - making similar installs on similar Linux distributions derived
 from one distro;
 - giving the user full freedom to simulate another OS if he wants to.
+
 Currently, the guessing OS is doing so:
+
 in function _detect_os, by finding non-empty value of scons argument
 which name is determined by variable int_obj['os_detected_at']:
     (see function _define_vars_data)
         if we found argument 'DESTDIR' with non-empty value, then,
             OS is detected as Gentoo,
         if we found argument 'install_root' with non-empty value, then,
-            OS is detected as Debian/Ubuntu
+            OS is detected as Debian/Ubuntu.
 
 ==Refusing COMMAND_LINE_TARGETS==
 
