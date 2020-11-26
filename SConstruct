@@ -522,6 +522,7 @@ def helpers_class():
     # External method
     # Cleaning targets with scons should be performed only after compiling (for re-compiling)
     # because the variables cache file is needed.
+    # When cleaning, passing to scons arguments (like DESTDIR=...) doesn't have any effect.
     def clean_targets():
         _set_targets_to_clean()
         for somepath in int_obj['targets_to_clean']:
