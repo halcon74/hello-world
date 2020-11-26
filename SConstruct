@@ -487,7 +487,7 @@ def helpers_class():
     # Internal method
     def _get_object_file():
         object_file = os.path.splitext(int_obj['my_vars']['source_full'])[0] + '.o'
-        print('get_object_file: ' + int_obj['my_vars']['source_full'] + ', ' + object_file)
+        print('get_object_file: ' + object_file)
         return object_file
 
     # Internal method
