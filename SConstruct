@@ -315,7 +315,7 @@ def helpers_class():
     int_obj['got_vars'] = {}
 
     # Set in internal method _set_targets_to_clean
-    int_obj['targets_to_clean'] = []
+    int_obj['targets_to_clean'] = ()
 
     # Internal method
     def _detect_os():
@@ -511,13 +511,13 @@ def helpers_class():
 
     # Internal method
     def _set_targets_to_clean():
-        int_obj['targets_to_clean'] = [
-            '.sconsign.dblite',
+        int_obj['targets_to_clean'] = (
             int_obj['variables_cache_file'],
+            '.sconsign.dblite',
             _get_object_file(),
             int_obj['my_vars']['compile_target'],
             _get_install_target()
-        ]
+        )
 
     # External method
     # Cleaning targets with scons should be performed only after compiling (for re-compiling)
