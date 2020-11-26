@@ -524,11 +524,17 @@ def helpers_class():
         ]
 
     # External method
-    # Cleaning; should be called normally only after compiling (for re-compiling).
-    # Because, if called without DESTDIR/install_root and PREFIX/prefix in COMMAND_LINE_TARGETS
-    # and in the absence of variables cache file, there will be error "cannot get destdir" - it's
-    # normal, because int_obj['targets_to_clean'] includes install_target that is located
-    # in destdir.
+    #
+    # Cleaning targets with scons should be performed only after compiling (for re-compiling)
+    # and
+    #               the best way to call it is without arguments, just "scons -c".
+    #
+    # If called without DESTDIR/install_root in COMMAND_LINE_TARGETS and in the absence of
+    # variables cache file, there will be error "cannot get destdir" - it's because
+    # int_obj['targets_to_clean'] includes install_target that is located in destdir.
+    #
+    # If called with DESTDIR/install_root in COMMAND_LINE_TARGETS, then the same PREFIX/prefix
+    # (as at the last compiling run) is needed to find the install_target.
     def clean_targets():
         _set_targets_to_clean()
         for somepath in int_obj['targets_to_clean']:
