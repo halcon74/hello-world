@@ -281,7 +281,11 @@ def helpers_class():
         # This is a SCons.Variables.Variables class object for reading from /
         # writing to the variables cache file
         # Changed by calling method "Add" in function read_variables_cache
-        'scons_var_obj' : Variables(int_obj['variables_cache_file'])
+        'scons_var_obj' : Variables(int_obj['variables_cache_file']),
+
+        'arguments' : ARGUMENTS,
+
+        'command_line_targets' : COMMAND_LINE_TARGETS
     }
 
     # These are "ready values" for variables not got from ARGUMENTS
@@ -447,8 +451,27 @@ def helpers_class():
                             ', source = ' + get_myown_env_variable('compile_target'))
 
     # External method
-    def is_option_clean_passed():
-        return int_obj['scons_objects']['env'].GetOption('clean')
+    def is_this_option_passed(option):
+        return int_obj['scons_objects']['env'].GetOption(option)
+
+    # Internal method
+    def _is_this_argument_passed(argument):
+        return int_obj['scons_objects']['arguments'].get(argument)
+
+    # External method
+    def is_install_argument_passed_and_1():
+        got_argument = _is_this_argument_passed('INSTALL')
+        if got_argument and got_argument == '1':
+            return 1
+        else:
+            return 0
+
+    # External method
+    def is_any_target_passed():
+        if int_obj['scons_objects']['command_line_targets']:
+            return 1
+        else:
+            return 0
 
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
@@ -458,7 +481,9 @@ def helpers_class():
     ext_obj['save_variables_cache'] = save_variables_cache
     ext_obj['program_compile'] = program_compile
     ext_obj['program_install'] = program_install
-    ext_obj['is_option_clean_passed'] = is_option_clean_passed
+    ext_obj['is_this_option_passed'] = is_this_option_passed
+    ext_obj['is_install_argument_passed_and_1'] = is_install_argument_passed_and_1
+    ext_obj['is_any_target_passed'] = is_any_target_passed
     return ext_obj
 
 def get_and_save_variables_for_install(helpers_):
@@ -474,20 +499,20 @@ def mycompile(helpers_):
 def myinstall(helpers_):
     helpers_['program_install']()
 
-if COMMAND_LINE_TARGETS:
+helpers = helpers_class()
+
+if helpers['is_any_target_passed']():
     print('this SConsctruct does not support COMMAND_LINE_TARGETS')
     sys.exit(1)
 
-helpers = helpers_class()
-
-if not helpers['is_option_clean_passed']():
+if not helpers['is_this_option_passed']('clean'):
     helpers['read_variables_cache']()
 
     if helpers['get_myown_env_variable']('destdir') and \
                 helpers['get_myown_env_variable']('compile_target'):
         print('variables for install retrieved successfully; no need for re-configuring!')
-        is_install_target_passed = ARGUMENTS.get('INSTALL')
-        if is_install_target_passed == '1':
+
+        if helpers['is_install_argument_passed_and_1']():
             myinstall(helpers)
         else:
             print('will not install; this SConstruct requires passing "INSTALL=1" in ' + \
