@@ -480,6 +480,59 @@ def helpers_class():
         else:
             return 0
 
+    # Internal method
+    def _get_object_file():
+        object_file = os.path.splitext(int_obj['my_vars']['source_full'])[0] + '.o'
+        print('get_object_file: ' + int_obj['my_vars']['source_full'] + ', ' + object_file)
+        return object_file
+
+    # Internal method
+    def _get_install_target():
+        if 'destdir' in int_obj['got_vars']:
+            destdir = int_obj['got_vars']['destdir']
+        else:
+            read_variables_cache()
+            destdir = helpers['get_myown_env_variable']('destdir')
+
+        if destdir:
+            install_target = _myown_os_path_join(destdir, \
+                                                int_obj['paths_and_names']['binary_name'])
+
+            print('get_install_target: ' + install_target)
+            return install_target
+        else:
+            # See the comment for function clean_targets
+            print('_get_install_target ERROR: cannot get destdir')
+            sys.exit(1)
+
+    # Internal method
+    def _set_targets_to_clean():
+        targets_to_clean = [
+            '.sconsign.dblite',
+            int_obj['variables_cache_file'],
+            _get_object_file(),
+            int_obj['my_vars']['compile_target'],
+            _get_install_target()
+        ]
+        return targets_to_clean
+
+    # External method
+    # Cleaning; should be called normally only after compiling (for re-compiling)
+    # Because, if called without DESTDIR in COMMAND_LINE_TARGETS and in the absence of
+    # variables cache file, there will be error "cannot get destdir" - it's normal :)
+    def clean_targets():
+        for somepath in _set_targets_to_clean():
+            if os.path.isfile(somepath):
+                target_to_clean = os.path.relpath(somepath, start=os.curdir)
+
+                if target_to_clean:
+                    print('deleting target: ' + target_to_clean)
+                    os.unlink(target_to_clean)
+                else:
+                    print('clean_targets ERROR: ' + target_to_clean + ' seems to be OUTSIDE the current directory!')
+            else:
+                print('clean_targets ERROR: ' + target_to_clean + ' is not file!')
+
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
     ext_obj['apply_vars'] = apply_vars
@@ -491,6 +544,7 @@ def helpers_class():
     ext_obj['is_this_option_passed'] = is_this_option_passed
     ext_obj['is_install_argument_passed_and_1'] = is_install_argument_passed_and_1
     ext_obj['is_any_target_passed'] = is_any_target_passed
+    ext_obj['clean_targets'] = clean_targets
     return ext_obj
 
 def get_and_save_variables_for_install(helpers_):
@@ -512,7 +566,9 @@ if helpers['is_any_target_passed']():
     print('this SConsctruct does not support COMMAND_LINE_TARGETS')
     sys.exit(1)
 
-if not helpers['is_this_option_passed']('clean'):
+if helpers['is_this_option_passed']('clean'):
+    helpers['clean_targets']()
+else:
     helpers['read_variables_cache']()
 
     if helpers['get_myown_env_variable']('destdir') and \
