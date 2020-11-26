@@ -30,6 +30,14 @@ scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/de
 
 
 
+LOOK ALSO
+
+build_on/debian/1_prepare_to_build/debian/rules
+and
+build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/Hello_World-9999.ebuild
+
+
+
 LONG VERSION
 
 ==Detecting OS==
@@ -284,7 +292,6 @@ def helpers_class():
         'scons_var_obj' : Variables(int_obj['variables_cache_file']),
 
         'arguments' : ARGUMENTS,
-
         'command_line_targets' : COMMAND_LINE_TARGETS
     }
 
