@@ -495,12 +495,8 @@ def helpers_class():
 
     # Internal method
     def _get_install_target():
-        get_vars('install_vars')
-        if 'destdir' in int_obj['got_vars']:
-            destdir = int_obj['got_vars']['destdir']
-        else:
-            read_variables_cache()
-            destdir = get_myown_env_variable('destdir')
+        read_variables_cache()
+        destdir = get_myown_env_variable('destdir')
 
         if destdir:
             install_target = _myown_os_path_join(destdir, \
@@ -524,17 +520,8 @@ def helpers_class():
         ]
 
     # External method
-    #
     # Cleaning targets with scons should be performed only after compiling (for re-compiling)
-    # and
-    #               the best way to call it is without arguments, just "scons -c".
-    #
-    # If called without DESTDIR/install_root in COMMAND_LINE_TARGETS and in the absence of
-    # variables cache file, there will be error "cannot get destdir" - it's because
-    # int_obj['targets_to_clean'] includes install_target that is located in destdir.
-    #
-    # If called with DESTDIR/install_root in COMMAND_LINE_TARGETS, then the same PREFIX/prefix
-    # (as at the last compiling run) is needed to find the install_target.
+    # because the variables cache file is needed.
     def clean_targets():
         _set_targets_to_clean()
         for somepath in int_obj['targets_to_clean']:
