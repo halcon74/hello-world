@@ -22,10 +22,10 @@ scons -j2 PREFIX=/usr DESTDIR=/var/tmp/portage/app-misc/Hello_World-9999/image \
 
 Example for Debian
 scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/debian/hello-world/usr \
-        CXX=g++ CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security" \
+        CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/user/hello-world-0.5.3/hello-world-0.5.3=. -fstack-protector-strong -Wformat -Werror=format-security" \
         LDFLAGS="-Wl,-z,relro"
 scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/debian/hello-world/usr \
-        CXX=g++ CXXFLAGS="-g -O2 -fstack-protector-strong -Wformat -Werror=format-security" \
+        CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/user/hello-world-0.5.3/hello-world-0.5.3=. -fstack-protector-strong -Wformat -Werror=format-security" \
         LDFLAGS="-Wl,-z,relro" INSTALL=1
 
 
