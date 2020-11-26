@@ -125,6 +125,7 @@ you can run this script two times with "INSTALL=1"
 """
 
 from collections import OrderedDict
+import os
 import os.path
 import re
 import sys
