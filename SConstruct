@@ -293,7 +293,10 @@ def helpers_class():
         'scons_var_obj' : Variables(int_obj['variables_cache_file']),
 
         'arguments' : ARGUMENTS,
-        'command_line_targets' : COMMAND_LINE_TARGETS
+        'command_line_targets' : COMMAND_LINE_TARGETS,
+
+        # A class for appending values to environment variables (as lists)
+        'clvar' : SCons.Util.CLVar
     }
 
     # These are "ready values" for variables not got from ARGUMENTS
@@ -407,7 +410,7 @@ def helpers_class():
                 replace_args = {}
                 print('setting ' + is_applied_to_scons_env + ' to ' + int_obj['got_vars'][var_key])
                 replace_args[is_applied_to_scons_env] = \
-                                            SCons.Util.CLVar(int_obj['got_vars'][var_key])
+                                            int_obj['scons_objects']['clvar'](int_obj['got_vars'][var_key])
                 int_obj['scons_objects']['env'].Replace(**replace_args)
 
     # External method
@@ -421,7 +424,7 @@ def helpers_class():
     # Internal method
     def _set_myown_env_variable(usedname, value):
         varname = int_obj['myown_env_variables'][usedname][0]
-        int_obj['scons_objects']['env'][varname] = SCons.Util.CLVar(value)
+        int_obj['scons_objects']['env'][varname] = int_obj['scons_objects']['clvar'](value)
 
     # External method
     def read_variables_cache():
