@@ -495,6 +495,7 @@ def helpers_class():
 
     # Internal method
     def _get_install_target():
+        get_vars('install_vars')
         if 'destdir' in int_obj['got_vars']:
             destdir = int_obj['got_vars']['destdir']
         else:
@@ -524,8 +525,8 @@ def helpers_class():
 
     # External method
     # Cleaning; should be called normally only after compiling (for re-compiling).
-    # Because, if called without DESTDIR or install_root in COMMAND_LINE_TARGETS and in
-    # the absence of variables cache file, there will be error "cannot get destdir" - it's
+    # Because, if called without DESTDIR/install_root and PREFIX/prefix in COMMAND_LINE_TARGETS
+    # and in the absence of variables cache file, there will be error "cannot get destdir" - it's
     # normal, because int_obj['targets_to_clean'] includes install_target that is located
     # in destdir.
     def clean_targets():
@@ -546,7 +547,7 @@ def helpers_class():
                                             ' seems to be OUTSIDE the current directory!')
                     sys.exit(1)
             else:
-                print('clean_targets ERROR: ' + target_to_clean + ' is not file!')
+                print('clean_targets ERROR: ' + somepath + ' is not file!')
                 sys.exit(1)
 
     ext_obj = {}
