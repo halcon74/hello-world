@@ -30,7 +30,7 @@ scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/de
 
 
 
-LOOK ALSO
+SEE ALSO
 
 build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/Hello_World-9999.ebuild
 and
@@ -537,7 +537,8 @@ def helpers_class():
                     print('deleting target: ' + target_to_clean)
                     os.unlink(target_to_clean)
                 else:
-                    print('clean_targets ERROR: ' + target_to_clean + ' seems to be OUTSIDE the current directory!')
+                    print('clean_targets ERROR: ' + target_to_clean + \
+                                            ' seems to be OUTSIDE the current directory!')
                     sys.exit(1)
             else:
                 print('clean_targets ERROR: ' + target_to_clean + ' is not file!')
