@@ -115,4 +115,17 @@ strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R
 
  * GNU info directory index is up-to-date.
 
-#
+# equery f Hello_World
+ * Searching for Hello_World ...
+ * Contents of app-misc/Hello_World-9999:
+/usr
+/usr/bin
+/usr/bin/Hello_World
+/usr/share
+/usr/share/doc
+/usr/share/doc/Hello_World-9999
+/usr/share/doc/Hello_World-9999/README.md.bz2
+/usr/share/doc/Hello_World-9999/used_sources.bz2
+$ /usr/bin/Hello_World
+Hello World!
+$
