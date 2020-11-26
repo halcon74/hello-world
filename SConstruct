@@ -310,6 +310,9 @@ def helpers_class():
     # Values are set in function get_vars
     int_obj['got_vars'] = {}
 
+    # Set in internal method _set_targets_to_clean
+    int_obj['targets_to_clean'] = []
+
     # Internal method
     def _detect_os():
         if int_obj['detected_os']:
@@ -507,21 +510,21 @@ def helpers_class():
 
     # Internal method
     def _set_targets_to_clean():
-        targets_to_clean = [
+        int_obj['targets_to_clean'] = [
             '.sconsign.dblite',
             int_obj['variables_cache_file'],
             _get_object_file(),
             int_obj['my_vars']['compile_target'],
             _get_install_target()
         ]
-        return targets_to_clean
 
     # External method
     # Cleaning; should be called normally only after compiling (for re-compiling).
     # Because, if called without DESTDIR in COMMAND_LINE_TARGETS and in the absence of
     # variables cache file, there will be error "cannot get destdir" - it's normal :)
     def clean_targets():
-        for somepath in _set_targets_to_clean():
+        _set_targets_to_clean()
+        for somepath in int_obj['targets_to_clean']:
 
             # No directories should be deleted, only files
             if os.path.isfile(somepath):
