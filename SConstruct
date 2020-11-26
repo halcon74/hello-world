@@ -523,6 +523,8 @@ def helpers_class():
     def clean_targets():
         for somepath in _set_targets_to_clean():
             if os.path.isfile(somepath):
+
+                # No files outside the current directory should be deleted
                 target_to_clean = os.path.relpath(somepath, start=os.curdir)
 
                 if target_to_clean:
@@ -530,8 +532,10 @@ def helpers_class():
                     os.unlink(target_to_clean)
                 else:
                     print('clean_targets ERROR: ' + target_to_clean + ' seems to be OUTSIDE the current directory!')
+                    sys.exit(1)
             else:
                 print('clean_targets ERROR: ' + target_to_clean + ' is not file!')
+                sys.exit(1)
 
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
