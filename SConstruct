@@ -521,7 +521,8 @@ def helpers_class():
     # External method
     # Cleaning; should be called normally only after compiling (for re-compiling).
     # Because, if called without DESTDIR in COMMAND_LINE_TARGETS and in the absence of
-    # variables cache file, there will be error "cannot get destdir" - it's normal :)
+    # variables cache file, there will be error "cannot get destdir" - it's normal,
+    # because int_obj['targets_to_clean'] includes install_target that is located in destdir
     def clean_targets():
         _set_targets_to_clean()
         for somepath in int_obj['targets_to_clean']:
