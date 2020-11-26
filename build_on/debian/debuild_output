@@ -1,3 +1,4 @@
+~/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4 $ debuild -us -uc
  dpkg-buildpackage -us -uc -ui
 dpkg-buildpackage: info: source package hello-world
 dpkg-buildpackage: info: source version 0.5.4-1
@@ -117,3 +118,4 @@ W: hello-world: binary-without-manpage usr/bin/Hello_World
 W: hello-world: doc-base-abstract-field-is-template hello-world:6
 E: hello-world: doc-base-file-references-missing-file hello-world:10 /usr/share/doc/hello-world/hello-world.text.gz
 Finished running lintian.
+~/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4 $
