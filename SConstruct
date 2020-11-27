@@ -323,11 +323,11 @@ def helpers_class():
 
     # Callbacks are called in external method clean_targets
     int_obj['targets_to_clean'] = (
+        lambda: _get_install_target(),
         lambda: int_obj['variables_cache_file'],
         lambda: '.sconsign.dblite',
         lambda: _get_object_file(),
-        lambda: int_obj['my_vars']['compile_target'],
-        lambda: _get_install_target()
+        lambda: int_obj['my_vars']['compile_target']
     )
 
     # Internal method
