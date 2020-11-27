@@ -22,25 +22,41 @@ Total: 1 package (1 new), Size of downloads: 0 KiB
  * 
  * Fetching https://github.com/halcon74/hello-world.git ...
 git fetch https://github.com/halcon74/hello-world.git +HEAD:refs/git-r3/HEAD
-remote: Enumerating objects: 126, done.
-remote: Counting objects: 100% (126/126), done.
-remote: Compressing objects: 100% (83/83), done.
-remote: Total 151 (delta 83), reused 86 (delta 43), pack-reused 25
-Receiving objects: 100% (151/151), 62.90 KiB | 277.00 KiB/s, done.
-Resolving deltas: 100% (97/97), completed with 3 local objects.
-From https://github.com/halcon74/hello-world
-   e21f54a..07a8de4             -> refs/git-r3/HEAD
- * [new tag]         v0.4.1     -> v0.4.1
+remote: Enumerating objects: 97, done.
+remote: Counting objects: 100% (97/97), done.
+remote: Compressing objects: 100% (58/58), done.
+remote: Total 165 (delta 59), reused 74 (delta 36), pack-reused 68
+Получение объектов: 100% (165/165), 45.92 KiB | 299.00 KiB/s, готово.
+Определение изменений: 100% (62/62), завершено с 7 локальными объектами.
+Из https://github.com/halcon74/hello-world
+   2b5ef79..74784dd             -> refs/git-r3/HEAD
+ * [новая метка]     v0.5.5     -> v0.5.5
 git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
  * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 git checkout --quiet refs/git-r3/HEAD
 GIT update -->
    repository:               https://github.com/halcon74/hello-world.git
-   updating from commit:     e21f54aa4a3227d68e8870827313f189f8e5dff8
-   to commit:                07a8de4e24c2831e25c1d058ecf6d8e4aa3fff8d
- SConstruct           | 518 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------------------
- gentoo/emerge_output |  20 ++++-
- 2 files changed, 339 insertions(+), 199 deletions(-)
+   updating from commit:     2b5ef7929e8116b736dd6d830a68e35f47da8127
+   to commit:                74784dd16198a8ffb1b962b756cbe8135fa3edb5
+ SConstruct                                                                                          | 83 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/changelog                              |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/compat                                 |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/control                                |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/copyright                              |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/hello-world-docs.docs                  |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/hello-world.doc-base                   |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/rules                                  |  3 +-
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/source/format                          |  0
+ build_on/{debian => debian_buster/1_prepare_to_build}/debian/watch                                  |  0
+ build_on/{debian/debuild_output => debian_buster/2_build_and_test/build_and_test}                   |  0
+ build_on/gentoo/1_prepare_to_build/etc/portage/repos.conf/localrepo.conf                            |  3 ++
+ .../{ => 1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World}/Hello_World-9999.ebuild    |  2 +-
+ build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/Manifest             |  2 ++
+ build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/metadata.xml         | 15 ++++++++++
+ build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/metadata/layout.conf                      |  3 ++
+ build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/profiles/repo_name                        |  1 +
+ build_on/gentoo/{emerge_output => 2_build_and_test/build_and_test}                                  | 17 +++++++++--
+ 18 files changed, 120 insertions(+), 9 deletions(-)
 >>> Source unpacked in /var/tmp/portage/app-misc/Hello_World-9999/work
 >>> Preparing source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 >>> Source prepared.
@@ -53,17 +69,24 @@ Reading destdir from cache as MYCACHEDDIR...
 Reading compile_target from cache as MYCACHEDSOURCE...
 variables for install not retrieved
 getting and saving variables needed for install...
+get_vars: destdir
 checking for destdir as DESTDIR... (are we on Gentoo?)
 detected Operating System: gentoo
 destdir (DESTDIR in Gentoo) argument found: /var/tmp/portage/app-misc/Hello_World-9999/image
+get_vars: prefix
 prefix (PREFIX in Gentoo) argument found: /usr
+get_vars: compile_target
 initially, destdir is set for default value without prefix: /var/tmp/portage/app-misc/Hello_World-9999/image
 destdir is reset using prefix and install_path: /var/tmp/portage/app-misc/Hello_World-9999/image/usr/bin
 Saving destdir to cache as MYCACHEDDIR...
 Saving compile_target to cache as MYCACHEDSOURCE...
+get_vars: cpp_compiler
 cpp_compiler (CXX in Gentoo) argument found: x86_64-pc-linux-gnu-g++
+get_vars: cpp_compiler_flags
 cpp_compiler_flags (CXXFLAGS in Gentoo) argument found: -O2 -march=native -pipe
+get_vars: linker_flags
 linker_flags (LDFLAGS in Gentoo) argument found: -Wl,-O1 -Wl,--as-needed
+get_vars: source_full
 setting CXX to x86_64-pc-linux-gnu-g++
 setting CXXFLAGS to -O2 -march=native -pipe
 setting LINKFLAGS to -Wl,-O1 -Wl,--as-needed
@@ -89,7 +112,7 @@ Install file: "build/Hello_World" as "/var/tmp/portage/app-misc/Hello_World-9999
 scons: done building targets.
 >>> Completed installing app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
 
- * Final size of build directory: 304 KiB
+ * Final size of build directory: 476 KiB
  * Final size of installed tree:   52 KiB
 
 strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R .comment -R .GCC.command.line -R .note.gnu.gold-version
@@ -114,6 +137,8 @@ strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R
 >>> No outdated packages were found on your system.
 
  * GNU info directory index is up-to-date.
+ 
+ #
 
 # equery f Hello_World
  * Searching for Hello_World ...
@@ -126,6 +151,47 @@ strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R
 /usr/share/doc/Hello_World-9999
 /usr/share/doc/Hello_World-9999/README.md.bz2
 /usr/share/doc/Hello_World-9999/used_sources.bz2
+#
+
 $ /usr/bin/Hello_World
 Hello World!
 $
+
+# emerge -v --depclean Hello_World
+# emerge -v --depclean Hello_World
+
+Calculating dependencies... done!
+>>> Calculating removal order...
+
+ app-misc/Hello_World
+    selected: 9999 
+   protected: none 
+     omitted: none 
+
+All selected packages: =app-misc/Hello_World-9999
+
+>>> 'Selected' packages are slated for removal.
+>>> 'Protected' and 'omitted' packages will not be removed.
+
+>>> Waiting 5 seconds before starting...
+>>> (Control-C to abort)...
+>>> Unmerging in: 5 4 3 2 1
+>>> Unmerging (1 of 1) app-misc/Hello_World-9999...
+No package files given... Grabbing a set.
+<<<          obj /usr/share/doc/Hello_World-9999/used_sources.bz2
+<<<          obj /usr/share/doc/Hello_World-9999/README.md.bz2
+<<<          obj /usr/bin/Hello_World
+<<<          dir /usr/share/doc/Hello_World-9999
+--- !empty   dir /usr/share/doc
+--- !empty   dir /usr/share
+--- !empty   dir /usr/bin
+--- !empty   dir /usr
+Packages installed:   1025
+Packages in world:    161
+Packages in system:   43
+Required packages:    1025
+Number removed:       1
+
+ * GNU info directory index is up-to-date.
+
+#

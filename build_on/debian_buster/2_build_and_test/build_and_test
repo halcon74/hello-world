@@ -1,7 +1,7 @@
-~/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4 $ debuild -us -uc
+~/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5 $ debuild -us -uc
  dpkg-buildpackage -us -uc -ui
 dpkg-buildpackage: info: source package hello-world
-dpkg-buildpackage: info: source version 0.5.4-1
+dpkg-buildpackage: info: source version 0.5.5-1
 dpkg-buildpackage: info: source distribution unstable
 dpkg-buildpackage: info: source changed by Alexey Mishustin <halcon@tuta.io>
  dpkg-source --before-build .
@@ -9,32 +9,42 @@ dpkg-buildpackage: info: host architecture amd64
  fakeroot debian/rules clean
 dh clean
    debian/rules override_dh_auto_clean
-make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
-scons prefix=/usr install_root=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-z,relro" -c || true
+make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
+scons -c || true
 scons: Reading SConscript files ...
+deleting target: .sconsign.dblite
+get_object_file: src/main.o
+deleting target: src/main.o
+deleting target: build/Hello_World
+Reading compile_target from cache as MYCACHEDSOURCE...
+Reading destdir from cache as MYCACHEDDIR...
+get_install_target: /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world/usr/bin/Hello_World
+clean_targets WARNING: /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world/usr/bin/Hello_World is not file! not cleaned
+deleting target: scons_variables_cache.conf
 scons: done reading SConscript files.
 scons: Cleaning targets ...
 scons: done cleaning targets.
-dh_clean .sconsign.dblite scons_variables_cache.conf src/main.o build/Hello_World
 dh_auto_clean
-make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
+make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
    dh_clean
  dpkg-source -b .
 dpkg-source: info: using source format '3.0 (quilt)'
-dpkg-source: info: building hello-world using existing ./hello-world_0.5.4.orig.tar.gz
-dpkg-source: info: building hello-world in hello-world_0.5.4-1.debian.tar.xz
-dpkg-source: info: building hello-world in hello-world_0.5.4-1.dsc
+dpkg-source: info: building hello-world using existing ./hello-world_0.5.5.orig.tar.gz
+dpkg-source: info: building hello-world in hello-world_0.5.5-1.debian.tar.xz
+dpkg-source: info: building hello-world in hello-world_0.5.5-1.dsc
  debian/rules build
-dh build
+make: 'build' is up to date.
+ fakeroot debian/rules binary
+dh binary
    dh_update_autotools_config
    dh_autoreconf
    debian/rules override_dh_auto_configure
-make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
+make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
 :
-make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
+make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
    debian/rules override_dh_auto_build
-make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
-scons prefix=/usr install_root=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-z,relro"
+make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
+scons prefix=/usr install_root=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-z,relro"
 scons: Reading SConscript files ...
 Reading compile_target from cache as MYCACHEDSOURCE...
 Reading destdir from cache as MYCACHEDDIR...
@@ -44,12 +54,12 @@ get_vars: destdir
 checking for destdir as DESTDIR... (are we on Gentoo?)
 checking for destdir as install_root... (are we on Debian/Ubuntu?)
 detected Operating System: debian
-destdir (install_root in Debian/Ubuntu) argument found: /home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world
+destdir (install_root in Debian/Ubuntu) argument found: /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world
 get_vars: prefix
 prefix (prefix in Debian/Ubuntu) argument found: /usr
 get_vars: compile_target
-initially, destdir is set for default value without prefix: /home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world
-destdir is reset using prefix and install_path: /home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world/usr/bin
+initially, destdir is set for default value without prefix: /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world
+destdir is reset using prefix and install_path: /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world/usr/bin
 Saving compile_target to cache as MYCACHEDSOURCE...
 Saving destdir to cache as MYCACHEDDIR...
 get_vars: linker_flags
@@ -58,36 +68,35 @@ get_vars: cpp_compiler
 cpp_compiler (CXX in Debian/Ubuntu) argument found: g++
 get_vars: source_full
 get_vars: cpp_compiler_flags
-cpp_compiler_flags (CXXFLAGS in Debian/Ubuntu) argument found: -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security
+cpp_compiler_flags (CXXFLAGS in Debian/Ubuntu) argument found: -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5=. -fstack-protector-strong -Wformat -Werror=format-security
 setting LINKFLAGS to -Wl,-z,relro
 setting CXX to g++
-setting CXXFLAGS to -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security
+setting CXXFLAGS to -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5=. -fstack-protector-strong -Wformat -Werror=format-security
 will compile: target = build/Hello_World, source = src/main.cpp
 scons: done reading SConscript files.
 scons: Building targets ...
-g++ -o src/main.o -c -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security src/main.cpp
+g++ -o src/main.o -c -g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5=. -fstack-protector-strong -Wformat -Werror=format-security src/main.cpp
 g++ -o build/Hello_World -Wl,-z,relro src/main.o
 scons: done building targets.
-make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
+make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
    dh_auto_test
    create-stamp debian/debhelper-build-stamp
- fakeroot debian/rules binary
-dh binary
    dh_testroot
    dh_prep
    debian/rules override_dh_auto_install
-make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
-scons prefix=/usr install_root=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-z,relro" INSTALL=1
+make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
+scons prefix=/usr install_root=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-z,relro" INSTALL=1
 scons: Reading SConscript files ...
 Reading compile_target from cache as MYCACHEDSOURCE...
 Reading destdir from cache as MYCACHEDDIR...
 variables for install retrieved successfully; no need for re-configuring!
-will install: dir = /home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4/debian/hello-world/usr/bin, source = build/Hello_World
+will install: dir = /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5/debian/hello-world/usr/bin, source = build/Hello_World
 scons: done reading SConscript files.
 scons: Building targets ...
 Install file: "build/Hello_World" as "debian/hello-world/usr/bin/Hello_World"
 scons: done building targets.
-make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4'
+make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
+   dh_install
    dh_installdocs
    dh_installchangelogs
    dh_perl
@@ -96,7 +105,10 @@ make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.4/hel
    dh_compress
    dh_fixperms
    dh_missing
-   dh_strip
+   debian/rules override_dh_strip
+make[1]: Entering directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
+:
+make[1]: Leaving directory '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5'
    dh_makeshlibs
    dh_shlibdeps
 dpkg-shlibdeps: warning: package could avoid a useless dependency if debian/hello-world/usr/bin/Hello_World was not linked against libgcc_s.so.1 (it uses none of the library's symbols)
@@ -104,18 +116,69 @@ dpkg-shlibdeps: warning: package could avoid a useless dependency if debian/hell
    dh_gencontrol
    dh_md5sums
    dh_builddeb
-dpkg-deb: building package 'hello-world' in '../hello-world_0.5.4-1_amd64.deb'.
-dpkg-deb: building package 'hello-world-dbgsym' in '../hello-world-dbgsym_0.5.4-1_amd64.deb'.
+dpkg-deb: building package 'hello-world' in '../hello-world_0.5.5-1_amd64.deb'.
  dpkg-genbuildinfo
- dpkg-genchanges  >../hello-world_0.5.4-1_amd64.changes
+ dpkg-genchanges  >../hello-world_0.5.5-1_amd64.changes
 dpkg-genchanges: info: including full source code in upload
  dpkg-source --after-build .
 dpkg-buildpackage: info: full upload (original source is included)
-Now running lintian hello-world_0.5.4-1_amd64.changes ...
+Now running lintian hello-world_0.5.5-1_amd64.changes ...
+W: hello-world source: diff-contains-substvars debian/hello-world-dbgsym.substvars
+E: hello-world: unstripped-binary-or-object usr/bin/Hello_World
 W: hello-world: wrong-bug-number-in-closes l3:#nnnn
-W: hello-world: new-package-should-close-itp-bug
+W: hello-world: wrong-bug-number-in-closes l9:#nnnn
+W: hello-world: wrong-bug-number-in-closes l15:#nnnn
 W: hello-world: binary-without-manpage usr/bin/Hello_World
-W: hello-world: doc-base-abstract-field-is-template hello-world:6
-E: hello-world: doc-base-file-references-missing-file hello-world:10 /usr/share/doc/hello-world/hello-world.text.gz
 Finished running lintian.
-~/Desktop/Packaging/hello-world-0.5.4/hello-world-0.5.4 $
+~/Desktop/Packaging/hello-world-0.5.5/hello-world-0.5.5 $
+
+# apt install /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world_0.5.5-1_amd64.deb
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Note, selecting 'hello-world' instead of '/home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world_0.5.5-1_amd64.deb'
+The following NEW packages will be installed:
+  hello-world
+0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
+Need to get 0 B/15.0 kB of archives.
+After this operation, 57.3 kB of additional disk space will be used.
+Get:1 /home/halcon/Desktop/Packaging/hello-world-0.5.5/hello-world_0.5.5-1_amd64.deb hello-world amd64 0.5.5-1 [15.0 kB]
+Selecting previously unselected package hello-world.
+(Reading database ... 228099 files and directories currently installed.)
+Preparing to unpack .../hello-world_0.5.5-1_amd64.deb ...
+Unpacking hello-world (0.5.5-1) ...
+Setting up hello-world (0.5.5-1) ...
+
+# dpkg --list | grep -i hello
+ii  hello-world                           0.5.5-1                             amd64        Test program printing 'Hello World!' to STDOUT
+
+# dpkg-query -L hello-world
+/.
+/usr
+/usr/bin
+/usr/bin/Hello_World
+/usr/share
+/usr/share/doc
+/usr/share/doc/hello-world
+/usr/share/doc/hello-world/changelog.Debian.gz
+/usr/share/doc/hello-world/copyright
+/usr/share/doc/hello-world/text
+/usr/share/doc/hello-world/text/ToDo
+/usr/share/doc/hello-world/text/used_sources
+
+$ /usr/bin/Hello_World
+Hello World!
+$
+
+# apt-get --purge remove hello-world
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be REMOVED:
+  hello-world*
+0 upgraded, 0 newly installed, 1 to remove and 2 not upgraded.
+After this operation, 57.3 kB disk space will be freed.
+Do you want to continue? [Y/n] y
+(Reading database ... 228105 files and directories currently installed.)
+Removing hello-world (0.5.5-1) ...
+#
