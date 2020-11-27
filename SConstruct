@@ -512,11 +512,11 @@ def helpers_class():
     # Internal method
     def _set_targets_to_clean():
         int_obj['targets_to_clean'] = (
-            int_obj['variables_cache_file'],
-            '.sconsign.dblite',
-            _get_object_file(),
-            int_obj['my_vars']['compile_target'],
-            _get_install_target()
+            lambda: int_obj['variables_cache_file'],
+            lambda: '.sconsign.dblite',
+            lambda: _get_object_file(),
+            lambda: int_obj['my_vars']['compile_target'],
+            lambda: _get_install_target()
         )
 
     # External method
@@ -525,7 +525,8 @@ def helpers_class():
     # When cleaning, passing to scons arguments (like DESTDIR=...) doesn't have any effect.
     def clean_targets():
         _set_targets_to_clean()
-        for somepath in int_obj['targets_to_clean']:
+        for callback in int_obj['targets_to_clean']:
+            somepath = callback()
 
             # No directories should be deleted, only files
             if os.path.isfile(somepath):
