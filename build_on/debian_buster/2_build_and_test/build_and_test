@@ -148,9 +148,11 @@ Selecting previously unselected package hello-world.
 Preparing to unpack .../hello-world_0.5.5-1_amd64.deb ...
 Unpacking hello-world (0.5.5-1) ...
 Setting up hello-world (0.5.5-1) ...
+#
 
 # dpkg --list | grep -i hello
 ii  hello-world                           0.5.5-1                             amd64        Test program printing 'Hello World!' to STDOUT
+#
 
 # dpkg-query -L hello-world
 /.
@@ -165,6 +167,7 @@ ii  hello-world                           0.5.5-1                             am
 /usr/share/doc/hello-world/text
 /usr/share/doc/hello-world/text/ToDo
 /usr/share/doc/hello-world/text/used_sources
+#
 
 $ /usr/bin/Hello_World
 Hello World!
