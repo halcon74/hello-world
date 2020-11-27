@@ -323,11 +323,11 @@ def helpers_class():
 
     # Callbacks are called in external method clean_targets
     int_obj['targets_to_clean'] = (
-        lambda: _get_install_target(),
-        lambda: int_obj['variables_cache_file'],
         lambda: '.sconsign.dblite',
         lambda: _get_object_file(),
-        lambda: int_obj['my_vars']['compile_target']
+        lambda: int_obj['my_vars']['compile_target'],
+        lambda: _get_install_target(),
+        lambda: int_obj['variables_cache_file']
     )
 
     # Internal method
@@ -519,12 +519,10 @@ def helpers_class():
             return install_target
         else:
             # See the comment for function clean_targets
-            print('_get_install_target ERROR: cannot get destdir')
-            sys.exit(1)
+            print('_get_install_target WARNING: cannot get destdir')
+            return ''
 
     # External method
-    # Cleaning targets with scons should be performed only after compiling (for re-compiling)
-    # because the variables cache file is needed.
     # When cleaning, passing to scons arguments (like DESTDIR=...) doesn't have any effect.
     def clean_targets():
         for callback in int_obj['targets_to_clean']:
@@ -540,12 +538,12 @@ def helpers_class():
                     print('deleting target: ' + target_to_clean)
                     os.unlink(target_to_clean)
                 else:
-                    print('clean_targets ERROR: ' + target_to_clean + \
-                                            ' seems to be OUTSIDE the current directory!')
-                    sys.exit(1)
+                    print('clean_targets WARNING: ' + target_to_clean + \
+                                            ' seems to be OUTSIDE the current directory! not cleaned')
+                    continue
             else:
-                print('clean_targets ERROR: ' + somepath + ' is not file!')
-                sys.exit(1)
+                print('clean_targets WARNING: ' + somepath + ' is not file! not cleaned')
+                continue
 
     ext_obj = {}
     ext_obj['get_vars'] = get_vars
