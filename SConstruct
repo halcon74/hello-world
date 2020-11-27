@@ -321,8 +321,14 @@ def helpers_class():
     # Values are set in function get_vars
     int_obj['got_vars'] = {}
 
-    # Set in internal method _set_targets_to_clean
-    int_obj['targets_to_clean'] = ()
+    # Called in internal method _set_targets_to_clean
+    int_obj['targets_to_clean'] = (
+        lambda: int_obj['variables_cache_file'],
+        lambda: '.sconsign.dblite',
+        lambda: _get_object_file(),
+        lambda: int_obj['my_vars']['compile_target'],
+        lambda: _get_install_target()
+    )
 
     # Internal method
     def _detect_os():
@@ -516,22 +522,11 @@ def helpers_class():
             print('_get_install_target ERROR: cannot get destdir')
             sys.exit(1)
 
-    # Internal method
-    def _set_targets_to_clean():
-        int_obj['targets_to_clean'] = (
-            lambda: int_obj['variables_cache_file'],
-            lambda: '.sconsign.dblite',
-            lambda: _get_object_file(),
-            lambda: int_obj['my_vars']['compile_target'],
-            lambda: _get_install_target()
-        )
-
     # External method
     # Cleaning targets with scons should be performed only after compiling (for re-compiling)
     # because the variables cache file is needed.
     # When cleaning, passing to scons arguments (like DESTDIR=...) doesn't have any effect.
     def clean_targets():
-        _set_targets_to_clean()
         for callback in int_obj['targets_to_clean']:
             somepath = callback()
 
