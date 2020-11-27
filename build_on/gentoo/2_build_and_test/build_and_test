@@ -26,11 +26,11 @@ remote: Enumerating objects: 97, done.
 remote: Counting objects: 100% (97/97), done.
 remote: Compressing objects: 100% (58/58), done.
 remote: Total 165 (delta 59), reused 74 (delta 36), pack-reused 68
-Получение объектов: 100% (165/165), 45.92 KiB | 299.00 KiB/s, готово.
-Определение изменений: 100% (62/62), завершено с 7 локальными объектами.
-Из https://github.com/halcon74/hello-world
+Receiving objects: 100% (165/165), 45.92 KiB | 299.00 KiB/s, готово.
+Resolving deltas: 100% (62/62), завершено с 7 локальными объектами.
+From https://github.com/halcon74/hello-world
    2b5ef79..74784dd             -> refs/git-r3/HEAD
- * [новая метка]     v0.5.5     -> v0.5.5
+ * [new tag]     v0.5.5     -> v0.5.5
 git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
  * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 git checkout --quiet refs/git-r3/HEAD
