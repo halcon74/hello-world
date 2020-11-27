@@ -321,7 +321,7 @@ def helpers_class():
     # Values are set in function get_vars
     int_obj['got_vars'] = {}
 
-    # Called in internal method _set_targets_to_clean
+    # Callbacks are called in external method clean_targets
     int_obj['targets_to_clean'] = (
         lambda: int_obj['variables_cache_file'],
         lambda: '.sconsign.dblite',
