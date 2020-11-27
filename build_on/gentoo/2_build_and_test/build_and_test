@@ -27,7 +27,7 @@ remote: Counting objects: 100% (97/97), done.
 remote: Compressing objects: 100% (58/58), done.
 remote: Total 165 (delta 59), reused 74 (delta 36), pack-reused 68
 Receiving objects: 100% (165/165), 45.92 KiB | 299.00 KiB/s, done.
-Resolving deltas: 100% (62/62), completed with 3 local objects.
+Resolving deltas: 100% (62/62), completed with 7 local objects.
 From https://github.com/halcon74/hello-world
    2b5ef79..74784dd             -> refs/git-r3/HEAD
  * [new tag]     v0.5.5     -> v0.5.5
