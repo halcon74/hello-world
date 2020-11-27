@@ -158,7 +158,6 @@ Hello World!
 $
 
 # emerge -v --depclean Hello_World
-# emerge -v --depclean Hello_World
 
 Calculating dependencies... done!
 >>> Calculating removal order...
