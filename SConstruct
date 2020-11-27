@@ -93,6 +93,13 @@ THE MOST IMPORTANT PART: this script does not contain an usual
 target "install", because I prefer to use command-line arguments
 instead of targets.
 
+( Why? Because, when using targets, I always meet a "SCons magic"
+that breaks the imperative logic that I am trying to implement here.
+This has a negative consequence: I have to re-write manually the
+functionality of cleaning targets (scons option -c, --clean).
+So far, I'm getting it done... If you found a way to use targets and
+at the same time to preserve the imperative logic, please let me know. )
+
 For this reason, this script requires
 passing "INSTALL=1" IN ARGUMENTS
 instead of
