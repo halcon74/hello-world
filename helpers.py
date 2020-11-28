@@ -52,8 +52,8 @@ because I define OS here as a set of variables, for:
 from one distro;
 - giving the user full freedom to simulate another OS if he wants to
 - setting custom hooks in any class function for any OS as simple as
-if int_obj['detected_os'] == 'gentoo':
-if int_obj['detected_os'] == 'debian':
+if int_data['detected_os'] == 'gentoo':
+if int_data['detected_os'] == 'debian':
 ...
 (currently, there are no such hooks).
 
