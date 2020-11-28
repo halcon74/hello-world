@@ -179,6 +179,8 @@ def helpers_class():
     }
     return ext_methods
 
+# ========== ALL THE FUNCTIONS BELOW ARE NOT INTENDED TO BE IMPORTED ==========
+
 # Internal method
 def _detect_os(int_data):
     if int_data['detected_os']:
