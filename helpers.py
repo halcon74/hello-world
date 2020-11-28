@@ -388,6 +388,114 @@ def clean_targets(targets_to_clean):
             print('clean_targets WARNING: ' + somepath + ' is not file! not cleaned')
             continue
 
+def _populate_supported_oses(vars_data, supported_oses, os_detected_at):
+    for supported_oses_key in supported_oses:
+        # Otherwise here is
+        # "dictionary changed size during iteration" RuntimeError
+        supported_oses_dict = supported_oses[supported_oses_key]
+        for vars_key in vars_data:
+            vars_dict = vars_data[vars_key]
+            for var_key in vars_dict:
+                var_dict = vars_dict[var_key]
+                if var_dict['is_got_from_arguments']:
+                    for key in var_dict['is_got_from_arguments']:
+                        if key == supported_oses_key:
+                            # Otherwise here is
+                            # "dictionary changed size during iteration" RuntimeError
+                            supported_oses_dict[var_key] = \
+                                                var_dict['is_got_from_arguments'][key]
+                    if var_key == os_detected_at and supported_oses_dict[var_key] == '':
+                        print('_populate_supported_oses ERROR: ' + var_key + \
+                                                ' is empty for ' + supported_oses_key)
+                        sys.exit(1)
+
+def _populate_myown_env_variables_descriptions(vars_data, myown_env_variables_descriptions):
+    for vars_key in vars_data:
+        vars_data_dict = vars_data[vars_key]
+        for var_key in vars_data_dict:
+            os_var_dict = vars_data_dict[var_key]
+            if os_var_dict['is_saved_to_cache_file']:
+                myown_env_variables_descriptions[var_key] = \
+                                                os_var_dict['is_saved_to_cache_file']
+
+def _define_vars_data(os_detected_at):
+    vars_data = {
+        # All that I add to env variables must be defined
+        # in values of 'is_saved_to_cache_file' here
+        'install_vars' : OrderedDict(),
+        'cpp_linker_vars' : {}
+    }
+
+    vars_data['install_vars']['destdir'] = {
+            'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
+            'is_applied_to_scons_env' : '',
+            'is_saved_to_cache_file' : ('MYCACHEDDIR', \
+                            "cached 'dir' argument for " + \
+                            "int_data['scons_objects']['env'].Install", ''),
+            'is_post_processed_in_a_function' : 'reset_destdir'
+    }
+    vars_data['install_vars']['prefix'] = {
+            'is_got_from_arguments' : {'gentoo' : 'PREFIX', 'debian' : 'prefix'},
+            'is_applied_to_scons_env' : '',
+            'is_saved_to_cache_file' : '',
+            'is_post_processed_in_a_function' : ''
+    }
+    vars_data['install_vars']['compile_target'] = {
+            'is_got_from_arguments' : '',
+            'is_applied_to_scons_env' : '',
+            'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
+                            "cached 'source' argument for " + \
+                            "int_data['scons_objects']['env'].Install", ''),
+            'is_post_processed_in_a_function' : ''
+    }
+    vars_data['cpp_linker_vars'] = {
+        'cpp_compiler' : {
+            'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian' : 'CXX'},
+            'is_applied_to_scons_env' : 'CXX',
+            'is_saved_to_cache_file' : '',
+            'is_post_processed_in_a_function' : ''
+        },
+        'cpp_compiler_flags' : {
+            'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS', 'debian' : 'CXXFLAGS'},
+            'is_applied_to_scons_env' : 'CXXFLAGS',
+            'is_saved_to_cache_file' : '',
+            'is_post_processed_in_a_function' : ''
+        },
+        'linker_flags' : {
+            'is_got_from_arguments' : {'gentoo' : 'LDFLAGS', 'debian' : 'LDFLAGS'},
+            'is_applied_to_scons_env' : 'LINKFLAGS',
+            'is_saved_to_cache_file' : '',
+            'is_post_processed_in_a_function' : ''
+        },
+        'source_full' : {
+            'is_got_from_arguments' : '',
+            'is_applied_to_scons_env' : '',
+            'is_saved_to_cache_file' : '',
+            'is_post_processed_in_a_function' : ''
+        }
+    }
+
+    supported_oses = OrderedDict()
+    # Is populated further in function _populate_supported_oses
+    supported_oses['gentoo'] = {
+        'os_name' : 'Gentoo'
+    }
+    supported_oses['debian'] = {
+        'os_name' : 'Debian/Ubuntu'
+    }
+    _populate_supported_oses(vars_data, supported_oses, os_detected_at)
+    # Uncomment to look at the dictionary
+    # print('supported_oses dictionary dump:')
+    # print(supported_oses)
+
+    # Is populated further in function _populate_myown_env_variables_descriptions
+    myown_env_variables_descriptions = {}
+    _populate_myown_env_variables_descriptions(vars_data, myown_env_variables_descriptions)
+    # Uncomment to look at the dictionary
+    # print('myown_env_variables_descriptions dictionary dump:')
+    # print(myown_env_variables_descriptions)
+
+    return vars_data, supported_oses, myown_env_variables_descriptions
 
 def _internal_data():
     mydata = {}
@@ -403,118 +511,8 @@ def _internal_data():
     mydata['variables_cache_file'] = 'scons_variables_cache.conf'
     mydata['scons_db_file'] = '.sconsign.dblite'
 
-    def _define_vars_data(os_detected_at):
-        supported_oses = OrderedDict()
-
-        # Is populated further in function _populate_supported_oses
-        supported_oses['gentoo'] = {
-            'os_name' : 'Gentoo'
-        }
-        supported_oses['debian'] = {
-            'os_name' : 'Debian/Ubuntu'
-        }
-
-        vars_data = {
-            # All that I add to env variables must be defined
-            # in values of 'is_saved_to_cache_file' here
-            'install_vars' : OrderedDict(),
-            'cpp_linker_vars' : {}
-        }
-
-        vars_data['install_vars']['destdir'] = {
-                'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
-                'is_applied_to_scons_env' : '',
-                'is_saved_to_cache_file' : ('MYCACHEDDIR', \
-                                "cached 'dir' argument for " + \
-                                "int_data['scons_objects']['env'].Install", ''),
-                'is_post_processed_in_a_function' : 'reset_destdir'
-        }
-        vars_data['install_vars']['prefix'] = {
-                'is_got_from_arguments' : {'gentoo' : 'PREFIX', 'debian' : 'prefix'},
-                'is_applied_to_scons_env' : '',
-                'is_saved_to_cache_file' : '',
-                'is_post_processed_in_a_function' : ''
-        }
-        vars_data['install_vars']['compile_target'] = {
-                'is_got_from_arguments' : '',
-                'is_applied_to_scons_env' : '',
-                'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
-                                "cached 'source' argument for " + \
-                                "int_data['scons_objects']['env'].Install", ''),
-                'is_post_processed_in_a_function' : ''
-        }
-        vars_data['cpp_linker_vars'] = {
-            'cpp_compiler' : {
-                'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian' : 'CXX'},
-                'is_applied_to_scons_env' : 'CXX',
-                'is_saved_to_cache_file' : '',
-                'is_post_processed_in_a_function' : ''
-            },
-            'cpp_compiler_flags' : {
-                'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS', 'debian' : 'CXXFLAGS'},
-                'is_applied_to_scons_env' : 'CXXFLAGS',
-                'is_saved_to_cache_file' : '',
-                'is_post_processed_in_a_function' : ''
-            },
-            'linker_flags' : {
-                'is_got_from_arguments' : {'gentoo' : 'LDFLAGS', 'debian' : 'LDFLAGS'},
-                'is_applied_to_scons_env' : 'LINKFLAGS',
-                'is_saved_to_cache_file' : '',
-                'is_post_processed_in_a_function' : ''
-            },
-            'source_full' : {
-                'is_got_from_arguments' : '',
-                'is_applied_to_scons_env' : '',
-                'is_saved_to_cache_file' : '',
-                'is_post_processed_in_a_function' : ''
-            }
-        }
-
-        # Is populated further in function _populate_myown_env_variables_descriptions
-        myown_env_variables_descriptions = {}
-
-        def _populate_supported_oses():
-            for supported_oses_key in supported_oses:
-                # Otherwise here is
-                # "dictionary changed size during iteration" RuntimeError
-                supported_oses_dict = supported_oses[supported_oses_key]
-                for vars_key in vars_data:
-                    vars_dict = vars_data[vars_key]
-                    for var_key in vars_dict:
-                        var_dict = vars_dict[var_key]
-                        if var_dict['is_got_from_arguments']:
-                            for key in var_dict['is_got_from_arguments']:
-                                if key == supported_oses_key:
-                                    # Otherwise here is
-                                    # "dictionary changed size during iteration" RuntimeError
-                                    supported_oses_dict[var_key] = \
-                                                        var_dict['is_got_from_arguments'][key]
-                            if var_key == os_detected_at and supported_oses_dict[var_key] == '':
-                                print('_populate_supported_oses ERROR: ' + var_key + \
-                                                        ' is empty for ' + supported_oses_key)
-                                sys.exit(1)
-        _populate_supported_oses()
-        # Uncomment to look at the dictionary
-        # print('supported_oses dictionary dump:')
-        # print(supported_oses)
-
-        def _populate_myown_env_variables_descriptions():
-            for vars_key in vars_data:
-                vars_data_dict = vars_data[vars_key]
-                for var_key in vars_data_dict:
-                    os_var_dict = vars_data_dict[var_key]
-                    if os_var_dict['is_saved_to_cache_file']:
-                        myown_env_variables_descriptions[var_key] = \
-                                                        os_var_dict['is_saved_to_cache_file']
-        _populate_myown_env_variables_descriptions()
-        # Uncomment to look at the dictionary
-        # print('myown_env_variables_descriptions dictionary dump:')
-        # print(myown_env_variables_descriptions)
-
-        return supported_oses, vars_data, myown_env_variables_descriptions
-
     mydata['os_detected_at'] = 'destdir'
-    mydata['supported_oses'], mydata['vars_data'], mydata['myown_env_variables'] = \
+    mydata['vars_data'], mydata['supported_oses'], mydata['myown_env_variables'] = \
                             _define_vars_data(mydata['os_detected_at'])
 
     mydata['scons_objects'] = {
