@@ -188,6 +188,8 @@ def helpers_class(paths_and_names):
 
 # ========== ALL THE FUNCTIONS BELOW ARE NOT INTENDED TO BE IMPORTED ==========
 
+# ========== METHODS ==========
+
 # Internal method
 def _detect_os(int_data):
     if int_data['detected_os']:
@@ -394,6 +396,8 @@ def clean_targets(targets_to_clean):
         else:
             print('clean_targets WARNING: ' + somepath + ' is not file! not cleaned')
             continue
+
+# ========== (DATA) CONSTRUCTOR ==========
 
 def _populate_supported_oses(vars_data, supported_oses, os_detected_at):
     for supported_oses_key in supported_oses:
