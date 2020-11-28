@@ -4,3 +4,4 @@ src/main.o
 build/Hello_World
 build/usr/bin/Hello_World
 scons_variables_cache.conf
+__pycache__/helpers.cpython-37.pyc
