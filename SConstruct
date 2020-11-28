@@ -5,6 +5,14 @@
 
 from helpers import helpers_class
 
+paths_and_names = {
+    'source_path' : 'src',
+    'source_name' : 'main.cpp',
+    'compile_path' : 'build',
+    'install_path' : 'bin',
+    'binary_name' : 'Hello_World'
+}
+
 def get_and_save_variables_for_install(helpers_):
     print('getting and saving variables needed for install...')
     helpers_['get_vars']('install_vars')
@@ -18,7 +26,7 @@ def mycompile(helpers_):
 def myinstall(helpers_):
     helpers_['program_install']()
 
-helpers = helpers_class()
+helpers = helpers_class(paths_and_names)
 
 if helpers['is_any_target_passed']():
     print('this SConsctruct does not support COMMAND_LINE_TARGETS')

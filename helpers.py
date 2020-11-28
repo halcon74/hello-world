@@ -161,8 +161,8 @@ def myown_os_path_join(*paths):
 # If you are surprised that I call it a class:
 # https://forums.gentoo.org/viewtopic-p-8527031.html#8527031
 # (search string: "OOP, because perl") :)
-def helpers_class():
-    int_data, post_process_funcs, targets_to_clean = _internal_data()
+def helpers_class(paths_and_names):
+    int_data, post_process_funcs, targets_to_clean = _internal_data(paths_and_names)
 
     ext_methods = {
         'get_vars' : lambda *args: get_vars(int_data, post_process_funcs, args[0]),
@@ -497,16 +497,24 @@ def _define_vars_data(os_detected_at):
 
     return vars_data, supported_oses, myown_env_variables_descriptions
 
-def _internal_data():
+def _check_paths_and_names(paths_and_names, mandatory_pnn_keys):
+    if not isinstance(paths_and_names, dict):
+        print('_check_paths_and_names ERROR: paths_and_names is not dictionary')
+        sys.exit(1)
+    for mandatory_key in mandatory_pnn_keys:
+        if mandatory_key not in paths_and_names:
+            print('_check_paths_and_names ERROR: mandatory key ' + mandatory_key + ' not found in paths_and_names')
+            sys.exit(1)
+        if not paths_and_names[mandatory_key]:
+            print("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is false")
+            sys.exit(1)
+
+def _internal_data(paths_and_names):
     mydata = {}
 
-    mydata['paths_and_names'] = {
-        'source_path' : 'src',
-        'source_name' : 'main.cpp',
-        'compile_path' : 'build',
-        'install_path' : 'bin',
-        'binary_name' : 'Hello_World'
-    }
+    mydata['mandatory_pnn_keys'] = ['source_path', 'source_name', 'compile_path', 'install_path', 'binary_name']
+    _check_paths_and_names(paths_and_names, mydata['mandatory_pnn_keys'])
+    mydata['paths_and_names'] = paths_and_names
 
     mydata['variables_cache_file'] = 'scons_variables_cache.conf'
     mydata['scons_db_file'] = '.sconsign.dblite'
