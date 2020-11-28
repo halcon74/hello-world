@@ -142,13 +142,13 @@ from SCons.Script import Environment, Variables, ARGUMENTS, COMMAND_LINE_TARGETS
 # os.path.join drops all other parts when one part is an absolute path;
 # os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
-def _myown_os_path_join(*paths):
+def myown_os_path_join(*paths):
     joined = ''
     for path in paths:
         pattern = re.compile("^[a-zA-Z0-9_." + os.path.sep + "-]+$")
         match = pattern.match(path)
         if not match:
-            print('_myown_os_path_join ERROR: path contains forbidden character(s)')
+            print('myown_os_path_join ERROR: path contains forbidden character(s)')
             sys.exit(1)
         if joined.endswith('/') and path.startswith('/'):
             fixed = path[1:]
@@ -226,7 +226,7 @@ def _reset_destdir(int_data):
     print('initially, destdir is set for default value without prefix: ' + \
                                                         int_data['got_vars']['destdir'])
     if 'prefix' in int_data['got_vars'] and int_data['got_vars']['prefix']:
-        int_data['got_vars']['destdir'] = _myown_os_path_join(\
+        int_data['got_vars']['destdir'] = myown_os_path_join(\
                                 int_data['got_vars']['destdir'], \
                                 int_data['got_vars']['prefix'], \
                                 int_data['paths_and_names']['install_path'])
@@ -361,7 +361,7 @@ def _get_install_target(int_data):
     destdir = get_myown_env_variable(int_data, 'destdir')
 
     if destdir:
-        install_target = _myown_os_path_join(destdir, \
+        install_target = myown_os_path_join(destdir, \
                                             int_data['paths_and_names']['binary_name'])
 
         print('get_install_target: ' + install_target)
@@ -543,9 +543,9 @@ def _internal_data():
     # These are "ready values" for variables not got from ARGUMENTS
     # (see FACADE in function get_vars)
     mydata['my_vars'] = {
-        'source_full' : _myown_os_path_join(mydata['paths_and_names']['source_path'], \
+        'source_full' : myown_os_path_join(mydata['paths_and_names']['source_path'], \
                                                 mydata['paths_and_names']['source_name']),
-        'compile_target' : _myown_os_path_join(mydata['paths_and_names']['compile_path'], \
+        'compile_target' : myown_os_path_join(mydata['paths_and_names']['compile_path'], \
                                                 mydata['paths_and_names']['binary_name'])
     }
 
