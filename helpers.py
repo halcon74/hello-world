@@ -50,7 +50,12 @@ because I define OS here as a set of variables, for:
 
 - making similar installs on similar Linux distributions derived
 from one distro;
-- giving the user full freedom to simulate another OS if he wants to.
+- giving the user full freedom to simulate another OS if he wants to
+- setting custom hooks in any class function for any OS as simple as
+if int_obj['detected_os'] == 'gentoo':
+if int_obj['detected_os'] == 'debian':
+...
+(currently, there are no such hooks).
 
 Currently, the detecting of OS is doing so:
 
