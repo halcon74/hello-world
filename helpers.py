@@ -55,7 +55,7 @@ from one distro;
 Currently, the detecting of OS is doing so:
 
 in function _detect_os, by finding non-empty value of scons argument
-which name is determined by variable obj['internal_data']['os_detected_at']:
+which name is determined by variable int_data['os_detected_at']:
     (see function _define_vars_data)
         if we found argument 'DESTDIR' with non-empty value, then,
             OS is detected as Gentoo,
@@ -72,7 +72,7 @@ and
 creates a variables-cache file.
 
 The name of this file is set in function helpers_class,
-variable obj['internal_data']['variables_cache_file'].
+variable int_data['variables_cache_file'].
 
 With this file, no redundant actions (that are usually called
 're-configuring') will be performed during the second and all the
