@@ -162,7 +162,7 @@ def myown_os_path_join(*paths):
 # https://forums.gentoo.org/viewtopic-p-8527031.html#8527031
 # (search string: "OOP, because perl") :)
 def helpers_class():
-    int_data = _internal_data()
+    int_data, targets_to_clean = _internal_data()
 
     ext_methods = {
         'get_vars' : lambda *args: get_vars(int_data, args[0]),
@@ -175,7 +175,7 @@ def helpers_class():
         'is_this_option_passed' : lambda *args: is_this_option_passed(int_data, args[0]),
         'is_install_argument_passed_and_1' : lambda: is_install_argument_passed_and_1(int_data),
         'is_any_target_passed' : lambda: is_any_target_passed(int_data),
-        'clean_targets' : lambda: clean_targets(int_data)
+        'clean_targets' : lambda : clean_targets(targets_to_clean)
     }
     return ext_methods
 
@@ -375,8 +375,8 @@ def _get_install_target(int_data):
 
 # External method
 # When cleaning, passing to scons whatever arguments (like DESTDIR=...) doesn't have any effect.
-def clean_targets(int_data):
-    for callback in int_data['targets_to_clean']:
+def clean_targets(targets_to_clean):
+    for callback in targets_to_clean:
         somepath = callback()
 
         # No directories should be deleted, only files
@@ -558,7 +558,7 @@ def _internal_data():
     mydata['got_vars'] = {}
 
     # Callbacks are called in external method clean_targets
-    mydata['targets_to_clean'] = (
+    targets_to_clean = (
         lambda: mydata['scons_db_file'],
         lambda: _get_object_file(mydata),
         lambda: mydata['my_vars']['compile_target'],
@@ -566,4 +566,4 @@ def _internal_data():
         lambda: mydata['variables_cache_file']
     )
 
-    return mydata
+    return mydata, targets_to_clean
