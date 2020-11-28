@@ -162,10 +162,10 @@ def myown_os_path_join(*paths):
 # https://forums.gentoo.org/viewtopic-p-8527031.html#8527031
 # (search string: "OOP, because perl") :)
 def helpers_class():
-    int_data, targets_to_clean = _internal_data()
+    int_data, targets_to_clean, post_process_funcs = _internal_data()
 
     ext_methods = {
-        'get_vars' : lambda *args: get_vars(int_data, args[0]),
+        'get_vars' : lambda *args: get_vars(int_data, post_process_funcs, args[0]),
         'apply_vars' : lambda *args: apply_vars(int_data, args[0]),
         'get_myown_env_variable' : lambda *args: get_myown_env_variable(int_data, args[0]),
         'read_variables_cache' : lambda: read_variables_cache(int_data),
@@ -235,27 +235,23 @@ def _reset_destdir(int_data):
         print('destdir is reset using prefix and install_path: ' + \
                                 int_data['got_vars']['destdir'])
 
-# Contains internal methods
-post_process_funcs = {}
-post_process_funcs['reset_destdir'] = _reset_destdir
-
 # Internal method, uses post_process_funcs
-def _post_process(int_data, funcname):
+def _post_process(post_process_funcs, funcname):
     if funcname in post_process_funcs:
-        post_process_funcs[funcname](int_data)
+        post_process_funcs[funcname]()
     else:
         print('_post_process ERROR: function ' + funcname + ' is not defined')
         sys.exit(1)
 
 # Internal method
-def _launch_post_process(int_data, vars_name):
+def _launch_post_process(int_data, post_process_funcs, vars_name):
     for var_dict in int_data['vars_data'][vars_name].values():
         is_post_processed_in_a_function_key = var_dict['is_post_processed_in_a_function']
         if is_post_processed_in_a_function_key:
-            _post_process(int_data, is_post_processed_in_a_function_key)
+            _post_process(post_process_funcs, is_post_processed_in_a_function_key)
 
 # External method (FACADE: _get_from_os | use int_data['my_vars'])
-def get_vars(int_data, vars_name):
+def get_vars(int_data, post_process_funcs, vars_name):
     for var_key, var_dict in int_data['vars_data'][vars_name].items():
         print('get_vars: ' + var_key)
         if var_dict['is_got_from_arguments']:
@@ -264,7 +260,7 @@ def get_vars(int_data, vars_name):
                 int_data['got_vars'][var_key] = var_value
         else:
             int_data['got_vars'][var_key] = int_data['my_vars'][var_key]
-    _launch_post_process(int_data, vars_name)
+    _launch_post_process(int_data, post_process_funcs, vars_name)
 
 # External method
 def apply_vars(int_data, vars_name):
@@ -557,7 +553,12 @@ def _internal_data():
     # Values are set in function get_vars
     mydata['got_vars'] = {}
 
-    # Callbacks are called in external method clean_targets
+    # Contains internal methods; their launching starts in internal method _launch_post_process
+    post_process_funcs = {
+        'reset_destdir' : lambda: _reset_destdir(mydata)
+    }
+
+    # Contains differents callbacks (including internal methods) that are called in external method clean_targets
     targets_to_clean = (
         lambda: mydata['scons_db_file'],
         lambda: _get_object_file(mydata),
@@ -566,4 +567,4 @@ def _internal_data():
         lambda: mydata['variables_cache_file']
     )
 
-    return mydata, targets_to_clean
+    return mydata, targets_to_clean, post_process_funcs
