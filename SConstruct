@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
-# See the comments in helpers.py
+# See comments in helpers.py
 
 from helpers import helpers_class
 
