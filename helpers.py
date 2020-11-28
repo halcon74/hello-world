@@ -162,7 +162,7 @@ def myown_os_path_join(*paths):
 # https://forums.gentoo.org/viewtopic-p-8527031.html#8527031
 # (search string: "OOP, because perl") :)
 def helpers_class():
-    int_data, targets_to_clean, post_process_funcs = _internal_data()
+    int_data, post_process_funcs, targets_to_clean = _internal_data()
 
     ext_methods = {
         'get_vars' : lambda *args: get_vars(int_data, post_process_funcs, args[0]),
@@ -567,4 +567,4 @@ def _internal_data():
         lambda: mydata['variables_cache_file']
     )
 
-    return mydata, targets_to_clean, post_process_funcs
+    return mydata, post_process_funcs, targets_to_clean
