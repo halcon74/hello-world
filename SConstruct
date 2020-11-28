@@ -174,6 +174,7 @@ def helpers_class():
     }
 
     int_obj['variables_cache_file'] = 'scons_variables_cache.conf'
+    int_obj['scons_db_file'] = '.sconsign.dblite'
 
     def _define_vars_data(os_detected_at):
         supported_oses = OrderedDict()
@@ -323,7 +324,7 @@ def helpers_class():
 
     # Callbacks are called in external method clean_targets
     int_obj['targets_to_clean'] = (
-        lambda: '.sconsign.dblite',
+        lambda: int_obj['scons_db_file'],
         lambda: _get_object_file(),
         lambda: int_obj['my_vars']['compile_target'],
         lambda: _get_install_target(),
@@ -523,7 +524,7 @@ def helpers_class():
             return ''
 
     # External method
-    # When cleaning, passing to scons arguments (like DESTDIR=...) doesn't have any effect.
+    # When cleaning, passing to scos whatever arguments (like DESTDIR=...) doesn't have any effect.
     def clean_targets():
         for callback in int_obj['targets_to_clean']:
             somepath = callback()
