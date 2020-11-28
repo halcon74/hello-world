@@ -236,19 +236,15 @@ def _reset_destdir(int_data):
                                 int_data['got_vars']['destdir'])
 
 # Internal method, uses post_process_funcs
-def _post_process(post_process_funcs, funcname):
-    if funcname in post_process_funcs:
-        post_process_funcs[funcname]()
-    else:
-        print('_post_process ERROR: function ' + funcname + ' is not defined')
-        sys.exit(1)
-
-# Internal method
 def _launch_post_process(int_data, post_process_funcs, vars_name):
     for var_dict in int_data['vars_data'][vars_name].values():
-        is_post_processed_in_a_function_key = var_dict['is_post_processed_in_a_function']
-        if is_post_processed_in_a_function_key:
-            _post_process(post_process_funcs, is_post_processed_in_a_function_key)
+        funcname = var_dict['is_post_processed_in_a_function']
+        if funcname:
+            if funcname in post_process_funcs:
+                post_process_funcs[funcname]()
+            else:
+                print('_launch_post_process ERROR: function ' + funcname + ' is not defined')
+                sys.exit(1)
 
 # External method (FACADE: _get_from_os | use int_data['my_vars'])
 def get_vars(int_data, post_process_funcs, vars_name):
@@ -553,7 +549,7 @@ def _internal_data():
     # Values are set in function get_vars
     mydata['got_vars'] = {}
 
-    # Contains internal methods; their launching starts in internal method _launch_post_process
+    # Contains internal methods that are called in internal method _launch_post_process
     post_process_funcs = {
         'reset_destdir' : lambda: _reset_destdir(mydata)
     }
