@@ -67,7 +67,7 @@ which name is determined by variable int_data['os_detected_at']:
         if we found argument 'DESTDIR' with non-empty value, then,
             OS is detected as Gentoo,
         if we found argument 'install_root' with non-empty value, then,
-            OS is detected as Debian/Ubuntu.
+            OS is detected as Debian-based.
 
 ==Refusing COMMAND_LINE_TARGETS==
 
@@ -492,7 +492,7 @@ def _define_vars_data(os_detected_at):
         'os_name' : 'Gentoo'
     }
     supported_oses['debian'] = {
-        'os_name' : 'Debian/Ubuntu'
+        'os_name' : 'Debian-based'
     }
     _populate_supported_oses(vars_data, supported_oses, os_detected_at)
     # Uncomment to look at the dictionary
