@@ -100,15 +100,15 @@ def will_install(int_data, install_source, install_target):
 
 def _internal_data(variables_cache_file):
     mydata = {
-        # 2 my own env variables are added in function read_variables_cache and then
-        # their values are set in function _save_variables_cache
+        # 2 my own env variables are added in function read_vars_from_cache and then
+        # their values are set in function save_vars_to_cache
         'env' : Environment(),
 
         'new_env_call': lambda **kwargs: Environment(**kwargs),
 
         # This is a SCons.Variables.Variables class object for reading from /
         # writing to the variables cache file
-        # Changed by calling method "Add" in function read_variables_cache
+        # Changed by calling method "Add" in function read_vars_from_cache
         'scons_var_obj' : Variables(variables_cache_file),
 
         'arguments' : ARGUMENTS,
