@@ -516,6 +516,9 @@ def _check_paths_and_names(paths_and_names, mandatory_pnn_keys):
             exit_err_1("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is false")
         if not isinstance(paths_and_names[mandatory_key], str):
             exit_err_1("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is not string")
+    for pnn_key in paths_and_names:
+        if not pnn_key in mandatory_pnn_keys:
+            exit_err_1('_check_paths_and_names ERROR: paths_and_names key ' + pnn_key + ' is not supported')
 
 def _internal_data(paths_and_names):
     mydata = {}
