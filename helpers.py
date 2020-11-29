@@ -199,7 +199,7 @@ def _detect_os(int_data):
         os_argname = nested_dict[int_data['os_detected_at']]
         print('checking for ' + int_data['os_detected_at'] + ' as ' + os_argname + \
                                         '... (are we on ' + nested_dict['os_name'] + '?)')
-        os_argvalue = ARGUMENTS.get(os_argname)
+        os_argvalue = int_data['scons_objects']['arguments'].get(os_argname)
         if os_argvalue:
             int_data['detected_os'] = key
             print('detected Operating System: ' + int_data['detected_os'])
@@ -221,7 +221,7 @@ def _get_from_os(int_data, argname):
         _detect_os(int_data)
     detected_os = int_data['detected_os']
     this_os_argname = int_data['supported_oses'][detected_os][argname]
-    argvalue = ARGUMENTS.get(this_os_argname)
+    argvalue = int_data['scons_objects']['arguments'].get(this_os_argname)
     if argvalue:
         print(argname + ' (' + this_os_argname + ' in ' + \
                 int_data['supported_oses'][detected_os]['os_name'] + \
@@ -298,7 +298,7 @@ def read_variables_cache(int_data):
         int_data['scons_objects']['scons_var_obj'].Add(is_saved_to_cache_file)
     # This adds new variables to Environment (doesn't rewrite it)
     # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-    int_data['scons_objects']['env'] = Environment(variables = \
+    int_data['scons_objects']['env'] = int_data['scons_objects']['new_env_call'](variables = \
                                         int_data['scons_objects']['scons_var_obj'])
 
 # External method
@@ -538,6 +538,8 @@ def _internal_data(paths_and_names):
         # 2 my own env variables are added in function read_variables_cache and then
         # their values are set in function _save_variables_cache
         'env' : Environment(),
+
+        'new_env_call': lambda **kwargs: Environment(**kwargs),
 
         # This is a SCons.Variables.Variables class object for reading from /
         # writing to the variables cache file
