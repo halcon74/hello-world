@@ -519,6 +519,9 @@ def _check_paths_and_names(paths_and_names, mandatory_pnn_keys):
         if not paths_and_names[mandatory_key]:
             print("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is false")
             sys.exit(1)
+        if not isinstance(paths_and_names[mandatory_key], str):
+            print("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is not string")
+            sys.exit(1)
 
 def _internal_data(paths_and_names):
     mydata = {}
