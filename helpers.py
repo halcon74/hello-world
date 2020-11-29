@@ -146,6 +146,10 @@ import sys
 import SCons.Util
 from SCons.Script import Environment, Variables, ARGUMENTS, COMMAND_LINE_TARGETS
 
+def exit_err_1(message):
+    print(message)
+    sys.exit(1)
+
 # os.path.join drops all other parts when one part is an absolute path;
 # os.path.normpath takes only one argument...
 # In short, I haven't yet found the proper built-in function :)
@@ -155,8 +159,7 @@ def myown_os_path_join(*paths):
         pattern = re.compile("^[a-zA-Z0-9_." + os.path.sep + "-]+$")
         match = pattern.match(path)
         if not match:
-            print('myown_os_path_join ERROR: path contains forbidden character(s)')
-            sys.exit(1)
+            exit_err_1('myown_os_path_join ERROR: path contains forbidden character(s)')
         if joined.endswith('/') and path.startswith('/'):
             fixed = path[1:]
             path = fixed
@@ -193,8 +196,7 @@ def helpers_class(paths_and_names):
 # Internal method
 def _detect_os(int_data):
     if int_data['detected_os']:
-        print('re-detecting Operating System is not supported')
-        sys.exit(1)
+        exit_err_1('re-detecting Operating System is not supported')
     for key, nested_dict in int_data['supported_oses'].items():
         os_argname = nested_dict[int_data['os_detected_at']]
         print('checking for ' + int_data['os_detected_at'] + ' as ' + os_argname + \
@@ -207,16 +209,14 @@ def _detect_os(int_data):
     print('Operating System not detected')
     print('If your Operating System is not supported, you can simulate one of ' + \
                     'supported OSes by passing parameters with names that it has')
-    print('Parameter names that each of supported Operating Systems has, ' + \
+    exit_err_1('Parameter names that each of supported Operating Systems has, ' + \
                     'you can see them in function _define_vars_data')
-    sys.exit(1)
 
 # Internal method
 def _get_from_os(int_data, argname):
     if int_data['detected_os'] == '' and argname != int_data['os_detected_at']:
-        print('_get_from_os ERROR: when getting ' + argname + \
+        exit_err_1('_get_from_os ERROR: when getting ' + argname + \
                                 ' value, OS should be already detected')
-        sys.exit(1)
     if argname == int_data['os_detected_at']:
         _detect_os(int_data)
     detected_os = int_data['detected_os']
@@ -252,8 +252,7 @@ def _launch_post_process(int_data, post_process_funcs, vars_name):
             if funcname in post_process_funcs:
                 post_process_funcs[funcname]()
             else:
-                print('_launch_post_process ERROR: function ' + funcname + ' is not defined')
-                sys.exit(1)
+                exit_err_1('_launch_post_process ERROR: function ' + funcname + ' is not defined')
 
 # External method (FACADE: _get_from_os | use int_data['my_vars'])
 def get_vars(int_data, post_process_funcs, vars_name):
@@ -416,9 +415,8 @@ def _populate_supported_oses(vars_data, supported_oses, os_detected_at):
                             supported_oses_dict[var_key] = \
                                                 var_dict['is_got_from_arguments'][key]
                     if var_key == os_detected_at and supported_oses_dict[var_key] == '':
-                        print('_populate_supported_oses ERROR: ' + var_key + \
+                        exit_err_1('_populate_supported_oses ERROR: ' + var_key + \
                                                 ' is empty for ' + supported_oses_key)
-                        sys.exit(1)
 
 def _populate_myown_env_variables_descriptions(vars_data, myown_env_variables_descriptions):
     for vars_key in vars_data:
@@ -510,18 +508,14 @@ def _define_vars_data(os_detected_at):
 
 def _check_paths_and_names(paths_and_names, mandatory_pnn_keys):
     if not isinstance(paths_and_names, dict):
-        print('_check_paths_and_names ERROR: paths_and_names is not dictionary')
-        sys.exit(1)
+        exit_err_1('_check_paths_and_names ERROR: paths_and_names is not dictionary')
     for mandatory_key in mandatory_pnn_keys:
         if mandatory_key not in paths_and_names:
-            print('_check_paths_and_names ERROR: mandatory key ' + mandatory_key + ' not found in paths_and_names')
-            sys.exit(1)
+            exit_err_1('_check_paths_and_names ERROR: mandatory key ' + mandatory_key + ' not found in paths_and_names')
         if not paths_and_names[mandatory_key]:
-            print("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is false")
-            sys.exit(1)
+            exit_err_1("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is false")
         if not isinstance(paths_and_names[mandatory_key], str):
-            print("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is not string")
-            sys.exit(1)
+            exit_err_1("_check_paths_and_names ERROR: paths_and_names['" + mandatory_key + "'] is not string")
 
 def _internal_data(paths_and_names):
     mydata = {}
