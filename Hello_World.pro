@@ -1,3 +1,3 @@
 TEMPLATE = app
 
-SOURCES += src/main.cpp SConstruct helpers.py
+SOURCES += src/main.cpp SConstruct helpers.py wrappers.py

@@ -143,8 +143,8 @@ import os
 import os.path
 import re
 import sys
-import SCons.Util
-from SCons.Script import Environment, Variables, ARGUMENTS, COMMAND_LINE_TARGETS
+
+from wrappers import wrappers_class
 
 def exit_err_1(message):
     print(message)
@@ -201,7 +201,7 @@ def _detect_os(int_data):
         os_argname = nested_dict[int_data['os_detected_at']]
         print('checking for ' + int_data['os_detected_at'] + ' as ' + os_argname + \
                                         '... (are we on ' + nested_dict['os_name'] + '?)')
-        os_argvalue = int_data['scons_objects']['arguments'].get(os_argname)
+        os_argvalue = int_data['scons_objects']['get_argument_from_cli'](os_argname)
         if os_argvalue:
             int_data['detected_os'] = key
             print('detected Operating System: ' + int_data['detected_os'])
@@ -221,7 +221,7 @@ def _get_from_os(int_data, argname):
         _detect_os(int_data)
     detected_os = int_data['detected_os']
     this_os_argname = int_data['supported_oses'][detected_os][argname]
-    argvalue = int_data['scons_objects']['arguments'].get(this_os_argname)
+    argvalue = int_data['scons_objects']['get_argument_from_cli'](this_os_argname)
     if argvalue:
         print(argname + ' (' + this_os_argname + ' in ' + \
                 int_data['supported_oses'][detected_os]['os_name'] + \
@@ -271,70 +271,53 @@ def apply_vars(int_data, vars_name):
     for var_key, var_dict in int_data['vars_data'][vars_name].items():
         is_applied_to_scons_env = var_dict['is_applied_to_scons_env']
         if is_applied_to_scons_env:
-            replace_args = {}
-            print('setting ' + is_applied_to_scons_env + ' to ' + int_data['got_vars'][var_key])
-            replace_args[is_applied_to_scons_env] = \
-                                        int_data['scons_objects']['clvar'](int_data['got_vars'][var_key])
-            int_data['scons_objects']['env'].Replace(**replace_args)
+            myvalue = int_data['got_vars'][var_key]
+            print('setting ' + is_applied_to_scons_env + ' to ' + myvalue)
+            int_data['scons_objects']['replace_var_in_env'](is_applied_to_scons_env, myvalue)
 
 # External method
 def get_myown_env_variable(int_data, usedname):
     varname = int_data['myown_env_variables'][usedname][0]
-    value = int_data['scons_objects']['env'][varname]
-    if value:
-        return int_data['scons_objects']['env'][varname][0]
-    return ''
+    value = int_data['scons_objects']['get_var_from_env'](varname)
+    return value
 
 # Internal method
 def _set_myown_env_variable(int_data, usedname, value):
     varname = int_data['myown_env_variables'][usedname][0]
-    int_data['scons_objects']['env'][varname] = int_data['scons_objects']['clvar'](value)
+    int_data['scons_objects']['append_value_to_var_in_env'](varname, value)
 
 # External method
 def read_variables_cache(int_data):
-    for varname, is_saved_to_cache_file in int_data['myown_env_variables'].items():
-        print('Reading ' + varname + ' from cache as ' + is_saved_to_cache_file[0] + '...')
-        int_data['scons_objects']['scons_var_obj'].Add(is_saved_to_cache_file)
-    # This adds new variables to Environment (doesn't rewrite it)
-    # https://scons.org/doc/2.3.0/HTML/scons-user/x2445.html#AEN2504
-    int_data['scons_objects']['env'] = int_data['scons_objects']['new_env_call'](variables = \
-                                        int_data['scons_objects']['scons_var_obj'])
+    tuple_with_data = int_data['myown_env_variables']
+    int_data['scons_objects']['read_vars_from_cache'](tuple_with_data)
 
 # External method
 def save_variables_cache(int_data):
-    for varname, is_saved_to_cache_file in int_data['myown_env_variables'].items():
-        print('Saving ' + varname + ' to cache as ' + is_saved_to_cache_file[0] + '...')
-        _set_myown_env_variable(int_data, varname, int_data['got_vars'][varname])
-    # This saves only variables from 'scons_var_obj', not all variables from 'env'
-    # (here 'env' is the environment to get the option values from)
-    # https://scons.org/doc/3.0.1/HTML/scons-api/SCons.Variables.Variables-class.html#Save
-    int_data['scons_objects']['scons_var_obj'].Save(int_data['variables_cache_file'], \
-                                                                int_data['scons_objects']['env'])
+    tuple_with_data = int_data['myown_env_variables']
+    got_vars = int_data['got_vars']
+    int_data['scons_objects']['save_vars_to_cache'](tuple_with_data, got_vars)
 
 # External method
 def program_compile(int_data):
-    target = int_data['scons_objects']['env'].Program(target = \
-                                            int_data['got_vars']['compile_target'], \
-                                            source = int_data['got_vars']['source_full'])
-    int_data['scons_objects']['env'].Default(target)
-    print('will compile: target = ' + int_data['got_vars']['compile_target'] + \
-                                            ', source = ' + int_data['got_vars']['source_full'])
+    compile_source = int_data['got_vars']['source_full']
+    compile_target = int_data['got_vars']['compile_target']
+    int_data['scons_objects']['will_compile'](compile_source, compile_target)
 
 # External method
 def program_install(int_data):
-    target = int_data['scons_objects']['env'].Install(dir = get_myown_env_variable(int_data, 'destdir'), \
-                                    source = get_myown_env_variable(int_data, 'compile_target'))
-    int_data['scons_objects']['env'].Default(target)
-    print('will install: dir = ' + get_myown_env_variable(int_data, 'destdir') + \
-                        ', source = ' + get_myown_env_variable(int_data, 'compile_target'))
+    install_source = get_myown_env_variable(int_data, 'compile_target')
+    install_target = get_myown_env_variable(int_data, 'destdir')
+    int_data['scons_objects']['will_install'](install_source, install_target)
 
 # External method
 def is_this_option_passed(int_data, option):
-    return int_data['scons_objects']['env'].GetOption(option)
+    value = int_data['scons_objects']['get_option_from_cli'](option)
+    return value
 
 # Internal method
 def _is_this_argument_passed(int_data, argument):
-    return int_data['scons_objects']['arguments'].get(argument)
+    argvalue = int_data['scons_objects']['get_argument_from_cli'](argument)
+    return argvalue
 
 # External method
 def is_install_argument_passed_and_1(int_data):
@@ -346,10 +329,8 @@ def is_install_argument_passed_and_1(int_data):
 
 # External method
 def is_any_target_passed(int_data):
-    if int_data['scons_objects']['command_line_targets']:
-        return 1
-    else:
-        return 0
+    result = int_data['scons_objects']['get_any_target_from_cli']()
+    return result
 
 # Internal method
 def _get_object_file(int_data):
@@ -440,7 +421,7 @@ def _define_vars_data(os_detected_at):
             'is_applied_to_scons_env' : '',
             'is_saved_to_cache_file' : ('MYCACHEDDIR', \
                             "cached 'dir' argument for " + \
-                            "int_data['scons_objects']['env'].Install", ''),
+                            "env.Install", ''),
             'is_post_processed_in_a_function' : 'reset_destdir'
     }
     vars_data['install_vars']['prefix'] = {
@@ -454,7 +435,7 @@ def _define_vars_data(os_detected_at):
             'is_applied_to_scons_env' : '',
             'is_saved_to_cache_file' : ('MYCACHEDSOURCE', \
                             "cached 'source' argument for " + \
-                            "int_data['scons_objects']['env'].Install", ''),
+                            "env.Install", ''),
             'is_post_processed_in_a_function' : ''
     }
     vars_data['cpp_linker_vars'] = {
@@ -527,31 +508,15 @@ def _internal_data(paths_and_names):
     _check_paths_and_names(paths_and_names, mydata['mandatory_pnn_keys'])
     mydata['paths_and_names'] = paths_and_names
 
-    mydata['variables_cache_file'] = 'scons_variables_cache.conf'
+    variables_cache_file = 'scons_variables_cache.conf'
+    mydata['variables_cache_file'] = variables_cache_file
+    mydata['scons_objects'] = wrappers_class(variables_cache_file)
+
     mydata['scons_db_file'] = '.sconsign.dblite'
 
     mydata['os_detected_at'] = 'destdir'
     mydata['vars_data'], mydata['supported_oses'], mydata['myown_env_variables'] = \
                             _define_vars_data(mydata['os_detected_at'])
-
-    mydata['scons_objects'] = {
-        # 2 my own env variables are added in function read_variables_cache and then
-        # their values are set in function _save_variables_cache
-        'env' : Environment(),
-
-        'new_env_call': lambda **kwargs: Environment(**kwargs),
-
-        # This is a SCons.Variables.Variables class object for reading from /
-        # writing to the variables cache file
-        # Changed by calling method "Add" in function read_variables_cache
-        'scons_var_obj' : Variables(mydata['variables_cache_file']),
-
-        'arguments' : ARGUMENTS,
-        'command_line_targets' : COMMAND_LINE_TARGETS,
-
-        # A class for appending values to environment variables (as lists)
-        'clvar' : SCons.Util.CLVar
-    }
 
     # These are "ready values" for variables not got from ARGUMENTS
     # (see FACADE in function get_vars)
