@@ -19,8 +19,8 @@ def get_and_save_variables_for_install(helpers_):
     helpers_['save_variables_cache']()
 
 def mycompile(helpers_):
-    helpers_['get_vars']('cpp_linker_vars')
-    helpers_['apply_vars']('cpp_linker_vars')
+    helpers_['get_vars']('compile_vars')
+    helpers_['apply_vars']('compile_vars')
     helpers_['program_compile']()
 
 def myinstall(helpers_):

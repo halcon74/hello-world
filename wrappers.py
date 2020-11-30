@@ -63,8 +63,8 @@ def append_value_to_var_in_env(int_data, key, value):
     # print('append_value_to_var_in_env after applying: ' + key + ' = ' + int_data['env'][key])
 
 # External method
-def read_vars_from_cache(int_data, tuple_with_data):
-    for varname, is_saved_to_cache_file in tuple_with_data.items():
+def read_vars_from_cache(int_data, descriptions):
+    for varname, is_saved_to_cache_file in descriptions.items():
         print('Reading ' + varname + ' from cache as ' + is_saved_to_cache_file[0] + '...')
         int_data['scons_var_obj'].Add(is_saved_to_cache_file)
     # This adds new variables to Environment (doesn't rewrite it)
@@ -72,8 +72,8 @@ def read_vars_from_cache(int_data, tuple_with_data):
     int_data['env'] = int_data['new_env_call'](variables = int_data['scons_var_obj'])
 
 # External method
-def save_vars_to_cache(int_data, tuple_with_data, values, variables_cache_file):
-    for varname, is_saved_to_cache_file in tuple_with_data.items():
+def save_vars_to_cache(int_data, descriptions, values, variables_cache_file):
+    for varname, is_saved_to_cache_file in descriptions.items():
         print('Saving ' + varname + ' to cache as ' + is_saved_to_cache_file[0] + '...')
         value = values[varname]
         append_value_to_var_in_env(int_data, is_saved_to_cache_file[0], value)

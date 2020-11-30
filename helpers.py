@@ -288,14 +288,14 @@ def _set_myown_env_variable(int_data, usedname, value):
 
 # External method
 def read_variables_cache(int_data):
-    tuple_with_data = int_data['myown_env_variables']
-    int_data['scons_wrappers']['read_vars_from_cache'](tuple_with_data)
+    descriptions = int_data['myown_env_variables']
+    int_data['scons_wrappers']['read_vars_from_cache'](descriptions)
 
 # External method
 def save_variables_cache(int_data):
-    tuple_with_data = int_data['myown_env_variables']
+    descriptions = int_data['myown_env_variables']
     got_vars = int_data['got_vars']
-    int_data['scons_wrappers']['save_vars_to_cache'](tuple_with_data, got_vars)
+    int_data['scons_wrappers']['save_vars_to_cache'](descriptions, got_vars)
 
 # External method
 def program_compile(int_data):
@@ -413,7 +413,7 @@ def _define_vars_data(os_detected_at):
         # All that I add to env variables must be defined
         # in values of 'is_saved_to_cache_file' here
         'install_vars' : OrderedDict(),
-        'cpp_linker_vars' : {}
+        'compile_vars' : {}
     }
 
     vars_data['install_vars']['destdir'] = {
@@ -438,7 +438,7 @@ def _define_vars_data(os_detected_at):
                             "env.Install", ''),
             'is_post_processed_in_a_function' : ''
     }
-    vars_data['cpp_linker_vars'] = {
+    vars_data['compile_vars'] = {
         'cpp_compiler' : {
             'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian' : 'CXX'},
             'is_applied_to_scons_env' : 'CXX',
