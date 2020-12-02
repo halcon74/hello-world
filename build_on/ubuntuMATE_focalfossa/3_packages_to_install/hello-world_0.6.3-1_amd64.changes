@@ -1,0 +1,37 @@
+Format: 1.8
+Date: Wed, 02 Dec 2020 21:18:00 +0300
+Source: hello-world
+Binary: hello-world
+Architecture: source amd64
+Version: 0.6.3-1
+Distribution: unstable
+Urgency: low
+Maintainer: Alexey Mishustin <halcon@tuta.io>
+Changed-By: Alexey Mishustin <halcon@tuta.io>
+Description:
+ hello-world - Test program printing 'Hello World!' to STDOUT
+Changes:
+ hello-world (0.6.3-1) unstable; urgency=low
+ .
+   * Bugfix release (Closes: #nnnn)
+Checksums-Sha1:
+ db53c2107da891e7f1c59ee1e133927247d7ae66 863 hello-world_0.6.3-1.dsc
+ 2b236d800e85c375444f3e77ad9149a55e712bfd 53964 hello-world_0.6.3.orig.tar.gz
+ ca7cff9cfd78e5f91d0f182678b0a34b5c463e13 13696 hello-world_0.6.3-1.debian.tar.xz
+ 58822d4045a0fabbc49af5a8048cf30be51f39e7 13648 hello-world-dbgsym_0.6.3-1_amd64.ddeb
+ 94666b4a2676d59e04420d1fb94e22dcfe97885f 5888 hello-world_0.6.3-1_amd64.buildinfo
+ a713cb3f58e24a08476ce1e1b4b14f9c40bc59de 5108 hello-world_0.6.3-1_amd64.deb
+Checksums-Sha256:
+ 0255fd4732f8f6aa00c6cb385bfa49854af2710b0574b3d4b357c5e0f1d5e698 863 hello-world_0.6.3-1.dsc
+ c2704e41b0fb95b91826ff0b21a2b4720e460bbc2cbf65bb696e866c3aa1aa63 53964 hello-world_0.6.3.orig.tar.gz
+ 1c8717774de7c2211145a6844ca297d365e3e67419505bc8e5311b1c0ec5d4be 13696 hello-world_0.6.3-1.debian.tar.xz
+ fdfe677b78d98f5adcde2d665a866a04539a34314fb20374253f8ea4809a41db 13648 hello-world-dbgsym_0.6.3-1_amd64.ddeb
+ df9bbb9a732579b81236cec2a591812f72f0337aaa6b45435737c8289643cada 5888 hello-world_0.6.3-1_amd64.buildinfo
+ efcb16a2ee81f4742a39c4440ad69230a6f2bdb233b269193aa8c48696c65053 5108 hello-world_0.6.3-1_amd64.deb
+Files:
+ ae7a7eb6dec22403e7b35bc6360612fc 863 misc optional hello-world_0.6.3-1.dsc
+ 2ecbf6baa23ab4227ca5531982d82a9f 53964 misc optional hello-world_0.6.3.orig.tar.gz
+ 9f28e9154d79ed54fcb0b18bfa65c777 13696 misc optional hello-world_0.6.3-1.debian.tar.xz
+ 1ca00b6e3315745967b689e5571e131a 13648 debug optional hello-world-dbgsym_0.6.3-1_amd64.ddeb
+ 7ff52e9ea566a27d91f8b18a07d208d5 5888 misc optional hello-world_0.6.3-1_amd64.buildinfo
+ 0ed00b128747631d34d976a3d90c564b 5108 misc optional hello-world_0.6.3-1_amd64.deb

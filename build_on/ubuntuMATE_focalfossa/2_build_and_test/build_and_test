@@ -1,0 +1,196 @@
+(on Debian Buster)
+
+# DIST=focal cowbuilder --build /home/halcon/Desktop/Packaging/hello-world-0.6.3-for-focal/hello-world_0.6.3-1.dsc --distribution focal --components "main universe" --basepath /var/cache/pbuilder/focal-amd64.cow --debootstrapopts --keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg
+<...>
+I: Copying back the cached apt archive contents
+I: Building the package
+I: Running cd /build/hello-world-0.6.3/ && env PATH="/usr/sbin:/usr/bin:/sbin:/bin" HOME="/nonexistent" dpkg-buildpackage -us -uc 
+dpkg-buildpackage: info: source package hello-world
+dpkg-buildpackage: info: source version 0.6.3-1
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by Alexey Mishustin <halcon@tuta.io>
+dpkg-buildpackage: info: host architecture amd64
+ dpkg-source --before-build .
+ fakeroot debian/rules clean
+dh clean
+   debian/rules override_dh_auto_clean
+make[1]: Entering directory '/build/hello-world-0.6.3'
+scons -c || true
+scons: Reading SConscript files ...
+clean_targets WARNING: .sconsign.dblite is not file! not cleaned
+get_object_file: src/main.o
+clean_targets WARNING: src/main.o is not file! not cleaned
+clean_targets WARNING: build/Hello_World is not file! not cleaned
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+_get_install_target WARNING: cannot get destdir
+clean_targets WARNING:  is not file! not cleaned
+clean_targets WARNING: scons_variables_cache.conf is not file! not cleaned
+scons: done reading SConscript files.
+scons: Cleaning targets ...
+scons: done cleaning targets.
+dh_auto_clean
+make[1]: Leaving directory '/build/hello-world-0.6.3'
+   dh_clean
+ dpkg-source -b .
+dpkg-source: info: using source format '3.0 (quilt)'
+dpkg-source: info: building hello-world using existing ./hello-world_0.6.3.orig.tar.gz
+dpkg-source: info: building hello-world in hello-world_0.6.3-1.debian.tar.xz
+dpkg-source: info: building hello-world in hello-world_0.6.3-1.dsc
+ debian/rules build
+dh build
+   dh_update_autotools_config
+   dh_autoreconf
+   debian/rules override_dh_auto_configure
+make[1]: Entering directory '/build/hello-world-0.6.3'
+:
+make[1]: Leaving directory '/build/hello-world-0.6.3'
+   debian/rules override_dh_auto_build
+make[1]: Entering directory '/build/hello-world-0.6.3'
+scons prefix=/usr install_root=/build/hello-world-0.6.3/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/build/hello-world-0.6.3=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-Bsymbolic-functions -Wl,-z,relro"
+scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+variables for install not retrieved
+getting and saving variables needed for install...
+get_vars: destdir
+checking for destdir as DESTDIR... (are we on Gentoo?)
+checking for destdir as install_root... (are we on Debian-based?)
+detected Operating System: debian
+destdir (install_root in Debian-based) argument found: /build/hello-world-0.6.3/debian/hello-world
+get_vars: prefix
+prefix (prefix in Debian-based) argument found: /usr
+get_vars: compile_target
+initially, destdir is set for default value without prefix: /build/hello-world-0.6.3/debian/hello-world
+destdir is reset using prefix and install_path: /build/hello-world-0.6.3/debian/hello-world/usr/bin
+Saving destdir to cache as MYCACHEDDIR...
+Saving compile_target to cache as MYCACHEDSOURCE...
+get_vars: cpp_compiler
+cpp_compiler (CXX in Debian-based) argument found: g++
+get_vars: cpp_compiler_flags
+cpp_compiler_flags (CXXFLAGS in Debian-based) argument found: -g -O2 -fdebug-prefix-map=/build/hello-world-0.6.3=. -fstack-protector-strong -Wformat -Werror=format-security
+get_vars: linker_flags
+linker_flags (LDFLAGS in Debian-based) argument found: -Wl,-Bsymbolic-functions -Wl,-z,relro
+get_vars: source_full
+setting CXX to g++
+setting CXXFLAGS to -g -O2 -fdebug-prefix-map=/build/hello-world-0.6.3=. -fstack-protector-strong -Wformat -Werror=format-security
+setting LINKFLAGS to -Wl,-Bsymbolic-functions -Wl,-z,relro
+will compile: target = build/Hello_World, source = src/main.cpp
+scons: done reading SConscript files.
+scons: Building targets ...
+g++ -o src/main.o -c -g -O2 -fdebug-prefix-map=/build/hello-world-0.6.3=. -fstack-protector-strong -Wformat -Werror=format-security src/main.cpp
+g++ -o build/Hello_World -Wl,-Bsymbolic-functions -Wl,-z,relro src/main.o
+scons: done building targets.
+make[1]: Leaving directory '/build/hello-world-0.6.3'
+   dh_auto_test
+   create-stamp debian/debhelper-build-stamp
+ fakeroot debian/rules binary
+dh binary
+   dh_testroot
+   dh_prep
+   debian/rules override_dh_auto_install
+make[1]: Entering directory '/build/hello-world-0.6.3'
+scons prefix=/usr install_root=/build/hello-world-0.6.3/debian/hello-world CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/build/hello-world-0.6.3=. -fstack-protector-strong -Wformat -Werror=format-security" LDFLAGS="-Wl,-Bsymbolic-functions -Wl,-z,relro" INSTALL=1
+scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+variables for install retrieved successfully; no need for re-configuring!
+will install: dir = /build/hello-world-0.6.3/debian/hello-world/usr/bin, source = build/Hello_World
+scons: done reading SConscript files.
+scons: Building targets ...
+Install file: "build/Hello_World" as "debian/hello-world/usr/bin/Hello_World"
+scons: done building targets.
+make[1]: Leaving directory '/build/hello-world-0.6.3'
+   dh_install
+   dh_installdocs
+   dh_installchangelogs
+   dh_perl
+   dh_link
+   dh_strip_nondeterminism
+   dh_compress
+   dh_fixperms
+   dh_missing
+   dh_strip
+   dh_makeshlibs
+   dh_shlibdeps
+   dh_installdeb
+   dh_gencontrol
+   dh_md5sums
+   dh_builddeb
+dpkg-deb: building package 'hello-world' in '../hello-world_0.6.3-1_amd64.deb'.
+dpkg-deb: building package 'hello-world-dbgsym' in 'debian/.debhelper/scratch-space/build-hello-world/hello-world-dbgsym_0.6.3-1_amd64.deb'.
+	Renaming hello-world-dbgsym_0.6.3-1_amd64.deb to hello-world-dbgsym_0.6.3-1_amd64.ddeb
+ dpkg-genbuildinfo
+ dpkg-genchanges  >../hello-world_0.6.3-1_amd64.changes
+dpkg-genchanges: info: including full source code in upload
+ dpkg-source --after-build .
+dpkg-buildpackage: info: full upload (original source is included)
+I: copying local configuration
+I: Copying back the cached apt archive contents
+I: unmounting dev/ptmx filesystem
+I: unmounting dev/pts filesystem
+I: unmounting dev/shm filesystem
+I: unmounting proc filesystem
+I: unmounting sys filesystem
+I: Current time: Thu Dec  3 02:09:14 MSK 2020
+I: pbuilder-time-stamp: 1606950554
+I: Cleaning COW directory
+I: forking: rm -rf /var/cache/pbuilder/build/cow.1995
+#
+
+(on UbuntuMATE Focal Fossa)
+
+# apt install /home/halcon/Desktop/vb_exchange/result/hello-world_0.6.3-1_amd64.deb 
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+Note, selecting 'hello-world' instead of '/home/halcon/Desktop/vb_exchange/result/hello-world_0.6.3-1_amd64.deb'
+The following NEW packages will be installed:
+  hello-world
+0 upgraded, 1 newly installed, 0 to remove and 4 not upgraded.
+Need to get 0 B/5?108 B of archives.
+After this operation, 30,7 kB of additional disk space will be used.
+Get:1 /mnt/vb_exchange/result/hello-world_0.6.3-1_amd64.deb hello-world amd64 0.6.3-1 [5?108 B]
+Selecting previously unselected package hello-world.
+(Reading database ... 227321 files and directories currently installed.)
+Preparing to unpack .../hello-world_0.6.3-1_amd64.deb ...
+Unpacking hello-world (0.6.3-1) ...
+Setting up hello-world (0.6.3-1) ...
+N: Download is performed unsandboxed as root as file '/mnt/vb_exchange/result/hello-world_0.6.3-1_amd64.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+#
+
+# dpkg --list | grep -i hello
+ii  hello-world                           0.6.3-1                           amd64        Test program printing 'Hello World!' to STDOUT
+#
+
+# dpkg-query -L hello-world
+/.
+/usr
+/usr/bin
+/usr/bin/Hello_World
+/usr/share
+/usr/share/doc
+/usr/share/doc/hello-world
+/usr/share/doc/hello-world/changelog.Debian.gz
+/usr/share/doc/hello-world/copyright
+/usr/share/doc/hello-world/text
+/usr/share/doc/hello-world/text/ToDo
+/usr/share/doc/hello-world/text/used_sources
+#
+
+$ /usr/bin/Hello_World
+Hello World!
+$
+
+# apt-get --purge remove hello-world
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be REMOVED:
+  hello-world*
+0 upgraded, 0 newly installed, 1 to remove and 4 not upgraded.
+After this operation, 30,7 kB disk space will be freed.
+Do you want to continue? [Y/n] y
+(Reading database ... 227328 files and directories currently installed.)
+Removing hello-world (0.6.3-1) ...
+#

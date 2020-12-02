@@ -22,41 +22,12 @@ Total: 1 package (1 new), Size of downloads: 0 KiB
  * 
  * Fetching https://github.com/halcon74/hello-world.git ...
 git fetch https://github.com/halcon74/hello-world.git +HEAD:refs/git-r3/HEAD
-remote: Enumerating objects: 97, done.
-remote: Counting objects: 100% (97/97), done.
-remote: Compressing objects: 100% (58/58), done.
-remote: Total 165 (delta 59), reused 74 (delta 36), pack-reused 68
-Receiving objects: 100% (165/165), 45.92 KiB | 299.00 KiB/s, done.
-Resolving deltas: 100% (62/62), completed with 7 local objects.
-From https://github.com/halcon74/hello-world
-   2b5ef79..74784dd             -> refs/git-r3/HEAD
- * [new tag]     v0.5.5     -> v0.5.5
 git symbolic-ref refs/git-r3/app-misc/Hello_World/0/__main__ refs/git-r3/HEAD
  * Checking out https://github.com/halcon74/hello-world.git to /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 git checkout --quiet refs/git-r3/HEAD
 GIT update -->
    repository:               https://github.com/halcon74/hello-world.git
-   updating from commit:     2b5ef7929e8116b736dd6d830a68e35f47da8127
-   to commit:                74784dd16198a8ffb1b962b756cbe8135fa3edb5
- SConstruct                                                                                          | 83 ++++++++++++++++++++++++++++++++++++++++++++++++---
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/changelog                              |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/compat                                 |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/control                                |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/copyright                              |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/hello-world-docs.docs                  |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/hello-world.doc-base                   |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/rules                                  |  3 +-
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/source/format                          |  0
- build_on/{debian => debian_buster/1_prepare_to_build}/debian/watch                                  |  0
- build_on/{debian/debuild_output => debian_buster/2_build_and_test/build_and_test}                   |  0
- build_on/gentoo/1_prepare_to_build/etc/portage/repos.conf/localrepo.conf                            |  3 ++
- .../{ => 1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World}/Hello_World-9999.ebuild    |  2 +-
- build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/Manifest             |  2 ++
- build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/metadata.xml         | 15 ++++++++++
- build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/metadata/layout.conf                      |  3 ++
- build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/profiles/repo_name                        |  1 +
- build_on/gentoo/{emerge_output => 2_build_and_test/build_and_test}                                  | 17 +++++++++--
- 18 files changed, 120 insertions(+), 9 deletions(-)
+   at the commit:            e3d8155950ec57d555221a68d3f49e20ccc38614
 >>> Source unpacked in /var/tmp/portage/app-misc/Hello_World-9999/work
 >>> Preparing source in /var/tmp/portage/app-misc/Hello_World-9999/work/Hello_World-9999 ...
 >>> Source prepared.
@@ -112,7 +83,7 @@ Install file: "build/Hello_World" as "/var/tmp/portage/app-misc/Hello_World-9999
 scons: done building targets.
 >>> Completed installing app-misc/Hello_World-9999 into /var/tmp/portage/app-misc/Hello_World-9999/image
 
- * Final size of build directory: 476 KiB
+ * Final size of build directory: 572 KiB
  * Final size of installed tree:   52 KiB
 
 strip: x86_64-pc-linux-gnu-strip --strip-unneeded -N __gentoo_check_ldflags__ -R .comment -R .GCC.command.line -R .note.gnu.gold-version

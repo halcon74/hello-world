@@ -2,19 +2,22 @@ Format: 1.0
 Source: hello-world
 Binary: hello-world
 Architecture: amd64 source
-Version: 0.5.5-1
+Version: 0.6.3-1
 Checksums-Md5:
- dbb781ee05de3a91b2e45781cac83ac4 860 hello-world_0.5.5-1.dsc
- b467910041696f9b83898c720163eff9 15004 hello-world_0.5.5-1_amd64.deb
+ 0d67638440e2d85ff0851c7616917baf 860 hello-world_0.6.3-1.dsc
+ efe00771d870a4221d4fe07fbbd56b9d 13404 hello-world-dbgsym_0.6.3-1_amd64.deb
+ 3105e6fc02af58151b911b07bd910f66 5052 hello-world_0.6.3-1_amd64.deb
 Checksums-Sha1:
- ca5f5efe332acb515a84239e785764ec588e06b2 860 hello-world_0.5.5-1.dsc
- 11a421697f0b03abec97b7344433bcc562cbd006 15004 hello-world_0.5.5-1_amd64.deb
+ 337cf8cd956960695439c97b5f8d2f1446ecec30 860 hello-world_0.6.3-1.dsc
+ 682efa6211f6e454365005915bda638ad15511b6 13404 hello-world-dbgsym_0.6.3-1_amd64.deb
+ 029de1b6ea1e776ecf080694e74e48550b91bf04 5052 hello-world_0.6.3-1_amd64.deb
 Checksums-Sha256:
- 855b480ff7657e24299aa5ea0079cf063f855d927163826468ae7c7d3b9a169a 860 hello-world_0.5.5-1.dsc
- 4acf7fc6286dfbc7ef181069d258b7d127c395a0d9d0e169705d4667f7546ce5 15004 hello-world_0.5.5-1_amd64.deb
+ 35a22fb13321e872c251b97fa6a9961642f0542adc4aeb390eecfcfb6c542471 860 hello-world_0.6.3-1.dsc
+ f7a09cb4daf195a98a0a51e1d7421e1cc35d3efcc4c9b0e11da593c9ebe9fbee 13404 hello-world-dbgsym_0.6.3-1_amd64.deb
+ c6dc8303db6a341c250d100b7f2937f74f85045ccd319a831913ab989f3d1ef0 5052 hello-world_0.6.3-1_amd64.deb
 Build-Origin: Debian
 Build-Architecture: amd64
-Build-Date: Fri, 27 Nov 2020 17:29:01 +0300
+Build-Date: Thu, 03 Dec 2020 02:02:11 +0300
 Build-Tainted-By:
  merged-usr-via-symlinks
  usr-local-has-programs
@@ -174,4 +177,4 @@ Installed-Build-Depends:
 Environment:
  DEB_BUILD_OPTIONS="parallel=4"
  LANG="en_US.UTF-8"
- SOURCE_DATE_EPOCH="1606480380"
+ SOURCE_DATE_EPOCH="1606933080"

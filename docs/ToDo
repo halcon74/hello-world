@@ -27,7 +27,10 @@
 		(DONE) to rewrite _apply_cpp_linker_vars in a loop using this relation
 
 6 CLOSED RESOLVED
-	to add support for Debian
+	to add support for Debian (native building with debuild)
+	
+7 CLOSED RESOLVED
+	to add support for Ubuntu (cross-deb-dist building with cowbuilder)
 
 NOTES
 
