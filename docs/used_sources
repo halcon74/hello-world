@@ -35,6 +35,10 @@ https://www.debian.org/doc/manuals/maint-guide/first.en.html
 and
 https://www.debian.org/doc/manuals/packaging-tutorial/packaging-tutorial.en.pdf
 
+12.
+https://blog.packagecloud.io/eng/2015/05/18/building-deb-packages-with-pbuilder/
+and
+https://gist.github.com/bzed/d488847361213c397266b132ed0e9b3c
 
 And, sure,
 https://packages.gentoo.org/packages/dev-qt/qt-creator
