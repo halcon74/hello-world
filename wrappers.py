@@ -60,7 +60,7 @@ def replace_var_in_env(int_data, key, value):
 # External method
 def append_value_to_var_in_env(int_data, key, value):
     int_data['env'][key] = int_data['clvar'](value)
-    # print('append_value_to_var_in_env after applying: ' + key + ' = ' + int_data['env'][key])
+    # print('append_value_to_var_in_env after appending: ' + key + ' = ' + int_data['env'][key])
 
 # External method
 def read_vars_from_cache(int_data, descriptions):
