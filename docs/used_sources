@@ -39,9 +39,13 @@ https://www.debian.org/doc/manuals/packaging-tutorial/packaging-tutorial.en.pdf
 
 13.
 https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html-single/RPM_Guide/index.html#ch-creating-rpms
+and
 https://docs.fedoraproject.org/en-US/packaging-guidelines
+and
 https://src.fedoraproject.org/rpms/redhat-rpm-config/blob/master/f/buildflags.md
+and
 https://fedoraproject.org/wiki/Packaging:SourceURL#Using_Revision_Control
+and
 https://wiki.centos.org/HowTos/SetupRpmBuildEnvironment
 
 And, sure,

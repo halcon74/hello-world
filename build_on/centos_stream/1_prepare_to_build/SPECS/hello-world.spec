@@ -5,7 +5,7 @@ Release: 1
 Summary: Test program printing 'Hello World!' to STDOUT
 License: GPL2+
 
-BuildArch: x86_64
+ExclusiveArch: x86_64
 
 URL: https://github.com/halcon74/%{name}
 Source0: https://github.com/halcon74/%{name}/archive/v%{version}/%{name}-%{version}.tar.gz
