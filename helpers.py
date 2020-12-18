@@ -28,14 +28,18 @@ scons prefix=/usr install_root=/home/user/hello-world-0.5.3/hello-world-0.5.3/de
         CXX=g++ CXXFLAGS="-g -O2 -fdebug-prefix-map=/home/user/hello-world-0.5.3/hello-world-0.5.3=. -fstack-protector-strong -Wformat -Werror=format-security" \
         LDFLAGS="-Wl,-z,relro" INSTALL=1
 
-
+Example for CentOS
+scons-3 PREFIX=/usr BUILDROOT=/home/user/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64 \
+	CXX=g++ 'CXXFLAGS=-O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection' \
+	'LDFLAGS=-Wl,-z,relro  -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld'
 
 SEE ALSO
 
 build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/Hello_World-9999.ebuild
 and
 build_on/debian_buster/1_prepare_to_build/debian/rules
-
+and
+build_on/centos_stream/1_prepare_to_build/rpmbuild/SPECS
 
 
 LONG VERSION
@@ -55,7 +59,8 @@ from one distro;
 
 - setting custom hooks in any class function for any OS as simple as
 if int_data['detected_os'] == 'gentoo':
-if int_data['detected_os'] == 'debian':
+if int_data['detected_os'] == 'debian-based':
+if int_data['detected_os'] == 'rpm-based':
 ...
 (currently, there are no such hooks).
 
@@ -417,7 +422,7 @@ def _define_vars_data(os_detected_at):
     }
 
     vars_data['install_vars']['destdir'] = {
-            'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian' : 'install_root'},
+            'is_got_from_arguments' : {'gentoo' : 'DESTDIR', 'debian-based' : 'install_root', 'rpm-based': 'BUILDROOT'},
             'is_applied_to_scons_env' : '',
             'is_saved_to_cache_file' : ('MYCACHEDDIR', \
                             "cached 'dir' argument for " + \
@@ -425,7 +430,7 @@ def _define_vars_data(os_detected_at):
             'is_post_processed_in_a_function' : 'reset_destdir'
     }
     vars_data['install_vars']['prefix'] = {
-            'is_got_from_arguments' : {'gentoo' : 'PREFIX', 'debian' : 'prefix'},
+            'is_got_from_arguments' : {'gentoo' : 'PREFIX', 'debian-based' : 'prefix', 'rpm-based': 'PREFIX'},
             'is_applied_to_scons_env' : '',
             'is_saved_to_cache_file' : '',
             'is_post_processed_in_a_function' : ''
@@ -440,19 +445,19 @@ def _define_vars_data(os_detected_at):
     }
     vars_data['compile_vars'] = {
         'cpp_compiler' : {
-            'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian' : 'CXX'},
+            'is_got_from_arguments' : {'gentoo' : 'CXX', 'debian-based' : 'CXX', 'rpm-based': 'CXX'},
             'is_applied_to_scons_env' : 'CXX',
             'is_saved_to_cache_file' : '',
             'is_post_processed_in_a_function' : ''
         },
         'cpp_compiler_flags' : {
-            'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS', 'debian' : 'CXXFLAGS'},
+            'is_got_from_arguments' : {'gentoo' : 'CXXFLAGS', 'debian-based' : 'CXXFLAGS', 'rpm-based': 'CXXFLAGS'},
             'is_applied_to_scons_env' : 'CXXFLAGS',
             'is_saved_to_cache_file' : '',
             'is_post_processed_in_a_function' : ''
         },
         'linker_flags' : {
-            'is_got_from_arguments' : {'gentoo' : 'LDFLAGS', 'debian' : 'LDFLAGS'},
+            'is_got_from_arguments' : {'gentoo' : 'LDFLAGS', 'debian-based' : 'LDFLAGS', 'rpm-based': 'LDFLAGS'},
             'is_applied_to_scons_env' : 'LINKFLAGS',
             'is_saved_to_cache_file' : '',
             'is_post_processed_in_a_function' : ''
@@ -470,8 +475,11 @@ def _define_vars_data(os_detected_at):
     supported_oses['gentoo'] = {
         'os_name' : 'Gentoo'
     }
-    supported_oses['debian'] = {
+    supported_oses['debian-based'] = {
         'os_name' : 'Debian-based Distro'
+    }
+    supported_oses['rpm-based'] = {
+        'os_name' : 'RPM-based Distro'
     }
     _populate_supported_oses(vars_data, supported_oses, os_detected_at)
     # Uncomment to look at the dictionary

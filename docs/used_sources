@@ -37,6 +37,12 @@ https://www.debian.org/doc/manuals/packaging-tutorial/packaging-tutorial.en.pdf
 
 12. https://wiki.debian.org/cowbuilder
 
+13.
+https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html-single/RPM_Guide/index.html#ch-creating-rpms
+https://src.fedoraproject.org/rpms/redhat-rpm-config/blob/master/f/buildflags.md
+https://fedoraproject.org/wiki/Packaging:SourceURL#Using_Revision_Control
+https://wiki.centos.org/HowTos/SetupRpmBuildEnvironment
+
 And, sure,
 https://packages.gentoo.org/packages/dev-qt/qt-creator
 and
