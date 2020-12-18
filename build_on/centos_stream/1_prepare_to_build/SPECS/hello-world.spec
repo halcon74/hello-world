@@ -19,9 +19,6 @@ turned into an attempt to make a helper for building/installing
 on different (*nix primarily) OSes via SCons "out-of-the-box" 
 (that is without (distro's) maintainer patches).
 
-# Build with the following syntax:
-# rpmbuild -ba SPECS/hello-world.spec
-
 %define _build_id_links none
 
 %define _BUILDROOT %{buildroot}
@@ -48,6 +45,7 @@ mkdir -p %{_BUILDROOT}%{_PREFIX}
 scons-3 %{_RPM_SCONS_INSTALL_OPTIONS}
 
 %clean
+
 scons-3 -c
 
 %files
