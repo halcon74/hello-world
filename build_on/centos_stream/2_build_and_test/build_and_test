@@ -1,0 +1,216 @@
+~/rpmbuild $ rpmlint -v /home/halcon/rpmbuild/SPECS/hello-world.spec
+/home/halcon/rpmbuild/SPECS/hello-world.spec: I: checking
+/home/halcon/rpmbuild/SPECS/hello-world.spec: I: checking-url https://github.com/halcon74/hello-world/archive/v0.7.1/hello-world-0.7.1.tar.gz (timeout 10 seconds)
+0 packages and 1 specfiles checked; 0 errors, 0 warnings.
+~/rpmbuild $
+
+~/rpmbuild $ rpmbuild -ba SPECS/hello-world.spec
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.mJ4rnh
++ umask 022
++ cd /home/halcon/rpmbuild/BUILD
++ cd /home/halcon/rpmbuild/BUILD
++ rm -rf hello-world-0.7.1
++ /usr/bin/gzip -dc /home/halcon/rpmbuild/SOURCES/hello-world-0.7.1.tar.gz
++ /usr/bin/tar -xof -
++ STATUS=0
++ '[' 0 -ne 0 ']'
++ cd hello-world-0.7.1
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ exit 0
+Executing(%build): /bin/sh -e /var/tmp/rpm-tmp.XttXe6
++ umask 022
++ cd /home/halcon/rpmbuild/BUILD
++ cd hello-world-0.7.1
++ scons-3 BUILDROOT=/home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64 PREFIX=/usr CXX=g++ 'CXXFLAGS=-O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection' 'LDFLAGS=-Wl,-z,relro  -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld'
+scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+variables for install not retrieved
+getting and saving variables needed for install...
+get_vars: destdir
+checking for destdir as DESTDIR... (are we on Gentoo?)
+checking for destdir as install_root... (are we on Debian-based Distro?)
+checking for destdir as BUILDROOT... (are we on RPM-based Distro?)
+detected Operating System: rpm-based
+destdir (BUILDROOT in RPM-based Distro) argument found: /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
+get_vars: prefix
+prefix (PREFIX in RPM-based Distro) argument found: /usr
+get_vars: compile_target
+initially, destdir is set for default value without prefix: /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
+destdir is reset using prefix and install_path: /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin
+Saving destdir to cache as MYCACHEDDIR...
+Saving compile_target to cache as MYCACHEDSOURCE...
+get_vars: cpp_compiler
+cpp_compiler (CXX in RPM-based Distro) argument found: g++
+get_vars: cpp_compiler_flags
+cpp_compiler_flags (CXXFLAGS in RPM-based Distro) argument found: -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
+get_vars: linker_flags
+linker_flags (LDFLAGS in RPM-based Distro) argument found: -Wl,-z,relro  -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld
+get_vars: source_full
+setting CXX to g++
+setting CXXFLAGS to -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
+setting LINKFLAGS to -Wl,-z,relro  -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld
+will compile: target = build/Hello_World, source = src/main.cpp
+scons: done reading SConscript files.
+scons: Building targets ...
+g++ -o src/main.o -c -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection src/main.cpp
+g++ -o build/Hello_World -Wl,-z,relro -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld src/main.o
+scons: done building targets.
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.gRBMLY
++ umask 022
++ cd /home/halcon/rpmbuild/BUILD
++ '[' /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64 '!=' / ']'
++ rm -rf /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
+++ dirname /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
++ mkdir -p /home/halcon/rpmbuild/BUILDROOT
++ mkdir /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
++ cd hello-world-0.7.1
++ mkdir -p /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr
++ scons-3 BUILDROOT=/home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64 PREFIX=/usr CXX=g++ 'CXXFLAGS=-O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1 -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1 -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection' 'LDFLAGS=-Wl,-z,relro  -Wl,-z,now -specs=/usr/lib/rpm/redhat/redhat-hardened-ld' INSTALL=1
+scons: Reading SConscript files ...
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+variables for install retrieved successfully; no need for re-configuring!
+will install: dir = /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin, source = build/Hello_World
+scons: done reading SConscript files.
+scons: Building targets ...
+Install file: "build/Hello_World" as "/home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin/Hello_World"
+scons: done building targets.
++ /usr/lib/rpm/find-debuginfo.sh -j4 --strict-build-id -m -i --build-id-seed 0.7.1-1 --unique-debug-suffix -0.7.1-1.x86_64 --unique-debug-src-base hello-world-0.7.1-1.x86_64 --run-dwz --dwz-low-mem-die-limit 10000000 --dwz-max-die-limit 110000000 -S debugsourcefiles.list /home/halcon/rpmbuild/BUILD/hello-world-0.7.1
+extracting debug info from /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin/Hello_World
+/usr/lib/rpm/sepdebugcrcfix: Updated 1 CRC32s, 0 CRC32s did match.
+1 block
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/redhat/brp-ldconfig
+/sbin/ldconfig: Warning: ignoring configuration file that cannot be opened: /etc/ld.so.conf: No such file or directory
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-strip-static-archive /usr/bin/strip
++ /usr/lib/rpm/brp-python-bytecompile '' 1
++ /usr/lib/rpm/brp-python-hardlink
++ PYTHON3=/usr/libexec/platform-python
++ /usr/lib/rpm/redhat/brp-mangle-shebangs
+Processing files: hello-world-0.7.1-1.x86_64
+Executing(%doc): /bin/sh -e /var/tmp/rpm-tmp.sHc1DV
++ umask 022
++ cd /home/halcon/rpmbuild/BUILD
++ cd hello-world-0.7.1
++ DOCDIR=/home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/share/doc/hello-world
++ export LC_ALL=C
++ LC_ALL=C
++ export DOCDIR
++ /usr/bin/mkdir -p /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/share/doc/hello-world
++ cp -pr README.md /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/share/doc/hello-world
++ cp -pr docs/ToDo /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/share/doc/hello-world
++ cp -pr docs/used_sources /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/share/doc/hello-world
++ exit 0
+Provides: hello-world = 0.7.1-1 hello-world(x86-64) = 0.7.1-1
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Requires: libc.so.6()(64bit) libc.so.6(GLIBC_2.2.5)(64bit) libgcc_s.so.1()(64bit) libm.so.6()(64bit) libstdc++.so.6()(64bit) libstdc++.so.6(GLIBCXX_3.4)(64bit) libstdc++.so.6(GLIBCXX_3.4.9)(64bit) rtld(GNU_HASH)
+Processing files: hello-world-debugsource-0.7.1-1.x86_64
+Provides: hello-world-debugsource = 0.7.1-1 hello-world-debugsource(x86-64) = 0.7.1-1
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Processing files: hello-world-debuginfo-0.7.1-1.x86_64
+Provides: hello-world-debuginfo = 0.7.1-1 hello-world-debuginfo(x86-64) = 0.7.1-1
+Requires(rpmlib): rpmlib(CompressedFileNames) <= 3.0.4-1 rpmlib(FileDigests) <= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+Recommends: hello-world-debugsource(x86-64) = 0.7.1-1
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64
+Wrote: /home/halcon/rpmbuild/SRPMS/hello-world-0.7.1-1.src.rpm
+Wrote: /home/halcon/rpmbuild/RPMS/x86_64/hello-world-0.7.1-1.x86_64.rpm
+Wrote: /home/halcon/rpmbuild/RPMS/x86_64/hello-world-debugsource-0.7.1-1.x86_64.rpm
+Wrote: /home/halcon/rpmbuild/RPMS/x86_64/hello-world-debuginfo-0.7.1-1.x86_64.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.xNieET
++ umask 022
++ cd /home/halcon/rpmbuild/BUILD
++ cd hello-world-0.7.1
++ scons-3 -c
+scons: Reading SConscript files ...
+deleting target: .sconsign.dblite
+get_object_file: src/main.o
+deleting target: src/main.o
+deleting target: build/Hello_World
+Reading destdir from cache as MYCACHEDDIR...
+Reading compile_target from cache as MYCACHEDSOURCE...
+get_install_target: /home/halcon/rpmbuild/BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin/Hello_World
+deleting target: ../../BUILDROOT/hello-world-0.7.1-1.x86_64/usr/bin/Hello_World
+deleting target: scons_variables_cache.conf
+scons: done reading SConscript files.
+scons: Cleaning targets ...
+scons: done cleaning targets.
++ exit 0
+~/rpmbuild $
+
+# dnf install /home/halcon/rpmbuild/RPMS/x86_64/hello-world-0.7.1-1.x86_64.rpm
+Last metadata expiration check: 1:25:57 ago on Sat 19 Dec 2020 01:04:39 AM MSK.
+Dependencies resolved.
+======================================================================================================================================
+ Package                          Architecture                Version                         Repository                         Size
+======================================================================================================================================
+Installing:
+ hello-world                      x86_64                      0.7.1-1                         @commandline                       13 k
+
+Transaction Summary
+======================================================================================================================================
+Install  1 Package
+
+Total size: 13 k
+Installed size: 12 k
+Is this ok [y/N]: y
+Downloading Packages:
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                              1/1 
+  Installing       : hello-world-0.7.1-1.x86_64                                                                                   1/1 
+  Verifying        : hello-world-0.7.1-1.x86_64                                                                                   1/1 
+Installed products updated.
+
+Installed:
+  hello-world-0.7.1-1.x86_64                                                                                                          
+
+Complete!
+#
+
+# rpm -ql hello-world
+/usr/bin/Hello_World
+/usr/share/doc/hello-world
+/usr/share/doc/hello-world/README.md
+/usr/share/doc/hello-world/ToDo
+/usr/share/doc/hello-world/used_sources
+#
+
+$ /usr/bin/Hello_World 
+Hello World!
+$
+
+# dnf remove hello-world
+Dependencies resolved.
+======================================================================================================================================
+ Package                          Architecture                Version                        Repository                          Size
+======================================================================================================================================
+Removing:
+ hello-world                      x86_64                      0.7.1-1                        @@commandline                       12 k
+
+Transaction Summary
+======================================================================================================================================
+Remove  1 Package
+
+Freed space: 12 k
+Is this ok [y/N]: y
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                              1/1 
+  Erasing          : hello-world-0.7.1-1.x86_64                                                                                   1/1 
+  Verifying        : hello-world-0.7.1-1.x86_64                                                                                   1/1 
+Installed products updated.
+
+Removed:
+  hello-world-0.7.1-1.x86_64                                                                                                          
+
+Complete!
+#
