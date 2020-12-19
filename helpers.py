@@ -39,7 +39,7 @@ build_on/gentoo/1_prepare_to_build/var/db/repos/localrepo/app-misc/Hello_World/H
 and
 build_on/debian_buster/1_prepare_to_build/debian/rules
 and
-build_on/centos_stream/1_prepare_to_build/rpmbuild/SPECS
+build_on/centos_stream/1_prepare_to_build/SPECS
 
 
 LONG VERSION
