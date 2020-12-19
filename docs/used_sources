@@ -44,7 +44,7 @@ https://docs.fedoraproject.org/en-US/packaging-guidelines
 and
 https://src.fedoraproject.org/rpms/redhat-rpm-config/blob/master/f/buildflags.md
 and
-https://fedoraproject.org/wiki/Packaging:SourceURL#Using_Revision_Control
+https://fedoraproject.org/wiki/Packaging:SourceURL#Git_Hosting_Services
 and
 https://wiki.centos.org/HowTos/SetupRpmBuildEnvironment
 
